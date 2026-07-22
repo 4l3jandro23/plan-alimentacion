@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🥗 Plan de Alimentación — Alejandro</title>
+<!-- Ajustes para que se comporte como app al añadirla a pantalla de inicio en iPhone -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Alimentación">
+<meta name="theme-color" content="#2f7a5f">
+<meta name="description" content="Plan de alimentación personalizado de 4 semanas, con menú, macros, recetas y lista de la compra.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
+<style>
+  :root{
+    --bg:#faf9f5; --card:#ffffff; --ink:#2b2b28; --muted:#6b6b63;
+    --accent:#2f7a5f; --accent2:#57a686; --accent-soft:#e7f3ee; --warn:#b5651d; --warn-soft:#fbeee2;
+    --border:#e7e5df; --radius:18px; --shadow:0 2px 12px rgba(0,0,0,.06);
+    --protein:#2f7a5f; --carbs:#c98a2b; --fat:#a33333; --barbg:#eee9df;
+  }
+  html.dark{
+    --bg:#12161a; --card:#1b2126; --ink:#eceef0; --muted:#98a1aa;
+    --accent:#5fd3a4; --accent2:#3f9975; --accent-soft:#1d332b; --warn:#e0955a; --warn-soft:#3a2a1c;
+    --border:#2a3138; --shadow:0 2px 14px rgba(0,0,0,.5);
+    --protein:#5fd3a4; --carbs:#e0b25a; --fat:#e07a7a; --barbg:#232b30;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55;
+    padding-bottom:calc(78px + env(safe-area-inset-bottom));
+    transition:background .25s, color .25s;
+  }
+  header{
+    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 20px;
+    position:sticky; top:0; z-index:20; box-shadow:0 2px 10px rgba(0,0,0,.15);
+    border-radius:0 0 22px 22px;
+  }
+  .headtop{display:flex; justify-content:space-between; align-items:center;}
+  header h1{margin:0 0 4px; font-size:1.3rem;}
+  header p{margin:0; opacity:.92; font-size:.85rem;}
+  #themeBtn{background:rgba(255,255,255,.22); border:none; color:#fff; font-size:1.1rem; width:38px; height:38px; border-radius:50%; cursor:pointer; flex-shrink:0;}
+
+  main{max-width:760px; margin:0 auto; padding:18px 16px 6px;}
+  .tabpanel{display:none; animation:fade .25s ease;}
+  .tabpanel.active{display:block;}
+  @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  h2{font-size:1.15rem; color:var(--accent); margin:0 0 14px; display:flex; align-items:center; gap:6px;}
+  h3{font-size:1rem; margin:18px 0 8px;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:16px; margin-bottom:14px; box-shadow:var(--shadow);
+  }
+  .tip{background:var(--accent-soft); border-left:4px solid var(--accent); border-radius:10px; padding:12px 14px; font-size:.92rem; margin:10px 0;}
+  .warn{background:var(--warn-soft); border-left:4px solid var(--warn); border-radius:10px; padding:12px 14px; font-size:.92rem; margin:10px 0;}
+  table{width:100%; border-collapse:collapse; font-size:.85rem; margin:10px 0;}
+  th,td{border:1px solid var(--border); padding:8px; text-align:left;}
+  th{background:var(--accent-soft);}
+  ul{padding-left:20px; margin:8px 0;}
+  li{margin-bottom:4px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media (max-width:480px){.grid2{grid-template-columns:1fr;}}
+  .pill{display:inline-block; background:var(--accent-soft); color:var(--accent); padding:4px 11px; border-radius:14px; font-size:.75rem; margin:2px 4px 2px 0; font-weight:600;}
+  .pill.no{background:#fbeaea; color:#a33333;}
+  html.dark .pill.no{background:#3a1f1f; color:#e07a7a;}
+  footer{text-align:center; font-size:.76rem; color:var(--muted); padding:16px 20px 8px;}
+
+  /* Stat cards */
+  .statgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:4px 0 18px;}
+  .stat{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 6px; text-align:center; box-shadow:var(--shadow);}
+  .stat b{display:block; font-size:1.15rem; color:var(--accent); margin-bottom:2px;}
+  .stat span{font-size:.66rem; color:var(--muted); line-height:1.2; display:block;}
+
+  details{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:10px; box-shadow:var(--shadow); overflow:hidden;}
+  details summary{padding:14px 16px; cursor:pointer; font-weight:700; font-size:.95rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  details summary::-webkit-details-marker{display:none;}
+  details summary::after{content:"⌄"; color:var(--accent); font-size:1.2rem; transition:transform .2s; flex-shrink:0;}
+  details[open] summary::after{transform:rotate(180deg);}
+  details .content{padding:0 16px 16px; font-size:.9rem;}
+
+  .week{margin-bottom:14px;}
+  .week > summary{font-size:1.02rem;}
+  .week-avg{font-size:.72rem; font-weight:400; color:var(--muted); margin-left:2px; display:block;}
+  .weekdays{display:flex; flex-direction:column; gap:10px; padding:0 12px 14px;}
+  .daycard{background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:12px 14px;}
+  .daycard-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
+  .dayname{font-weight:700; color:var(--accent); font-size:.92rem;}
+  .kcal{font-weight:700; font-size:.85rem; background:var(--accent-soft); color:var(--accent); padding:3px 10px; border-radius:12px;}
+  .meal{font-size:.87rem; margin:4px 0;}
+  .macrobars{margin-top:10px; display:flex; flex-direction:column; gap:5px;}
+  .macrorow{display:grid; grid-template-columns:64px 1fr 40px; align-items:center; gap:6px; font-size:.72rem; color:var(--muted);}
+  .bar{background:var(--barbg); border-radius:6px; height:8px; overflow:hidden;}
+  .fill{height:100%; border-radius:6px;}
+  .fill.protein{background:var(--protein);}
+  .fill.carbs{background:var(--carbs);}
+  .fill.fat{background:var(--fat);}
+  .libre-tag{background:var(--warn-soft); color:var(--warn); padding:2px 8px; border-radius:10px; font-size:.7rem; font-weight:600;}
+  .pizza-tag{background:#ffe3c2; color:#8a4b00; padding:2px 8px; border-radius:10px; font-size:.7rem; font-weight:600;}
+  html.dark .pizza-tag{background:#4a3418; color:#ffb96b;}
+
+  .shoplist{columns:2; column-gap:20px;}
+  @media (max-width:480px){.shoplist{columns:1;}}
+  .shoplist li{break-inside:avoid;}
+
+  /* Bottom tab bar (iOS style) */
+  .bottomnav{
+    position:fixed; bottom:0; left:0; right:0; display:flex;
+    background:var(--card); border-top:1px solid var(--border);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    box-shadow:0 -2px 14px rgba(0,0,0,.08); z-index:30;
+    backdrop-filter:blur(10px);
+  }
+  .bottomnav button{
+    flex:1; background:none; border:none; display:flex; flex-direction:column;
+    align-items:center; gap:2px; font-size:.64rem; color:var(--muted);
+    padding:6px 2px 4px; font-family:inherit; cursor:pointer; font-weight:600;
+  }
+  .bottomnav button .ic{font-size:1.35rem; line-height:1;}
+  .bottomnav button.active{color:var(--accent);}
+
+  /* Offline / update banners */
+  .banner{
+    position:fixed; left:12px; right:12px; z-index:40; padding:10px 14px; border-radius:14px;
+    font-size:.82rem; font-weight:600; text-align:center; box-shadow:var(--shadow);
+    transform:translateY(-120%); transition:transform .25s ease;
+  }
+  .banner.show{transform:translateY(0);}
+  #offlineBanner{top:calc(10px + env(safe-area-inset-top)); background:var(--warn-soft); color:var(--warn);}
+  #updateBanner{
+    top:calc(10px + env(safe-area-inset-top)); background:var(--accent-soft); color:var(--accent);
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  #updateBanner button{
+    background:var(--accent); color:#fff; border:none; border-radius:10px; padding:5px 12px;
+    font-size:.78rem; font-weight:700; cursor:pointer;
+  }
+</style>
+</head>
+<body>
+
+<div id="offlineBanner" class="banner">📡 Sin conexión — viendo datos guardados</div>
+<div id="updateBanner" class="banner"><span>🔄 Hay una versión nueva</span><button onclick="applyUpdate()">Actualizar</button></div>
+
+<header>
+  <div class="headtop">
+    <div>
+      <h1>🥗 Plan de Alimentación</h1>
+      <p>Personalizado para Alejandro</p>
+    </div>
+    <button id="themeBtn" onclick="toggleTheme()">🌙</button>
+  </div>
+</header>
+
+<main>
+
+<!-- ==================== INICIO ==================== -->
+<div id="tab-inicio" class="tabpanel active">
+
+  <div class="statgrid">
+    <div class="stat"><b>58-78</b><span>kg rango sano</span></div>
+    <div class="stat"><b>~1.740</b><span>kcal media/día</span></div>
+    <div class="stat"><b>4</b><span>semanas de plan</span></div>
+  </div>
+
+  <h2>🧭 Cómo funciona esto</h2>
+  <div class="card">
+    <p>Esto no es una dieta estricta ni un plan cerrado que haya que cumplir al milímetro. Está construido a partir de la pauta de tu dietista (método del plato + dieta mediterránea 🌿) y de la guía sobre ansiedad y comida que ya tenías, adaptado a lo que realmente comes, cuánto tiempo tienes y cómo te va con las rutinas.</p>
+    <div class="tip">💡 <b>Regla de oro:</b> mejor un 80% sostenible durante meses que un 100% perfecto durante dos semanas. Si un día se rompe el plan, no se "recupera" comiendo menos al día siguiente — se retoma sin más en la siguiente comida.</div>
+    <p>Sabemos que sueles empezar muy fuerte y abandonar rápido, o que el estrés puntual tira todo por tierra. Por eso casi todo aquí es intercambiable: si un día no tienes lo que tocaba, cambia por otra proteína o verdura de la lista. La estructura importa más que el detalle exacto.</p>
+  </div>
+
+  <h2>🍕 Tradiciones que respetamos</h2>
+  <div class="card">
+    <p><b>Último viernes de mes:</b> pizza en el trabajo con el equipo 🍕 — está integrado en la semana 4 del menú como tu comida de ese día, sin sustituirlo por otra cosa ni sentir que "rompes" nada. Si el último viernes real no coincide con la semana 4 al repetir el ciclo cada mes, simplemente mueve la pizza a ese viernes.</p>
+    <p><b>Cena libre de finde:</b> los <b>viernes noche</b> y los <b>sábados noche</b> son cena libre todas las semanas 🎉 — disfruta sin contar nada, y retoma el plan el domingo o el lunes sin culpa.</p>
+  </div>
+
+  <h2>🧠 Hambre real vs. ansiedad</h2>
+  <div class="card">
+    <table>
+      <tr><th></th><th>😌 Hambre real</th><th>😵 Ansiedad / emocional</th></tr>
+      <tr><td>¿Cómo aparece?</td><td>Poco a poco</td><td>De golpe</td></tr>
+      <tr><td>¿Se pasaría esperando 15-20 min?</td><td>Va aumentando</td><td>Se hace insoportable</td></tr>
+      <tr><td>¿Me vale cualquier comida?</td><td>Sí, cualquier cosa</td><td>Solo algo muy concreto</td></tr>
+    </table>
+    <div class="tip">⏳ Si es ansiedad: intenta posponer 10-15 min haciendo otra cosa (andar 5 min, llamar a alguien, agua/infusión). Si sigue después, come algo — no se trata de aguantar, sino de no reaccionar en automático. Esto complementa, no sustituye, el trabajo con psicología/psiquiatría.</div>
+    <p>🎯 <b>Tus disparadores:</b> estrés puntual del trabajo, tardes-noches solo en casa, picoteo después de cenar. Ten en casa algo saludable ya listo (fruta 🍎, yogur, frutos secos ya contados) para que la opción fácil sea también la buena.</p>
+    <ul>
+      <li>🍏 Fruta siempre a mano (mochila, mesa del trabajo)</li>
+      <li>🥦 Verdura presente en comida y cena</li>
+      <li>🛒 Planifica la compra para no tener en casa lo que no quieres tener a mano</li>
+      <li>📵 Come sin pantallas, mínimo 20 min por comida</li>
+      <li>🍴 Si comes deprisa, para y suelta los cubiertos un momento</li>
+    </ul>
+  </div>
+
+  <h2>🍽️ Método del plato</h2>
+  <div class="card">
+    <div class="grid2">
+      <div><h3>☀️ Comida</h3><p>½ verdura + ¼ proteína + ¼ carbohidrato (arroz, pasta integral, patata, legumbre)</p></div>
+      <div><h3>🌙 Cena</h3><p>Verdura + proteína, más ligera. Carbohidrato solo si tienes hambre real.</p></div>
+    </div>
+    <h3>✅ Tus proteínas habituales</h3>
+    <span class="pill">🍗 Pollo/pavo</span><span class="pill">🥩 Cerdo</span><span class="pill">🥩 Ternera</span>
+    <span class="pill">🐟 Salmón</span><span class="pill">🐟 Atún</span><span class="pill">🦑 Calamar</span><span class="pill">🐙 Pulpo</span>
+    <span class="pill">🥚 Huevo</span><span class="pill">🫘 Legumbres</span>
+    <p style="margin-top:10px;">🚫 <b>Evitamos:</b> <span class="pill no">Gambas/langostinos</span><span class="pill no">Coles de Bruselas</span><span class="pill no">Melón</span><span class="pill no">Horchata</span></p>
+    <p>🐟 <b>Bacalao/merluza:</b> no te convencen tal cual — probamos versiones al horno con ajo y limón o crujientes en airfryer. Si sigue sin gustarte, sustituye por salmón, atún, pollo o pavo sin más.</p>
+  </div>
+
+  <h2>🌅 Desayuno y media mañana</h2>
+  <div class="card">
+    <p>Tu desayuno actual (pan+manzana, bocata de fuet/jamón, a veces bollería, kéfir/yogur) no está mal de base — el objetivo es subir algo de proteína y bajar la frecuencia de bollería, sin prohibir nada.</p>
+    <ul>
+      <li>🥣 <b>Kéfir o yogur griego</b> + fruta + frutos secos</li>
+      <li>🍞 <b>Tostada con jamón</b> (mejor cocido/serrano que fuet) + fruta</li>
+      <li>🍳 <b>Huevo</b> revuelto o tortilla francesa + tostada (fin de semana)</li>
+    </ul>
+    <div class="tip">🥐 La pastelería/empanadilla no desaparece — resérvala a 1-2 veces por semana. El resto de días, kéfir/yogur+fruta o tostada con jamón.</div>
+  </div>
+</div>
+
+<!-- ==================== MENU ==================== -->
+<div id="tab-menu" class="tabpanel">
+  <h2>📅 Menú de 4 semanas</h2>
+  <div class="card">
+    <p>Todo es intercambiable: si un día no te apetece lo propuesto, cambia por otra opción de la misma categoría. Lunes-jueves con tupper en el trabajo; viernes y sábado noche, libres siempre.</p>
+    <div class="tip">🔢 Las <b>kcal y macros son una estimación orientativa</b> (no un cálculo clínico exacto) — de media rondan los <b>~1.740 kcal/día</b>, un déficit moderado y sostenible. Los días con cena libre o pizza no cuentan esa comida en el total. Si quieres precisión real, pesa ingredientes con Fitia.</div>
+  </div>
+  <div id="weeksContainer"></div>
+</div>
+
+<!-- ==================== RECETAS ==================== -->
+<div id="tab-recetas" class="tabpanel">
+  <h2>🍳 Recetas rápidas</h2>
+  <p style="color:var(--muted); font-size:.9rem;">Todas en menos de 30 min, pocos ingredientes, sabrosas sin dejar de ser saludables.</p>
+
+  <details><summary>🐟 Salmón al airfryer con limón <span style="font-weight:400;color:var(--muted);font-size:.8rem;">10 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> lomo de salmón, aceite de oliva, sal, limón, ajo en polvo, eneldo o perejil (opcional).</p>
+    <p><b>Preparación:</b> pincela el salmón con aceite, sal y ajo en polvo. Airfryer 190°C, 8-10 min. Limón por encima al sacar. Acompaña con verdura al vapor o ensalada.</p></div>
+  </details>
+
+  <details><summary>🍗 Pollo o pavo al airfryer con especias <span style="font-weight:400;color:var(--muted);font-size:.8rem;">15 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> pechuga o contramuslo, aceite, pimentón, ajo en polvo, orégano, sal.</p>
+    <p><b>Preparación:</b> adoba 5 min (o directo si tienes prisa). Airfryer 180°C, 12-14 min, girando a mitad. Queda jugoso sin fritura.</p></div>
+  </details>
+
+  <details><summary>🦑 Calamar a la plancha <span style="font-weight:400;color:var(--muted);font-size:.8rem;">10 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> calamar limpio (congelado va perfecto), ajo, perejil, aceite, sal, limón.</p>
+    <p><b>Preparación:</b> sartén bien caliente con poco aceite, calamar 2-3 min por lado. Ajo y perejil picados al final, limón al servir.</p></div>
+  </details>
+
+  <details><summary>🐙 Pulpo a la gallega fácil <span style="font-weight:400;color:var(--muted);font-size:.8rem;">20 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> pulpo cocido (se vende ya cocido en Mercadona), patata, pimentón, aceite de oliva, sal gorda.</p>
+    <p><b>Preparación:</b> cuece o calienta la patata en rodajas, coloca el pulpo troceado encima, riega con aceite y espolvorea pimentón y sal gorda. Sin complicación.</p></div>
+  </details>
+
+  <details><summary>🐟 Merluza/bacalao "distinto" — al horno con ajo y limón <span style="font-weight:400;color:var(--muted);font-size:.8rem;">20 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> lomo de merluza o bacalao, ajo laminado, aceite, limón, perejil, pan rallado (opcional, crujiente).</p>
+    <p><b>Preparación:</b> horno 200°C. Pescado en bandeja con aceite, ajo laminado, limón y opcionalmente una capa fina de pan rallado con perejil para que quede crujiente. 15-18 min.</p></div>
+  </details>
+
+  <details><summary>🫘 Garbanzos salteados exprés <span style="font-weight:400;color:var(--muted);font-size:.8rem;">10 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> garbanzos de bote, espinacas frescas o congeladas, ajo, aceite, pimentón, taquitos de pavo o jamón.</p>
+    <p><b>Preparación:</b> sofríe ajo, añade espinacas hasta reducir, añade garbanzos y pavo, pimentón. 5-8 min. Plato completo en una sartén.</p></div>
+  </details>
+
+  <details><summary>🥚 Tortilla francesa con espinacas <span style="font-weight:400;color:var(--muted);font-size:.8rem;">7 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> 2 huevos, un puñado de espinacas, sal, aceite.</p>
+    <p><b>Preparación:</b> saltea espinacas 2 min, bate huevos con sal, añade y cuaja. Rápido, barato y proteico para cena.</p></div>
+  </details>
+
+  <details><summary>🍚 Arroz o pasta integral con verduras (base multiusos) <span style="font-weight:400;color:var(--muted);font-size:.8rem;">20 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> arroz o pasta integral, pimiento, calabacín, cebolla, aceite, ajo.</p>
+    <p><b>Preparación:</b> saltea las verduras troceadas en aceite con ajo 8-10 min, mezcla con el arroz/pasta ya cocido. Añade encima la proteína del día.</p></div>
+  </details>
+
+  <details><summary>🍫 Merienda dulce que sí suma <span style="font-weight:400;color:var(--muted);font-size:.8rem;">2 min</span></summary>
+    <div class="content"><p><b>Ingredientes:</b> yogur griego o kéfir, fruta troceada, una onza de chocolate negro o canela.</p>
+    <p><b>Preparación:</b> mezcla todo en un bol. Dulce, rápido, con proteína/fibra en vez de solo azúcar.</p></div>
+  </details>
+
+</div>
+
+<!-- ==================== COMPRA ==================== -->
+<div id="tab-compra" class="tabpanel">
+  <h2>🛒 Lista de la compra</h2>
+
+  <div class="card">
+    <h3>😩 Se te caduca la comida — cómo evitarlo</h3>
+    <p>No es un problema de falta de organización, es que el sistema típico de "compra grande semanal" no encaja con tu ritmo. Prueba esto:</p>
+    <ul>
+      <li>🧊 <b>Congelado como primera opción</b> para proteína (pollo, pescado, calamar): no caduca, sacas solo la ración que toca. Fresco solo si vas a cocinarlo en 1-2 días.</li>
+      <li>🔁 <b>Compra pequeña 2 veces por semana</b> (ej. lunes y jueves) en vez de una única compra grande — así lo fresco no llega a caducar antes de usarlo.</li>
+      <li>🥦 <b>Verdura congelada</b> para el día a día (mismo valor nutricional, dura meses); fresca solo la cantidad justa para 2-3 días.</li>
+      <li>📦 <b>Regla FIFO:</b> lo que compres antes, colócalo delante en la nevera para acordarte de usarlo primero.</li>
+      <li>🥫 Legumbre de bote, atún en lata, arroz, pasta, avena: cero presión, duran meses en la despensa.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>💶 Dónde comprar y precios aproximados</h3>
+    <p style="font-size:.8rem;color:var(--muted);">Precios orientativos en supermercados económicos de Barcelona (Mercadona / Lidl) — varían según tienda, oferta y momento. Consulta la app del súper para el precio exacto del día.</p>
+    <table>
+      <tr><th>Producto</th><th>Dónde</th><th>Precio aprox.</th></tr>
+      <tr><td>🍗 Pechuga de pollo</td><td>Mercadona</td><td>5-6 €/kg</td></tr>
+      <tr><td>🦃 Pavo (filete/contramuslo)</td><td>Mercadona</td><td>4-6 €/kg</td></tr>
+      <tr><td>🐟 Salmón (congelado)</td><td>Lidl / Mercadona</td><td>7-9 €/kg</td></tr>
+      <tr><td>🦑 Calamar congelado</td><td>Lidl / Mercadona</td><td>6-8 €/kg</td></tr>
+      <tr><td>🐙 Pulpo cocido (bolsa)</td><td>Mercadona</td><td>4-6 €/bolsa individual</td></tr>
+      <tr><td>🐟 Merluza/bacalao congelado</td><td>Mercadona</td><td>7-9 €/kg</td></tr>
+      <tr><td>🥩 Solomillo de cerdo</td><td>Mercadona</td><td>7-9 €/kg</td></tr>
+      <tr><td>🥚 Huevos (docena)</td><td>Mercadona / Lidl</td><td>2-2,5 €</td></tr>
+      <tr><td>🫘 Legumbres de bote</td><td>Mercadona (Hacendado)</td><td>0,65-0,85 €/bote</td></tr>
+      <tr><td>🐟 Atún en lata (pack 3)</td><td>Mercadona</td><td>2,5-3 €</td></tr>
+      <tr><td>🍚 Arroz integral (1kg)</td><td>Mercadona / Lidl</td><td>1,20-1,50 €</td></tr>
+      <tr><td>🍝 Pasta integral (500g)</td><td>Mercadona / Lidl</td><td>0,90-1,10 €</td></tr>
+      <tr><td>🥣 Avena (500g)</td><td>Mercadona / Lidl</td><td>~1 €</td></tr>
+      <tr><td>🥛 Yogur griego (pack 4)</td><td>Mercadona / Lidl</td><td>1,30-1,80 €</td></tr>
+      <tr><td>🥤 Kéfir (botella)</td><td>Mercadona</td><td>1,50-2 €</td></tr>
+      <tr><td>🍎 Fruta variada</td><td>Frutería de barrio o Mercadona</td><td>1,20-2 €/kg</td></tr>
+      <tr><td>🥜 Frutos secos (bolsa 500g)</td><td>Lidl</td><td>3-5 €</td></tr>
+      <tr><td>🥦 Verdura congelada (1kg)</td><td>Mercadona / Lidl</td><td>1,20-1,80 €</td></tr>
+      <tr><td>🫒 Aceite de oliva virgen extra (1L)</td><td>Mercadona / Lidl</td><td>7-10 € <span style="font-size:.75em;">(precio subido, variable)</span></td></tr>
+      <tr><td>🍫 Chocolate negro</td><td>Mercadona / Lidl</td><td>1,50-2 €</td></tr>
+    </table>
+    <p style="font-size:.82rem;">💡 Frutería/mercado de barrio suele salir más barato para comprar poca cantidad de fruta y verdura fresca — justo lo que necesitas para no desperdiciar.</p>
+  </div>
+
+  <div class="card">
+    <h3>🏠 Despensa base (dura semanas)</h3>
+    <ul class="shoplist">
+      <li>🫒 Aceite de oliva virgen extra</li>
+      <li>🫘 Legumbres de bote</li>
+      <li>🐟 Atún en lata</li>
+      <li>🍚 Arroz y pasta integral</li>
+      <li>🌾 Avena</li>
+      <li>🥜 Frutos secos</li>
+      <li>🧂 Ajo en polvo, pimentón, orégano</li>
+      <li>🥚 Huevos</li>
+      <li>🥦 Verdura congelada</li>
+      <li>🍫 Chocolate negro</li>
+      <li>☕ Café y leche</li>
+    </ul>
+  </div>
+
+  <details><summary>🗓️ Semana 1 — fresco a comprar</summary>
+    <div class="content"><p>Salmón congelado (2 raciones), merluza, pechuga de pollo, muslos de pollo, pavo, calamar y pulpo, solomillo de cerdo, espárragos, espinacas, pimientos, champiñones, ensalada, tomate, patata, fruta variada (poca cantidad, 2-3 días vista).</p></div>
+  </details>
+  <details><summary>🗓️ Semana 2 — fresco a comprar</summary>
+    <div class="content"><p>Pechuga de pollo, salmón, pulpo, bacalao, ternera, calamar, muslos de pollo, pimiento, champiñón, espinaca, brócoli, patata, fruta variada.</p></div>
+  </details>
+  <details><summary>🗓️ Semana 3 — fresco a comprar</summary>
+    <div class="content"><p>Salmón, calamar, pavo, merluza, ternera, sardinas, verduras variadas (pimiento, champiñón, brócoli, ensalada), patata, fruta variada.</p></div>
+  </details>
+  <details><summary>🗓️ Semana 4 — fresco a comprar</summary>
+    <div class="content"><p>Pollo, pulpo, salmón, calamar, cerdo, merluza, verduras variadas, patata, fruta variada. (Viernes: pizza en el trabajo, no hace falta comprar nada para ese día).</p></div>
+  </details>
+</div>
+
+<!-- ==================== PROGRESO ==================== -->
+<div id="tab-progreso" class="tabpanel">
+  <h2>📊 Rango de referencia y seguimiento</h2>
+  <div class="card">
+    <p>Para tu altura (176 cm), un rango de peso saludable orientativo (IMC 18.5-25) sería aproximadamente <b>58-78 kg</b> — coincide con lo que ya te indicaron en tu reconocimiento médico. Es una referencia, no un objetivo estricto ni una fecha límite. ⏳</p>
+    <div class="warn">⚖️ No hace falta pesarte a diario ni contar calorías al gramo. Si quieres reactivar Fitia en algún momento, genial, pero no es obligatorio.</div>
+    <p><b>✅ Check-in semanal simple (opcional):</b> una vez por semana pregúntate: ¿cómo ha ido la energía? ¿algún atracón fuerte? ¿cómo sienta la ropa? Eso dice más que la báscula día a día.</p>
+  </div>
+</div>
+
+</main>
+
+<footer>🌱 Plan orientativo de salud general — no sustituye la valoración de tu dietista, psicóloga o médico. · Actualizado julio 2026</footer>
+
+<nav class="bottomnav" id="tabnav">
+  <button class="active" onclick="showTab('inicio', this)"><span class="ic">🏠</span>Inicio</button>
+  <button onclick="showTab('menu', this)"><span class="ic">📅</span>Menú</button>
+  <button onclick="showTab('recetas', this)"><span class="ic">🍳</span>Recetas</button>
+  <button onclick="showTab('compra', this)"><span class="ic">🛒</span>Compra</button>
+  <button onclick="showTab('progreso', this)"><span class="ic">📊</span>Progreso</button>
+</nav>
+
+<script>
+function showTab(name, btn){
+  document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelectorAll('#tabnav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function toggleTheme(){
+  const isDark = document.documentElement.classList.toggle('dark');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  try{ localStorage.setItem('planAlimentacionTheme', isDark ? 'dark' : 'light'); }catch(e){}
+}
+(function initTheme(){
+  let saved = null;
+  try{ saved = localStorage.getItem('planAlimentacionTheme'); }catch(e){}
+  if(saved === 'dark'){ document.documentElement.classList.add('dark'); }
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.getElementById('themeBtn').textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+  });
+})();
+
+const MAXP=150, MAXC=220, MAXF=100;
+
+const weeksData = [
+{ n:1, avg:1731, days:[
+  {day:"Lunes 🐟", desayuno:"🍞 Tostada integral con jamón + manzana", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón al horno con espárragos y patata", merienda:"🍫 Yogur + plátano + onza de chocolate", cena:"🐟 Merluza al horno con ajo y limón", kcal:1890,p:118,c:175,f:72},
+  {day:"Martes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pollo a la plancha con arroz integral y pimientos", merienda:"🍎 Yogur + manzana", cena:"🥚 Tortilla francesa con espinacas y tomate aliñado", kcal:1770,p:110,c:158,f:69},
+  {day:"Miércoles 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Garbanzos salteados con espinacas y taquitos de pavo", merienda:"🍎 Yogur + fruta", cena:"🦑 Calamar a la plancha con ensalada verde", kcal:1780,p:104,c:187,f:56},
+  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con verduras asadas", kcal:1830,p:116,c:166,f:67},
+  {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
+  {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Yogur o café con leche + fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Arroz con pollo y verduras (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada verde ligera", kcal:1900,p:126,c:161,f:74}
+]},
+{ n:2, avg:1740, days:[
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pechuga a la plancha con quinoa y verduras", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con verduras al horno", kcal:1830,p:120,c:161,f:69},
+  {day:"Martes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón al airfryer con limón y ensalada de patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🥚 Huevo escalfado con tomate y espinacas", kcal:1870,p:106,c:172,f:78},
+  {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Lentejas estofadas con verduras", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
+  {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Yogur o café con leche + fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
+  {day:"Viernes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Ensalada de arroz con atún, maíz y pimiento", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1420,p:82,c:156,f:46, libre:true},
+  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Ternera a la plancha con champiñones y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Muslitos de pollo al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1840,p:116,c:158,f:74}
+]},
+{ n:3, avg:1744, days:[
+  {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón al horno con brócoli", kcal:1830,p:106,c:186,f:63},
+  {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón a la plancha con arroz integral y verduras", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con verduras", kcal:1890,p:118,c:166,f:75},
+  {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con champiñones", kcal:1750,p:102,c:165,f:66},
+  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pavo con champiñones salteados y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
+  {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
+  {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
+  {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
+]},
+{ n:4, avg:1744, days:[
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pollo a la plancha con verduras salteadas y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
+  {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
+  {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
+  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Alubias con verduras y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
+  {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍕 Viernes de pizza en el trabajo (tradición del equipo)", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
+  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}
+]}
+];
+
+function bar(cls,val,max){
+  const pct = Math.min(100, Math.round(val/max*100));
+  return '<div class="fill '+cls+'" style="width:'+pct+'%"></div>';
+}
+
+function renderWeeks(){
+  const container = document.getElementById('weeksContainer');
+  let html = '';
+  weeksData.forEach(w=>{
+    html += '<details class="week"'+(w.n===1?' open':'')+'>';
+    html += '<summary>🗓️ Semana '+w.n+'<span class="week-avg">media ~'+w.avg+' kcal/día</span></summary>';
+    html += '<div class="weekdays">';
+    w.days.forEach(d=>{
+      html += '<div class="daycard">';
+      html += '<div class="daycard-header"><span class="dayname">'+d.day+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
+      html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+'</div>';
+      html += '<div class="meal">'+d.media+'</div>';
+      html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
+      html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
+      html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
+      html += '<div class="macrobars">';
+      html += '<div class="macrorow"><span>🥩 Prot.</span><div class="bar">'+bar('protein',d.p,MAXP)+'</div><span>'+d.p+'g</span></div>';
+      html += '<div class="macrorow"><span>🍞 Carbs</span><div class="bar">'+bar('carbs',d.c,MAXC)+'</div><span>'+d.c+'g</span></div>';
+      html += '<div class="macrorow"><span>🥑 Grasa</span><div class="bar">'+bar('fat',d.f,MAXF)+'</div><span>'+d.f+'g</span></div>';
+      html += '</div></div>';
+    });
+    html += '</div></details>';
+  });
+  container.innerHTML = html;
+}
+renderWeeks();
+
+/* ===== PWA: registro de Service Worker + banners de offline / actualización ===== */
+let swRegistration = null;
+
+function showBanner(id){ document.getElementById(id).classList.add('show'); }
+function hideBanner(id){ document.getElementById(id).classList.remove('show'); }
+
+window.addEventListener('online', ()=>hideBanner('offlineBanner'));
+window.addEventListener('offline', ()=>showBanner('offlineBanner'));
+document.addEventListener('DOMContentLoaded', ()=>{ if(!navigator.onLine) showBanner('offlineBanner'); });
+
+function applyUpdate(){
+  if(swRegistration && swRegistration.waiting){
+    swRegistration.waiting.postMessage({type:'SKIP_WAITING'});
+  }
+}
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js').then(reg=>{
+      swRegistration = reg;
+      reg.addEventListener('updatefound', ()=>{
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', ()=>{
+          if(newWorker.state === 'installed' && navigator.serviceWorker.controller){
+            showBanner('updateBanner');
+          }
+        });
+      });
+    }).catch(err=>console.warn('SW registration failed:', err));
+  });
+
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+</script>
+
+</body>
+</html>
