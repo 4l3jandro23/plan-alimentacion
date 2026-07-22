@@ -117,10 +117,11 @@
   }
   .bottomnav button{
     flex:1; background:none; border:none; display:flex; flex-direction:column;
-    align-items:center; gap:2px; font-size:.64rem; color:var(--muted);
-    padding:6px 2px 4px; font-family:inherit; cursor:pointer; font-weight:600;
+    align-items:center; gap:2px; font-size:.6rem; color:var(--muted);
+    padding:6px 1px 4px; font-family:inherit; cursor:pointer; font-weight:600;
+    min-width:0;
   }
-  .bottomnav button .ic{font-size:1.35rem; line-height:1;}
+  .bottomnav button .ic{font-size:1.25rem; line-height:1;}
   .bottomnav button.active{color:var(--accent);}
 
   /* Offline / update banners */
@@ -158,8 +159,19 @@
 
 <main>
 
+<!-- ==================== HOY ==================== -->
+<div id="tab-hoy" class="tabpanel active">
+  <h2>📆 Hoy</h2>
+  <div class="card" id="hoyDateCard">
+    <p id="hoyDate" style="margin:0 0 4px; font-size:1.05rem; font-weight:700; color:var(--accent);"></p>
+    <p id="hoyWeekLabel" style="margin:0; font-size:.85rem; color:var(--muted);"></p>
+  </div>
+  <div id="hoyTip"></div>
+  <div id="hoyContent"></div>
+</div>
+
 <!-- ==================== INICIO ==================== -->
-<div id="tab-inicio" class="tabpanel active">
+<div id="tab-inicio" class="tabpanel">
 
   <div class="statgrid">
     <div class="stat"><b>58-78</b><span>kg rango sano</span></div>
@@ -378,7 +390,8 @@
 <footer>🌱 Plan orientativo de salud general — no sustituye la valoración de tu dietista, psicóloga o médico. · Actualizado julio 2026</footer>
 
 <nav class="bottomnav" id="tabnav">
-  <button class="active" onclick="showTab('inicio', this)"><span class="ic">🏠</span>Inicio</button>
+  <button class="active" onclick="showTab('hoy', this)"><span class="ic">📆</span>Hoy</button>
+  <button onclick="showTab('inicio', this)"><span class="ic">🏠</span>Inicio</button>
   <button onclick="showTab('menu', this)"><span class="ic">📅</span>Menú</button>
   <button onclick="showTab('recetas', this)"><span class="ic">🍳</span>Recetas</button>
   <button onclick="showTab('compra', this)"><span class="ic">🛒</span>Compra</button>
@@ -480,6 +493,55 @@ function renderWeeks(){
   container.innerHTML = html;
 }
 renderWeeks();
+renderHoy();
+
+function getISOWeek(date){
+  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const dayNum = (d.getUTCDay() + 6) % 7;
+  d.setUTCDate(d.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(d.getUTCFullYear(), 0, 4));
+  const diff = (d - firstThursday) / 86400000;
+  return 1 + Math.round(diff / 7);
+}
+
+function renderHoy(){
+  const now = new Date();
+  const dayIndex = (now.getDay() + 6) % 7; // 0=Lunes ... 6=Domingo
+  const isoWeek = getISOWeek(now);
+  const cycleIndex = (isoWeek - 1) % weeksData.length;
+  const week = weeksData[cycleIndex];
+  const d = week.days[dayIndex];
+
+  const dateStr = now.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
+  const dateCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  document.getElementById('hoyDate').textContent = '📅 ' + dateCap;
+  const dayNameClean = d.day.replace(/\s*\S+$/, '').trim();
+  document.getElementById('hoyWeekLabel').textContent = 'Semana ' + week.n + ' del ciclo · ' + dayNameClean;
+
+  let tipHtml;
+  if(d.pizza){
+    tipHtml = '<div class="tip">🍕 Hoy toca la tradición de pizza de equipo en el trabajo — sin sustituirla por nada, disfrútala.</div>';
+  } else if(d.libre){
+    tipHtml = '<div class="tip">🎉 Esta noche es cena libre — disfruta sin contar nada y retoma el plan sin culpa mañana.</div>';
+  } else {
+    tipHtml = '<div class="tip">🍽️ Recuerda el método del plato en la comida (½ verdura + ¼ proteína + ¼ carbohidrato) y una cena más ligera.</div>';
+  }
+  document.getElementById('hoyTip').innerHTML = tipHtml;
+
+  let html = '<div class="daycard">';
+  html += '<div class="daycard-header"><span class="dayname">'+d.day+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
+  html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+'</div>';
+  html += '<div class="meal">'+d.media+'</div>';
+  html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
+  html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
+  html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
+  html += '<div class="macrobars">';
+  html += '<div class="macrorow"><span>🥩 Prot.</span><div class="bar">'+bar('protein',d.p,MAXP)+'</div><span>'+d.p+'g</span></div>';
+  html += '<div class="macrorow"><span>🍞 Carbs</span><div class="bar">'+bar('carbs',d.c,MAXC)+'</div><span>'+d.c+'g</span></div>';
+  html += '<div class="macrorow"><span>🥑 Grasa</span><div class="bar">'+bar('fat',d.f,MAXF)+'</div><span>'+d.f+'g</span></div>';
+  html += '</div></div>';
+  document.getElementById('hoyContent').innerHTML = html;
+}
 
 /* ===== PWA: registro de Service Worker + banners de offline / actualización ===== */
 let swRegistration = null;
