@@ -234,6 +234,7 @@
       <li>🍳 <b>Huevo</b> revuelto o tortilla francesa + tostada (fin de semana)</li>
     </ul>
     <div class="tip">🥐 La pastelería/empanadilla no desaparece — resérvala a 1-2 veces por semana. El resto de días, kéfir/yogur+fruta o tostada con jamón.</div>
+    <div class="tip">☕ <b>Tus cafés con leche:</b> uno a primera hora con el desayuno y otro a media mañana están contemplados en el plan tal cual los tomas — no hace falta contarlos aparte ni cambiarlos. Si algún día te apetece un tercero, adelante, no pasa nada.</div>
   </div>
 </div>
 
@@ -425,46 +426,62 @@ const MAXP=150, MAXC=220, MAXF=100;
 
 const weeksData = [
 { n:1, avg:1731, days:[
-  {day:"Lunes 🐟", desayuno:"🍞 Tostada integral con jamón + manzana", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón al horno con espárragos y patata", merienda:"🍫 Yogur + plátano + onza de chocolate", cena:"🐟 Merluza al horno con ajo y limón", kcal:1890,p:118,c:175,f:72},
-  {day:"Martes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pollo a la plancha con arroz integral y pimientos", merienda:"🍎 Yogur + manzana", cena:"🥚 Tortilla francesa con espinacas y tomate aliñado", kcal:1770,p:110,c:158,f:69},
-  {day:"Miércoles 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Garbanzos salteados con espinacas y taquitos de pavo", merienda:"🍎 Yogur + fruta", cena:"🦑 Calamar a la plancha con ensalada verde", kcal:1780,p:104,c:187,f:56},
-  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con verduras asadas", kcal:1830,p:116,c:166,f:67},
-  {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
-  {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Yogur o café con leche + fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
-  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Arroz con pollo y verduras (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada verde ligera", kcal:1900,p:126,c:161,f:74}
+  {day:"Lunes 🐟", desayuno:"🍞 Tostada integral con jamón + manzana", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al horno con espárragos y patata", merienda:"🍫 Yogur + plátano + onza de chocolate", cena:"🐟 Merluza al horno con ajo y limón", kcal:1890,p:118,c:175,f:72},
+  {day:"Martes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con arroz integral y pimientos", merienda:"🍎 Yogur + manzana", cena:"🥚 Tortilla francesa con espinacas y tomate aliñado", kcal:1770,p:110,c:158,f:69},
+  {day:"Miércoles 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos salteados con espinacas y taquitos de pavo", merienda:"🍎 Yogur + fruta", cena:"🦑 Calamar a la plancha con ensalada verde", kcal:1780,p:104,c:187,f:56},
+  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con verduras asadas", kcal:1830,p:116,c:166,f:67},
+  {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
+  {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Arroz con pollo y verduras (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada verde ligera", kcal:1900,p:126,c:161,f:74}
 ]},
 { n:2, avg:1740, days:[
-  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pechuga a la plancha con quinoa y verduras", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con verduras al horno", kcal:1830,p:120,c:161,f:69},
-  {day:"Martes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón al airfryer con limón y ensalada de patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🥚 Huevo escalfado con tomate y espinacas", kcal:1870,p:106,c:172,f:78},
-  {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Lentejas estofadas con verduras", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
-  {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Yogur o café con leche + fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
-  {day:"Viernes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Ensalada de arroz con atún, maíz y pimiento", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1420,p:82,c:156,f:46, libre:true},
-  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Ternera a la plancha con champiñones y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
-  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Muslitos de pollo al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1840,p:116,c:158,f:74}
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y verduras", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con verduras al horno", kcal:1830,p:120,c:161,f:69},
+  {day:"Martes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con limón y ensalada de patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🥚 Huevo escalfado con tomate y espinacas", kcal:1870,p:106,c:172,f:78},
+  {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Lentejas estofadas con verduras", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
+  {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
+  {day:"Viernes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y pimiento", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1420,p:82,c:156,f:46, libre:true},
+  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Ternera a la plancha con champiñones y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos de pollo al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1840,p:116,c:158,f:74}
 ]},
 { n:3, avg:1744, days:[
-  {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón al horno con brócoli", kcal:1830,p:106,c:186,f:63},
-  {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón a la plancha con arroz integral y verduras", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con verduras", kcal:1890,p:118,c:166,f:75},
-  {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con champiñones", kcal:1750,p:102,c:165,f:66},
-  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pavo con champiñones salteados y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
-  {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
-  {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
-  {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
+  {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón al horno con brócoli", kcal:1830,p:106,c:186,f:63},
+  {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón a la plancha con arroz integral y verduras", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con verduras", kcal:1890,p:118,c:166,f:75},
+  {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con champiñones", kcal:1750,p:102,c:165,f:66},
+  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con champiñones salteados y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
+  {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
+  {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
+  {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
 ]},
 { n:4, avg:1744, days:[
-  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Pollo a la plancha con verduras salteadas y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
-  {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
-  {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Yogur o café con leche + fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
-  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🫘 Alubias con verduras y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
-  {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍕 Viernes de pizza en el trabajo (tradición del equipo)", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
-  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
-  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Yogur o café con leche + fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con verduras salteadas y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
+  {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
+  {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
+  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con verduras y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
+  {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Viernes de pizza en el trabajo (tradición del equipo)", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
+  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}
 ]}
 ];
 
 function bar(cls,val,max){
   const pct = Math.min(100, Math.round(val/max*100));
   return '<div class="fill '+cls+'" style="width:'+pct+'%"></div>';
+}
+
+function dayCardHtml(d){
+  let html = '<div class="daycard">';
+  html += '<div class="daycard-header"><span class="dayname">'+d.day+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
+  html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+' + ☕ café con leche</div>';
+  html += '<div class="meal">'+d.media+'</div>';
+  html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
+  html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
+  html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
+  html += '<div class="macrobars">';
+  html += '<div class="macrorow"><span>🥩 Prot.</span><div class="bar">'+bar('protein',d.p,MAXP)+'</div><span>'+d.p+'g</span></div>';
+  html += '<div class="macrorow"><span>🍞 Carbs</span><div class="bar">'+bar('carbs',d.c,MAXC)+'</div><span>'+d.c+'g</span></div>';
+  html += '<div class="macrorow"><span>🥑 Grasa</span><div class="bar">'+bar('fat',d.f,MAXF)+'</div><span>'+d.f+'g</span></div>';
+  html += '</div></div>';
+  return html;
 }
 
 function renderWeeks(){
@@ -474,20 +491,7 @@ function renderWeeks(){
     html += '<details class="week"'+(w.n===1?' open':'')+'>';
     html += '<summary>🗓️ Semana '+w.n+'<span class="week-avg">media ~'+w.avg+' kcal/día</span></summary>';
     html += '<div class="weekdays">';
-    w.days.forEach(d=>{
-      html += '<div class="daycard">';
-      html += '<div class="daycard-header"><span class="dayname">'+d.day+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
-      html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+'</div>';
-      html += '<div class="meal">'+d.media+'</div>';
-      html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
-      html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
-      html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
-      html += '<div class="macrobars">';
-      html += '<div class="macrorow"><span>🥩 Prot.</span><div class="bar">'+bar('protein',d.p,MAXP)+'</div><span>'+d.p+'g</span></div>';
-      html += '<div class="macrorow"><span>🍞 Carbs</span><div class="bar">'+bar('carbs',d.c,MAXC)+'</div><span>'+d.c+'g</span></div>';
-      html += '<div class="macrorow"><span>🥑 Grasa</span><div class="bar">'+bar('fat',d.f,MAXF)+'</div><span>'+d.f+'g</span></div>';
-      html += '</div></div>';
-    });
+    w.days.forEach(d=>{ html += dayCardHtml(d); });
     html += '</div></details>';
   });
   container.innerHTML = html;
@@ -527,20 +531,7 @@ function renderHoy(){
     tipHtml = '<div class="tip">🍽️ Recuerda el método del plato en la comida (½ verdura + ¼ proteína + ¼ carbohidrato) y una cena más ligera.</div>';
   }
   document.getElementById('hoyTip').innerHTML = tipHtml;
-
-  let html = '<div class="daycard">';
-  html += '<div class="daycard-header"><span class="dayname">'+d.day+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
-  html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+'</div>';
-  html += '<div class="meal">'+d.media+'</div>';
-  html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
-  html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
-  html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
-  html += '<div class="macrobars">';
-  html += '<div class="macrorow"><span>🥩 Prot.</span><div class="bar">'+bar('protein',d.p,MAXP)+'</div><span>'+d.p+'g</span></div>';
-  html += '<div class="macrorow"><span>🍞 Carbs</span><div class="bar">'+bar('carbs',d.c,MAXC)+'</div><span>'+d.c+'g</span></div>';
-  html += '<div class="macrorow"><span>🥑 Grasa</span><div class="bar">'+bar('fat',d.f,MAXF)+'</div><span>'+d.f+'g</span></div>';
-  html += '</div></div>';
-  document.getElementById('hoyContent').innerHTML = html;
+  document.getElementById('hoyContent').innerHTML = dayCardHtml(d);
 }
 
 /* ===== PWA: registro de Service Worker + banners de offline / actualización ===== */
