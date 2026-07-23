@@ -167,6 +167,20 @@
     <p id="hoyWeekLabel" style="margin:0; font-size:.85rem; color:var(--muted);"></p>
   </div>
   <div id="hoyTip"></div>
+
+  <button id="hardDayBtn" onclick="toggleHardDay()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:14px; font-family:inherit; font-size:.88rem; font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">😮‍💨 Hoy no tengo fuerzas para esto</button>
+
+  <div id="hardDayCard" class="card" style="display:none;">
+    <h3 style="margin-top:0;">🌱 Plan mínimo de hoy</h3>
+    <p>Vale. Hoy no hace falta el menú completo — con esto es más que suficiente:</p>
+    <ul>
+      <li>🍎 Come algo de fruta o verdura, lo que tengas más a mano</li>
+      <li>💧 Un vaso de agua más de lo normal</li>
+      <li>🚶 Si te ves con fuerzas, sal a andar 10 minutos — aunque sea hasta el portal y vuelta</li>
+    </ul>
+    <div class="tip">El menú completo sigue aquí abajo tal cual, por si en algún momento del día te apetece. No hay que recuperar nada ni empezar de cero mañana — solo retomar.</div>
+  </div>
+
   <div id="hoyContent"></div>
 </div>
 
@@ -434,6 +448,14 @@ function showTab(name, btn){
   document.querySelectorAll('#tabnav button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function toggleHardDay(){
+  const card = document.getElementById('hardDayCard');
+  const btn = document.getElementById('hardDayBtn');
+  const isOpen = card.style.display !== 'none';
+  card.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '😮‍💨 Hoy no tengo fuerzas para esto' : '✅ Volver al plan de hoy';
 }
 
 function toggleTheme(){
