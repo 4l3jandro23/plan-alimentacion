@@ -109,46 +109,6 @@
   @media (max-width:480px){.shoplist{columns:1;}}
   .shoplist li{break-inside:avoid;}
 
-  /* Calendario de registro */
-  .cal-nav{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
-  .cal-nav button{background:var(--accent-soft); color:var(--accent); border:none; width:34px; height:34px; border-radius:10px; font-size:1.1rem; cursor:pointer; font-weight:700;}
-  .cal-nav span{font-weight:700; font-size:.95rem;}
-  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:5px;}
-  .cal-dow{text-align:center; font-size:.65rem; color:var(--muted); font-weight:700; padding-bottom:4px;}
-  .cal-day{
-    aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    border-radius:10px; background:var(--bg); border:1px solid var(--border); cursor:pointer;
-    font-size:.78rem; color:var(--ink); position:relative; gap:1px;
-  }
-  .cal-day.empty{background:none; border:none; cursor:default;}
-  .cal-day.today{border-color:var(--accent); border-width:2px; font-weight:700;}
-  .cal-day.selected{background:var(--accent-soft);}
-  .cal-day .dot{font-size:.85rem; line-height:1;}
-  .cal-legend{font-size:.72rem; color:var(--muted); margin-top:10px; line-height:1.8;}
-  .cal-tags{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0;}
-  .cal-tags button{
-    background:var(--bg); border:1px solid var(--border); color:var(--ink); border-radius:12px;
-    padding:6px 12px; font-size:.78rem; font-family:inherit; cursor:pointer; font-weight:600;
-  }
-  .cal-tags button.active{background:var(--accent); border-color:var(--accent); color:#fff;}
-  #calNote{
-    width:100%; border:1px solid var(--border); border-radius:12px; padding:10px 12px;
-    font-family:inherit; font-size:.85rem; background:var(--bg); color:var(--ink); resize:vertical;
-  }
-  .cal-actions{display:flex; gap:8px; margin-top:10px;}
-  .cal-actions button{
-    border:none; border-radius:12px; padding:9px 16px; font-family:inherit; font-size:.85rem;
-    font-weight:700; cursor:pointer;
-  }
-  .cal-actions .save{background:var(--accent); color:#fff;}
-  .cal-actions .delete{background:var(--warn-soft); color:var(--warn);}
-  .cal-macros-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:4px 0 6px;}
-  .cal-macros-grid label{font-size:.68rem; color:var(--muted); display:flex; flex-direction:column; gap:3px; font-weight:600;}
-  .cal-macros-grid input{
-    width:100%; border:1px solid var(--border); border-radius:8px; padding:6px 4px; text-align:center;
-    font-family:inherit; font-size:.82rem; background:var(--bg); color:var(--ink);
-  }
-
   /* Bottom tab bar (iOS style) */
   .bottomnav{
     position:fixed; bottom:0; left:0; right:0; display:flex;
@@ -203,7 +163,7 @@
 
 <!-- ==================== HOY ==================== -->
 <div id="tab-hoy" class="tabpanel active">
-  <h2>📆 Hoy</h2>
+  <h2>☀️ Hoy</h2>
   <div class="card" id="hoyDateCard">
     <p id="hoyDate" style="margin:0 0 4px; font-size:1.05rem; font-weight:700; color:var(--accent);"></p>
     <p id="hoyWeekLabel" style="margin:0; font-size:.85rem; color:var(--muted);"></p>
@@ -224,8 +184,6 @@
   </div>
 
   <div id="hoyContent"></div>
-
-  <button onclick="logToday()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-top:14px; font-family:inherit; font-size:.88rem; font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">📝 Apuntar lo de hoy</button>
 </div>
 
 <!-- ==================== INICIO ==================== -->
@@ -448,44 +406,6 @@
 
 <!-- ==================== PROGRESO ==================== -->
 <div id="tab-progreso" class="tabpanel">
-  <h2>📅 Calendario</h2>
-  <div class="card">
-    <p style="font-size:.85rem; color:var(--muted); margin-top:0;">Apunta libremente cómo te ha ido cada día, si te apetece — no hace falta rellenarlo siempre ni todos los días. Si algún día quieres más precisión, puedes copiar aquí las kcal/macros que te dé Fitia. Todo se guarda solo en este dispositivo, no se sube a ningún sitio.</p>
-    <div class="cal-nav">
-      <button onclick="calShiftMonth(-1)" aria-label="Mes anterior">‹</button>
-      <span id="calMonthLabel"></span>
-      <button onclick="calShiftMonth(1)" aria-label="Mes siguiente">›</button>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-legend">🎯 Seguido el plan &nbsp;·&nbsp; 🔄 Lo adapté &nbsp;·&nbsp; 🎉 Libre/finde &nbsp;·&nbsp; 😮‍💨 Día difícil</div>
-  </div>
-
-  <div class="card" id="calDayEditor" style="display:none;">
-    <h3 id="calDayLabel" style="margin-top:0;"></h3>
-    <div class="cal-tags" id="calTags">
-      <button data-tag="seguido" onclick="calSetTag('seguido')">🎯 Seguido</button>
-      <button data-tag="adaptado" onclick="calSetTag('adaptado')">🔄 Adaptado</button>
-      <button data-tag="libre" onclick="calSetTag('libre')">🎉 Libre</button>
-      <button data-tag="dificil" onclick="calSetTag('dificil')">😮‍💨 Difícil</button>
-    </div>
-    <textarea id="calNote" rows="3" placeholder="¿Qué has comido? Notas libres, sin presión..."></textarea>
-
-    <button id="calMacrosToggle" onclick="calToggleMacros()" style="background:none; border:none; color:var(--accent); font-family:inherit; font-size:.8rem; font-weight:700; padding:8px 0 2px; cursor:pointer;">+ Añadir kcal/macros de Fitia (opcional)</button>
-    <div id="calMacrosFields" style="display:none;">
-      <div class="cal-macros-grid">
-        <label>kcal<input type="number" id="calKcal" inputmode="numeric" min="0" placeholder="0"></label>
-        <label>Prot. (g)<input type="number" id="calP" inputmode="numeric" min="0" placeholder="0"></label>
-        <label>Carbs (g)<input type="number" id="calC" inputmode="numeric" min="0" placeholder="0"></label>
-        <label>Grasa (g)<input type="number" id="calF" inputmode="numeric" min="0" placeholder="0"></label>
-      </div>
-    </div>
-
-    <div class="cal-actions">
-      <button class="save" onclick="calSaveDay()">Guardar</button>
-      <button class="delete" id="calDeleteBtn" onclick="calDeleteDay()" style="display:none;">Borrar</button>
-    </div>
-  </div>
-
   <h2>📊 Rango de referencia y seguimiento</h2>
   <div class="card">
     <p>Para tu altura (176 cm), un rango de peso saludable orientativo (IMC 18.5-25) sería aproximadamente <b>58-78 kg</b> — el mismo cálculo que ya te indicaron en tu reconocimiento médico de feb. 2025 (peso ideal 57,35-77,19 kg). Es una referencia, no un objetivo estricto ni una fecha límite. ⏳</p>
@@ -515,7 +435,7 @@
 <footer>🌱 Plan orientativo de salud general — no sustituye la valoración de tu dietista, psicóloga o médico. · Actualizado julio 2026</footer>
 
 <nav class="bottomnav" id="tabnav">
-  <button class="active" onclick="showTab('hoy', this)"><span class="ic">📆</span>Hoy</button>
+  <button class="active" onclick="showTab('hoy', this)"><span class="ic">☀️</span>Hoy</button>
   <button onclick="showTab('inicio', this)"><span class="ic">🏠</span>Inicio</button>
   <button onclick="showTab('menu', this)"><span class="ic">📅</span>Menú</button>
   <button onclick="showTab('recetas', this)"><span class="ic">🍳</span>Recetas</button>
@@ -539,142 +459,6 @@ function toggleHardDay(){
   card.style.display = isOpen ? 'none' : 'block';
   btn.textContent = isOpen ? '😮‍💨 Hoy no tengo fuerzas para esto' : '✅ Volver al plan de hoy';
 }
-
-/* ===== Calendario de registro (localStorage, solo en este dispositivo) ===== */
-const CAL_TAGS = {seguido:'🎯', adaptado:'🔄', libre:'🎉', dificil:'😮‍💨'};
-const calState = { viewDate: new Date(), selectedKey: null, pendingTag: null };
-
-function calLoadLog(){
-  try{ return JSON.parse(localStorage.getItem('planAlimentacionLog')) || {}; }catch(e){ return {}; }
-}
-function calSaveLog(log){
-  try{ localStorage.setItem('planAlimentacionLog', JSON.stringify(log)); }catch(e){}
-}
-function calDateKey(date){
-  const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
-  return y+'-'+m+'-'+d;
-}
-
-function renderCalendar(){
-  const view = calState.viewDate;
-  const year = view.getFullYear(), month = view.getMonth();
-  const label = view.toLocaleDateString('es-ES', {month:'long', year:'numeric'});
-  document.getElementById('calMonthLabel').textContent = label.charAt(0).toUpperCase()+label.slice(1);
-
-  const log = calLoadLog();
-  const today = calDateKey(new Date());
-  const firstOfMonth = new Date(year, month, 1);
-  const startOffset = (firstOfMonth.getDay()+6)%7; // 0=Lunes
-  const daysInMonth = new Date(year, month+1, 0).getDate();
-
-  let html = '';
-  ['L','M','X','J','V','S','D'].forEach(d=>{ html += '<div class="cal-dow">'+d+'</div>'; });
-  for(let i=0;i<startOffset;i++){ html += '<div class="cal-day empty"></div>'; }
-  for(let d=1; d<=daysInMonth; d++){
-    const date = new Date(year, month, d);
-    const key = calDateKey(date);
-    const entry = log[key];
-    const classes = ['cal-day'];
-    if(key === today) classes.push('today');
-    if(key === calState.selectedKey) classes.push('selected');
-    const dotIcon = entry ? (entry.tag ? CAL_TAGS[entry.tag] : (entry.macros ? '🔢' : '•')) : '';
-    const dot = entry ? '<span class="dot">'+dotIcon+'</span>' : '';
-    const dayLabel = date.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
-    html += '<div class="'+classes.join(' ')+'" role="button" tabindex="0" aria-label="'+dayLabel+'" onclick="calSelectDay(\''+key+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();calSelectDay(\''+key+'\');}">'+d+dot+'</div>';
-  }
-  document.getElementById('calGrid').innerHTML = html;
-}
-
-function calShiftMonth(delta){
-  calState.viewDate = new Date(calState.viewDate.getFullYear(), calState.viewDate.getMonth()+delta, 1);
-  renderCalendar();
-}
-
-function calSelectDay(key){
-  calState.selectedKey = key;
-  const log = calLoadLog();
-  const entry = log[key] || {};
-  calState.pendingTag = entry.tag || null;
-
-  const [y,m,d] = key.split('-').map(Number);
-  const dateObj = new Date(y, m-1, d);
-  const dateLabel = dateObj.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
-  document.getElementById('calDayLabel').textContent = dateLabel.charAt(0).toUpperCase()+dateLabel.slice(1);
-  document.getElementById('calNote').value = entry.note || '';
-  document.querySelectorAll('#calTags button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.tag === calState.pendingTag);
-  });
-
-  const macros = entry.macros || {};
-  document.getElementById('calKcal').value = macros.kcal ?? '';
-  document.getElementById('calP').value = macros.p ?? '';
-  document.getElementById('calC').value = macros.c ?? '';
-  document.getElementById('calF').value = macros.f ?? '';
-  document.getElementById('calMacrosFields').style.display = entry.macros ? 'block' : 'none';
-  document.getElementById('calMacrosToggle').textContent = entry.macros ? '− Ocultar kcal/macros' : '+ Añadir kcal/macros de Fitia (opcional)';
-
-  document.getElementById('calDeleteBtn').style.display = (entry.tag || entry.note || entry.macros) ? 'inline-block' : 'none';
-  document.getElementById('calDayEditor').style.display = 'block';
-  renderCalendar();
-}
-
-function calSetTag(tag){
-  calState.pendingTag = (calState.pendingTag === tag) ? null : tag;
-  document.querySelectorAll('#calTags button').forEach(b=>{
-    b.classList.toggle('active', b.dataset.tag === calState.pendingTag);
-  });
-}
-
-function calToggleMacros(){
-  const fields = document.getElementById('calMacrosFields');
-  const isOpen = fields.style.display !== 'none';
-  fields.style.display = isOpen ? 'none' : 'block';
-  document.getElementById('calMacrosToggle').textContent = isOpen ? '+ Añadir kcal/macros de Fitia (opcional)' : '− Ocultar kcal/macros';
-}
-
-function calReadMacros(){
-  const num = id => {
-    const v = parseFloat(document.getElementById(id).value);
-    return isNaN(v) ? null : v;
-  };
-  const macros = { kcal: num('calKcal'), p: num('calP'), c: num('calC'), f: num('calF') };
-  const hasAny = Object.values(macros).some(v => v !== null);
-  return hasAny ? macros : null;
-}
-
-function calSaveDay(){
-  if(!calState.selectedKey) return;
-  const note = document.getElementById('calNote').value.trim();
-  const macros = calReadMacros();
-  const log = calLoadLog();
-  if(!note && !calState.pendingTag && !macros){
-    delete log[calState.selectedKey];
-  } else {
-    log[calState.selectedKey] = { tag: calState.pendingTag, note: note, macros: macros };
-  }
-  calSaveLog(log);
-  calSelectDay(calState.selectedKey);
-}
-
-function calDeleteDay(){
-  if(!calState.selectedKey) return;
-  const log = calLoadLog();
-  delete log[calState.selectedKey];
-  calSaveLog(log);
-  document.getElementById('calNote').value = '';
-  calState.pendingTag = null;
-  calSelectDay(calState.selectedKey);
-}
-
-function logToday(){
-  const progresoBtn = Array.from(document.querySelectorAll('#tabnav button')).find(b => b.textContent.includes('Progreso'));
-  showTab('progreso', progresoBtn);
-  calState.viewDate = new Date();
-  calSelectDay(calDateKey(new Date()));
-  setTimeout(()=>{ document.getElementById('calDayEditor').scrollIntoView({behavior:'smooth', block:'start'}); }, 150);
-}
-
-renderCalendar();
 
 function toggleTheme(){
   const isDark = document.documentElement.classList.toggle('dark');
@@ -786,7 +570,7 @@ function renderHoy(){
 
   const dateStr = now.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
   const dateCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-  document.getElementById('hoyDate').textContent = '📅 ' + dateCap;
+  document.getElementById('hoyDate').textContent = dateCap;
   const dayNameClean = d.day.replace(/\s*\S+$/, '').trim();
   document.getElementById('hoyWeekLabel').textContent = 'Semana ' + week.n + ' del ciclo · ' + dayNameClean;
 
