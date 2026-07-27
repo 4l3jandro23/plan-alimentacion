@@ -142,6 +142,12 @@
   }
   .cal-actions .save{background:var(--accent); color:#fff;}
   .cal-actions .delete{background:var(--warn-soft); color:var(--warn);}
+  .cal-macros-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:4px 0 6px;}
+  .cal-macros-grid label{font-size:.68rem; color:var(--muted); display:flex; flex-direction:column; gap:3px; font-weight:600;}
+  .cal-macros-grid input{
+    width:100%; border:1px solid var(--border); border-radius:8px; padding:6px 4px; text-align:center;
+    font-family:inherit; font-size:.82rem; background:var(--bg); color:var(--ink);
+  }
 
   /* Bottom tab bar (iOS style) */
   .bottomnav{
@@ -444,7 +450,7 @@
 <div id="tab-progreso" class="tabpanel">
   <h2>📅 Calendario</h2>
   <div class="card">
-    <p style="font-size:.85rem; color:var(--muted); margin-top:0;">Apunta libremente cómo te ha ido cada día, si te apetece — no hace falta rellenarlo siempre ni todos los días. Se guarda solo en este dispositivo, no se sube a ningún sitio.</p>
+    <p style="font-size:.85rem; color:var(--muted); margin-top:0;">Apunta libremente cómo te ha ido cada día, si te apetece — no hace falta rellenarlo siempre ni todos los días. Si algún día quieres más precisión, puedes copiar aquí las kcal/macros que te dé Fitia. Todo se guarda solo en este dispositivo, no se sube a ningún sitio.</p>
     <div class="cal-nav">
       <button onclick="calShiftMonth(-1)" aria-label="Mes anterior">‹</button>
       <span id="calMonthLabel"></span>
@@ -463,6 +469,17 @@
       <button data-tag="dificil" onclick="calSetTag('dificil')">😮‍💨 Difícil</button>
     </div>
     <textarea id="calNote" rows="3" placeholder="¿Qué has comido? Notas libres, sin presión..."></textarea>
+
+    <button id="calMacrosToggle" onclick="calToggleMacros()" style="background:none; border:none; color:var(--accent); font-family:inherit; font-size:.8rem; font-weight:700; padding:8px 0 2px; cursor:pointer;">+ Añadir kcal/macros de Fitia (opcional)</button>
+    <div id="calMacrosFields" style="display:none;">
+      <div class="cal-macros-grid">
+        <label>kcal<input type="number" id="calKcal" inputmode="numeric" min="0" placeholder="0"></label>
+        <label>Prot. (g)<input type="number" id="calP" inputmode="numeric" min="0" placeholder="0"></label>
+        <label>Carbs (g)<input type="number" id="calC" inputmode="numeric" min="0" placeholder="0"></label>
+        <label>Grasa (g)<input type="number" id="calF" inputmode="numeric" min="0" placeholder="0"></label>
+      </div>
+    </div>
+
     <div class="cal-actions">
       <button class="save" onclick="calSaveDay()">Guardar</button>
       <button class="delete" id="calDeleteBtn" onclick="calDeleteDay()" style="display:none;">Borrar</button>
@@ -560,7 +577,8 @@ function renderCalendar(){
     const classes = ['cal-day'];
     if(key === today) classes.push('today');
     if(key === calState.selectedKey) classes.push('selected');
-    const dot = entry ? '<span class="dot">'+(entry.tag ? CAL_TAGS[entry.tag] : '•')+'</span>' : '';
+    const dotIcon = entry ? (entry.tag ? CAL_TAGS[entry.tag] : (entry.macros ? '🔢' : '•')) : '';
+    const dot = entry ? '<span class="dot">'+dotIcon+'</span>' : '';
     const dayLabel = date.toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long'});
     html += '<div class="'+classes.join(' ')+'" role="button" tabindex="0" aria-label="'+dayLabel+'" onclick="calSelectDay(\''+key+'\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();calSelectDay(\''+key+'\');}">'+d+dot+'</div>';
   }
@@ -586,7 +604,16 @@ function calSelectDay(key){
   document.querySelectorAll('#calTags button').forEach(b=>{
     b.classList.toggle('active', b.dataset.tag === calState.pendingTag);
   });
-  document.getElementById('calDeleteBtn').style.display = (entry.tag || entry.note) ? 'inline-block' : 'none';
+
+  const macros = entry.macros || {};
+  document.getElementById('calKcal').value = macros.kcal ?? '';
+  document.getElementById('calP').value = macros.p ?? '';
+  document.getElementById('calC').value = macros.c ?? '';
+  document.getElementById('calF').value = macros.f ?? '';
+  document.getElementById('calMacrosFields').style.display = entry.macros ? 'block' : 'none';
+  document.getElementById('calMacrosToggle').textContent = entry.macros ? '− Ocultar kcal/macros' : '+ Añadir kcal/macros de Fitia (opcional)';
+
+  document.getElementById('calDeleteBtn').style.display = (entry.tag || entry.note || entry.macros) ? 'inline-block' : 'none';
   document.getElementById('calDayEditor').style.display = 'block';
   renderCalendar();
 }
@@ -598,14 +625,32 @@ function calSetTag(tag){
   });
 }
 
+function calToggleMacros(){
+  const fields = document.getElementById('calMacrosFields');
+  const isOpen = fields.style.display !== 'none';
+  fields.style.display = isOpen ? 'none' : 'block';
+  document.getElementById('calMacrosToggle').textContent = isOpen ? '+ Añadir kcal/macros de Fitia (opcional)' : '− Ocultar kcal/macros';
+}
+
+function calReadMacros(){
+  const num = id => {
+    const v = parseFloat(document.getElementById(id).value);
+    return isNaN(v) ? null : v;
+  };
+  const macros = { kcal: num('calKcal'), p: num('calP'), c: num('calC'), f: num('calF') };
+  const hasAny = Object.values(macros).some(v => v !== null);
+  return hasAny ? macros : null;
+}
+
 function calSaveDay(){
   if(!calState.selectedKey) return;
   const note = document.getElementById('calNote').value.trim();
+  const macros = calReadMacros();
   const log = calLoadLog();
-  if(!note && !calState.pendingTag){
+  if(!note && !calState.pendingTag && !macros){
     delete log[calState.selectedKey];
   } else {
-    log[calState.selectedKey] = { tag: calState.pendingTag, note: note };
+    log[calState.selectedKey] = { tag: calState.pendingTag, note: note, macros: macros };
   }
   calSaveLog(log);
   calSelectDay(calState.selectedKey);
