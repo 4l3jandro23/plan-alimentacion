@@ -55,10 +55,14 @@
     overscroll-behavior-y:contain;
   }
   header{
-    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;
-    padding:calc(18px + env(safe-area-inset-top)) 18px 20px;
-    position:sticky; top:0; z-index:20; box-shadow:0 2px 10px rgba(0,0,0,.15);
-    border-radius:0 0 22px 22px;
+    background:
+      radial-gradient(circle at 88% -20%, rgba(255,255,255,.22), transparent 55%),
+      radial-gradient(circle at -10% 120%, rgba(255,255,255,.12), transparent 50%),
+      linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;
+    padding:calc(18px + env(safe-area-inset-top)) 18px 22px;
+    position:sticky; top:0; z-index:20; box-shadow:0 4px 16px rgba(0,0,0,.16);
+    border-radius:0 0 26px 26px;
   }
   .headtop{display:flex; justify-content:space-between; align-items:center;}
   header h1{margin:0 0 4px; font-size:1.3rem;}
@@ -101,7 +105,13 @@
   .tabpanel{display:none; animation:fade .25s ease;}
   .tabpanel.active{display:block;}
   @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
-  h2{font-size:1.15rem; color:var(--accent); margin:0 0 14px; display:flex; align-items:center; gap:6px;}
+  h2{font-size:1.1rem; color:var(--ink); margin:0 0 14px; display:flex; align-items:center; gap:10px; letter-spacing:-.1px;}
+  .h2-badge{
+    display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+    width:34px; height:34px; border-radius:12px; background:var(--accent-soft);
+    font-size:1.05rem; box-shadow:inset 0 0 0 1px rgba(0,0,0,.03);
+  }
+  html.dark .h2-badge{ box-shadow:none; }
   h3{font-size:1rem; margin:18px 0 8px;}
   .card{
     background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
@@ -123,12 +133,18 @@
 
   /* Stat cards */
   .statgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:4px 0 18px;}
-  .stat{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 6px; text-align:center; box-shadow:var(--shadow);}
-  .stat b{display:block; font-size:1.15rem; color:var(--accent); margin-bottom:2px;}
+  .stat{background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px 6px; text-align:center; box-shadow:var(--shadow); transition:transform .15s;}
+  .stat b{display:block; font-size:1.2rem; margin-bottom:2px;}
   .stat span{font-size:.66rem; color:var(--muted); line-height:1.2; display:block;}
+  .stat:nth-child(1) b{color:var(--accent);}
+  .stat:nth-child(2) b{color:var(--warn);}
+  .stat:nth-child(3) b{color:var(--fat);}
 
   details{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:10px; box-shadow:var(--shadow); overflow:hidden;}
-  details summary{padding:14px 16px; cursor:pointer; font-weight:700; font-size:.95rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  details summary{padding:14px 16px; cursor:pointer; font-weight:700; font-size:.95rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:8px; transition:background .15s;}
+  details summary:active{background:var(--accent-soft);}
+  button:active{transform:scale(.96); transition:transform .1s;}
+  .bottomnav button:active{transform:none;}
   details summary::-webkit-details-marker{display:none;}
   details summary::after{content:"⌄"; color:var(--accent); font-size:1.2rem; transition:transform .2s; flex-shrink:0;}
   details[open] summary::after{transform:rotate(180deg);}
@@ -154,9 +170,13 @@
   .pizza-tag{background:#ffe3c2; color:#8a4b00; padding:2px 8px; border-radius:10px; font-size:.7rem; font-weight:600;}
   html.dark .pizza-tag{background:#4a3418; color:#ffb96b;}
 
-  .shoplist{columns:2; column-gap:20px;}
+  .shoplist{columns:2; column-gap:20px; list-style:none; padding:0;}
   @media (max-width:480px){.shoplist{columns:1;}}
   .shoplist li{break-inside:avoid;}
+  .shop-item{display:flex; align-items:center; gap:8px; padding:5px 0; cursor:pointer; font-size:.92rem;}
+  .shop-item input{width:18px; height:18px; accent-color:var(--accent); flex-shrink:0; cursor:pointer;}
+  .shop-item.checked span{color:var(--muted); text-decoration:line-through;}
+  .shop-clear{background:none; border:none; color:var(--accent); font-family:inherit; font-size:.78rem; font-weight:700; cursor:pointer; padding:8px 0 0; display:block;}
 
   /* Bottom tab bar (iOS style) */
   .bottomnav{
@@ -250,12 +270,17 @@
 
     <div class="settings-row">
       <div>🏖️ Vacaciones</div>
-      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Mientras dure, Hoy te recuerda que no hace falta seguir el menú.</p>
-      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Mientras duren, Hoy se adapta según qué tipo de vacaciones sean.</p>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
         <label style="font-size:.78rem; color:var(--muted);">Desde <input type="date" id="vacStart" onchange="saveVacation()" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
         <label style="font-size:.78rem; color:var(--muted);">Hasta <input type="date" id="vacEnd" onchange="saveVacation()" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
-        <button onclick="clearVacation()" style="background:var(--warn-soft); color:var(--warn); border:none; border-radius:8px; padding:6px 10px; font-family:inherit; font-size:.78rem; font-weight:600; cursor:pointer;">Quitar</button>
       </div>
+      <div class="style-options" id="vacTipo">
+        <button class="style-opt" data-tipo="descansando" onclick="setVacTipo('descansando')">🛋️ Descansando</button>
+        <button class="style-opt" data-tipo="viaje" onclick="setVacTipo('viaje')">🧳 De viaje</button>
+        <button class="style-opt" data-tipo="otro" onclick="setVacTipo('otro')">📌 Otro</button>
+      </div>
+      <button onclick="clearVacation()" style="margin-top:10px; background:var(--warn-soft); color:var(--warn); border:none; border-radius:8px; padding:6px 10px; font-family:inherit; font-size:.78rem; font-weight:600; cursor:pointer;">Quitar vacaciones</button>
     </div>
 
     <button class="settings-close" onclick="closeSettings()">Listo</button>
@@ -307,7 +332,7 @@
 
   <h2>🍕 Tradiciones que respetamos</h2>
   <div class="card">
-    <p><b>Último viernes de mes:</b> pizza en el trabajo con el equipo 🍕 — está integrado en la semana 4 del menú como tu comida de ese día, sin sustituirlo por otra cosa ni sentir que "rompes" nada. Si el último viernes real no coincide con la semana 4 al repetir el ciclo cada mes, simplemente mueve la pizza a ese viernes.</p>
+    <p><b>Último viernes laboral de mes:</b> comida de equipo en el trabajo 🍕 — pizza (Papa John's), hamburguesa o milanesas del Chalito, según toque ese mes. Está integrado en la semana 4 del menú como tu comida de ese día, sin sustituirlo por otra cosa ni sentir que "rompes" nada. Si el último viernes real no coincide con la semana 4 al repetir el ciclo cada mes, simplemente mueve esta comida a ese viernes.</p>
     <p><b>Cena libre de finde:</b> los <b>viernes noche</b> y los <b>sábados noche</b> son cena libre todas las semanas 🎉 — disfruta sin contar nada, y retoma el plan el domingo o el lunes sin culpa.</p>
   </div>
 
@@ -480,33 +505,21 @@
 
   <div class="card">
     <h3>🏠 Despensa base (dura semanas)</h3>
-    <ul class="shoplist">
-      <li>🫒 Aceite de oliva virgen extra</li>
-      <li>🫘 Legumbres de bote</li>
-      <li>🐟 Atún en lata</li>
-      <li>🍚 Arroz y pasta integral</li>
-      <li>🌾 Avena</li>
-      <li>🍞 Pan de molde integral (congelado)</li>
-      <li>🥜 Frutos secos</li>
-      <li>🧂 Ajo en polvo, pimentón, orégano</li>
-      <li>🥚 Huevos</li>
-      <li>🥦 Verdura congelada</li>
-      <li>🍫 Chocolate negro</li>
-      <li>☕ Café y leche semidesnatada</li>
-    </ul>
+    <ul class="shoplist" id="despensaList"></ul>
+    <button class="shop-clear" onclick="clearShopList('despensa')">Desmarcar todo</button>
   </div>
 
   <details><summary>🗓️ Semana 1 — fresco a comprar</summary>
-    <div class="content"><p>Salmón congelado (2 raciones), merluza, pechuga de pollo, muslos de pollo, pavo, calamar y pulpo, solomillo de cerdo, espárragos, espinacas, pimientos, champiñones, ensalada, tomate, patata, fruta variada (poca cantidad, 2-3 días vista).</p></div>
+    <div class="content"><ul class="shoplist" id="frescoList1"></ul><button class="shop-clear" onclick="clearShopList('fresco1')">Desmarcar todo</button></div>
   </details>
   <details><summary>🗓️ Semana 2 — fresco a comprar</summary>
-    <div class="content"><p>Pechuga de pollo, salmón, pulpo, bacalao, ternera, calamar, muslos de pollo, pimiento, champiñón, espinaca, brócoli, patata, fruta variada.</p></div>
+    <div class="content"><ul class="shoplist" id="frescoList2"></ul><button class="shop-clear" onclick="clearShopList('fresco2')">Desmarcar todo</button></div>
   </details>
   <details><summary>🗓️ Semana 3 — fresco a comprar</summary>
-    <div class="content"><p>Salmón, calamar, pavo, merluza, ternera, sardinas, verduras variadas (pimiento, champiñón, brócoli, ensalada), patata, fruta variada.</p></div>
+    <div class="content"><ul class="shoplist" id="frescoList3"></ul><button class="shop-clear" onclick="clearShopList('fresco3')">Desmarcar todo</button></div>
   </details>
   <details><summary>🗓️ Semana 4 — fresco a comprar</summary>
-    <div class="content"><p>Pollo, pulpo, salmón, calamar, cerdo, merluza, verduras variadas, patata, fruta variada. (Viernes: pizza en el trabajo, no hace falta comprar nada para ese día).</p></div>
+    <div class="content"><ul class="shoplist" id="frescoList4"></ul><button class="shop-clear" onclick="clearShopList('fresco4')">Desmarcar todo</button><p style="font-size:.82rem; color:var(--muted); margin-top:8px;">Viernes: comida de equipo en el trabajo — pizza, hamburguesa o milanesas —, no hace falta comprar nada para ese día.</p></div>
   </details>
 </div>
 
@@ -626,15 +639,33 @@ function loadVacation(){
 function saveVacation(){
   const start = document.getElementById('vacStart').value;
   const end = document.getElementById('vacEnd').value;
+  const prev = loadVacation();
+  const tipo = (prev && prev.tipo) || 'descansando';
   if(start && end){
-    try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify({start, end})); }catch(e){}
+    try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify({start, end, tipo})); }catch(e){}
   }
+  renderVacTipoButtons();
   renderHoy();
+}
+function setVacTipo(tipo){
+  const vac = loadVacation() || {};
+  vac.tipo = tipo;
+  try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify(vac)); }catch(e){}
+  renderVacTipoButtons();
+  renderHoy();
+}
+function renderVacTipoButtons(){
+  const vac = loadVacation();
+  const tipo = (vac && vac.tipo) || 'descansando';
+  document.querySelectorAll('#vacTipo .style-opt').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tipo === tipo);
+  });
 }
 function clearVacation(){
   document.getElementById('vacStart').value = '';
   document.getElementById('vacEnd').value = '';
   try{ localStorage.removeItem('planAlimentacionVacaciones'); }catch(e){}
+  renderVacTipoButtons();
   renderHoy();
 }
 function isVacationToday(){
@@ -642,6 +673,11 @@ function isVacationToday(){
   if(!vac || !vac.start || !vac.end) return false;
   const todayKey = calDateKeyLocal(new Date());
   return todayKey >= vac.start && todayKey <= vac.end;
+}
+function vacationTipoToday(){
+  if(!isVacationToday()) return null;
+  const vac = loadVacation();
+  return (vac && vac.tipo) || 'descansando';
 }
 function calDateKeyLocal(date){
   const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
@@ -667,8 +703,50 @@ function calDateKeyLocal(date){
       document.getElementById('vacStart').value = vac.start || '';
       document.getElementById('vacEnd').value = vac.end || '';
     }
+    renderVacTipoButtons();
   });
 })();
+
+/* ===== Listas de la compra con checkbox (localStorage) ===== */
+const SHOP_LISTS = {
+  despensa: ['🫒 Aceite de oliva virgen extra','🫘 Legumbres de bote','🐟 Atún en lata','🍚 Arroz y pasta integral','🌾 Avena','🍞 Pan de molde integral (congelado)','🥜 Frutos secos','🧂 Ajo en polvo, pimentón, orégano','🥚 Huevos','🥦 Verdura congelada','🍫 Chocolate negro','☕ Café y leche semidesnatada'],
+  fresco1: ['Salmón congelado (2 raciones)','Merluza','Pechuga de pollo','Muslos de pollo','Pavo','Calamar','Pulpo','Solomillo de cerdo','Espárragos','Espinacas','Pimientos','Champiñones','Ensalada','Tomate','Patata','Fruta variada (poca cantidad, 2-3 días vista)'],
+  fresco2: ['Pechuga de pollo','Salmón','Pulpo','Bacalao','Ternera','Calamar','Muslos de pollo','Pimiento','Champiñón','Espinaca','Brócoli','Patata','Fruta variada'],
+  fresco3: ['Salmón','Calamar','Pavo','Merluza','Ternera','Sardinas','Pimiento','Champiñón','Brócoli','Ensalada','Patata','Fruta variada'],
+  fresco4: ['Pollo','Pulpo','Salmón','Calamar','Cerdo','Merluza','Verduras variadas','Patata','Fruta variada']
+};
+const SHOP_LIST_ELS = { despensa:'despensaList', fresco1:'frescoList1', fresco2:'frescoList2', fresco3:'frescoList3', fresco4:'frescoList4' };
+
+function loadShopChecked(key){
+  try{ return JSON.parse(localStorage.getItem('planAlimentacionShop_'+key)) || []; }catch(e){ return []; }
+}
+function saveShopChecked(key, arr){
+  try{ localStorage.setItem('planAlimentacionShop_'+key, JSON.stringify(arr)); }catch(e){}
+}
+function toggleShopItem(key, item){
+  let checked = loadShopChecked(key);
+  checked = checked.includes(item) ? checked.filter(i=>i!==item) : [...checked, item];
+  saveShopChecked(key, checked);
+  renderShopList(key);
+}
+function clearShopList(key){
+  saveShopChecked(key, []);
+  renderShopList(key);
+}
+function renderShopList(key){
+  const items = SHOP_LISTS[key];
+  const checked = loadShopChecked(key);
+  const container = document.getElementById(SHOP_LIST_ELS[key]);
+  if(!container) return;
+  container.innerHTML = items.map(item=>{
+    const isChecked = checked.includes(item);
+    return '<li><label class="shop-item'+(isChecked?' checked':'')+'"><input type="checkbox" '+(isChecked?'checked':'')+' onchange="toggleShopItem(\''+key+'\', '+JSON.stringify(item).replace(/"/g,'&quot;')+')"><span>'+item+'</span></label></li>';
+  }).join('');
+}
+function renderAllShopLists(){
+  Object.keys(SHOP_LISTS).forEach(renderShopList);
+}
+renderAllShopLists();
 
 const MAXP=150, MAXC=220, MAXF=100;
 
@@ -705,7 +783,7 @@ const weeksData = [
   {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
   {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
   {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con verduras y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
-  {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Viernes de pizza en el trabajo (tradición del equipo)", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
+  {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}
 ]}
@@ -746,6 +824,20 @@ function renderWeeks(){
 }
 renderWeeks();
 renderHoy();
+badgeifyHeadings();
+
+function badgeifyHeadings(){
+  const emojiRe = /^(\p{Extended_Pictographic}️?)\s*/u;
+  document.querySelectorAll('main h2').forEach(h=>{
+    if(h.querySelector('.h2-badge')) return;
+    const text = h.textContent;
+    const match = text.match(emojiRe);
+    if(!match) return;
+    const emoji = match[1];
+    const rest = text.slice(match[0].length);
+    h.innerHTML = '<span class="h2-badge">'+emoji+'</span><span>'+rest+'</span>';
+  });
+}
 
 function getISOWeek(date){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -770,21 +862,40 @@ function renderHoy(){
   const dayNameClean = d.day.replace(/\s*\S+$/, '').trim();
   document.getElementById('hoyWeekLabel').textContent = 'Semana ' + week.n + ' del ciclo · ' + dayNameClean;
 
+  const vacTipo = vacationTipoToday();
   let tipHtml = '';
-  if(isVacationToday()){
-    tipHtml += '<div class="tip">🏖️ Estás de vacaciones — no hace falta que sigas el menú si no quieres. Disfruta sin culpa, el plan te espera cuando vuelvas.</div>';
-  } else if(loadWfhDays().includes(dayIndex)){
-    tipHtml += '<div class="tip">🏠 Hoy teletrabajas — tienes más margen para cocinar algo fresco si te apetece, no hace falta que sea tupper.</div>';
+  let contentHtml = '';
+
+  if(vacTipo === 'viaje'){
+    tipHtml = '<div class="tip">🧳 Estás de viaje — olvídate del menú de hoy, no tiene sentido con lo que tengas disponible. Disfruta el viaje, el plan te espera igual cuando vuelvas.</div>';
+    contentHtml = '<div class="card"><h3 style="margin-top:0;">🧳 Fuera de rutina</h3>'
+      + '<p>No hace falta pensar en esto mientras viajas. Si en algún momento quieres tenerlo en cuenta, sin obsesionarte:</p>'
+      + '<ul><li>🥩 Prioriza proteína cuando puedas (carne, pescado, huevo, legumbre)</li>'
+      + '<li>💧 Agua antes que refrescos, sobre todo si hace calor</li>'
+      + '<li>🚶 Camina lo que te apetezca — ya cuenta</li>'
+      + '<li>🍕 Disfruta la comida del sitio, para eso viajas</li></ul></div>';
+  } else if(vacTipo === 'descansando'){
+    tipHtml = '<div class="tip">🛋️ Vacaciones en casa — no hace falta que sigas el menú al pie de la letra. Si te apetece, es buen momento para probar alguna receta nueva de la pestaña Recetas, sin prisa.</div>';
+    contentHtml = dayCardHtml(d);
+  } else if(vacTipo === 'otro'){
+    tipHtml = '<div class="tip">🏖️ Estás de vacaciones — no hace falta que sigas el menú si no quieres. Disfruta sin culpa, el plan te espera cuando vuelvas.</div>';
+    contentHtml = dayCardHtml(d);
+  } else {
+    if(loadWfhDays().includes(dayIndex)){
+      tipHtml += '<div class="tip">🏠 Hoy teletrabajas: nada de tupper, cocina la comida fresca a mediodía tranquilamente en casa.</div>';
+    }
+    if(d.pizza){
+      tipHtml += '<div class="tip">🍕 Hoy toca la comida de equipo del trabajo (pizza, hamburguesa o milanesas, según toque) — sin sustituirla por nada, disfrútala.</div>';
+    } else if(d.libre){
+      tipHtml += '<div class="tip">🎉 Esta noche es cena libre — disfruta sin contar nada y retoma el plan sin culpa mañana.</div>';
+    } else {
+      tipHtml += '<div class="tip">🍽️ Recuerda el método del plato en la comida (½ verdura + ¼ proteína + ¼ carbohidrato) y una cena más ligera.</div>';
+    }
+    contentHtml = dayCardHtml(d);
   }
-  if(d.pizza){
-    tipHtml += '<div class="tip">🍕 Hoy toca la tradición de pizza de equipo en el trabajo — sin sustituirla por nada, disfrútala.</div>';
-  } else if(d.libre){
-    tipHtml += '<div class="tip">🎉 Esta noche es cena libre — disfruta sin contar nada y retoma el plan sin culpa mañana.</div>';
-  } else if(!isVacationToday()){
-    tipHtml += '<div class="tip">🍽️ Recuerda el método del plato en la comida (½ verdura + ¼ proteína + ¼ carbohidrato) y una cena más ligera.</div>';
-  }
+
   document.getElementById('hoyTip').innerHTML = tipHtml;
-  document.getElementById('hoyContent').innerHTML = dayCardHtml(d);
+  document.getElementById('hoyContent').innerHTML = contentHtml;
 }
 
 /* ===== PWA: registro de Service Worker + banners de offline / actualización ===== */
