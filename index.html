@@ -644,6 +644,7 @@ function setColor(color){
   document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
     s.classList.toggle('active', s.dataset.color === color);
   });
+  pushSync();
 }
 function setStyle(style){
   document.documentElement.setAttribute('data-style', style);
@@ -651,6 +652,7 @@ function setStyle(style){
   document.querySelectorAll('#styleOptions .style-opt').forEach(b=>{
     b.classList.toggle('active', b.dataset.style === style);
   });
+  pushSync();
 }
 
 function loadWfhDays(){
@@ -662,6 +664,7 @@ function toggleWfhDay(day){
   try{ localStorage.setItem('planAlimentacionWfh', JSON.stringify(days)); }catch(e){}
   renderWfhButtons();
   renderHoy();
+  pushSync();
 }
 function renderWfhButtons(){
   const days = loadWfhDays();
@@ -683,6 +686,7 @@ function saveVacation(){
   }
   renderVacTipoButtons();
   renderHoy();
+  pushSync();
 }
 function setVacTipo(tipo){
   const vac = loadVacation() || {};
@@ -690,6 +694,7 @@ function setVacTipo(tipo){
   try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify(vac)); }catch(e){}
   renderVacTipoButtons();
   renderHoy();
+  pushSync();
 }
 function renderVacTipoButtons(){
   const vac = loadVacation();
@@ -704,6 +709,7 @@ function clearVacation(){
   try{ localStorage.removeItem('planAlimentacionVacaciones'); }catch(e){}
   renderVacTipoButtons();
   renderHoy();
+  pushSync();
 }
 function isVacationToday(){
   const vac = loadVacation();
@@ -765,10 +771,12 @@ function toggleShopItem(key, item){
   checked = checked.includes(item) ? checked.filter(i=>i!==item) : [...checked, item];
   saveShopChecked(key, checked);
   renderShopList(key);
+  pushSync();
 }
 function clearShopList(key){
   saveShopChecked(key, []);
   renderShopList(key);
+  pushSync();
 }
 function renderShopList(key){
   const items = SHOP_LISTS[key];
@@ -784,6 +792,88 @@ function renderAllShopLists(){
   Object.keys(SHOP_LISTS).forEach(renderShopList);
 }
 renderAllShopLists();
+
+/* ===== Sincronización entre dispositivos (Supabase) ===== */
+const SUPABASE_URL = 'https://ibouktzmckphsvqabgig.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_8pdb7ItwgBzII8SMsdWjzA_kunVAiq5';
+const SYNC_KEYS = [
+  'planAlimentacionColor','planAlimentacionStyle','planAlimentacionWfh','planAlimentacionVacaciones',
+  'planAlimentacionShop_despensa','planAlimentacionShop_fresco1','planAlimentacionShop_fresco2',
+  'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4'
+];
+let syncPushTimer = null;
+
+function collectSyncState(){
+  const state = {};
+  SYNC_KEYS.forEach(k=>{
+    const v = localStorage.getItem(k);
+    if(v !== null) state[k] = v;
+  });
+  return state;
+}
+function applySyncState(state){
+  if(!state) return;
+  SYNC_KEYS.forEach(k=>{
+    if(Object.prototype.hasOwnProperty.call(state, k)){
+      try{ localStorage.setItem(k, state[k]); }catch(e){}
+    }
+  });
+}
+function rerenderAfterSync(){
+  const color = localStorage.getItem('planAlimentacionColor') || '';
+  const style = localStorage.getItem('planAlimentacionStyle') || '';
+  document.documentElement.setAttribute('data-color', color);
+  document.documentElement.setAttribute('data-style', style);
+  document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
+    s.classList.toggle('active', s.dataset.color === color);
+  });
+  document.querySelectorAll('#styleOptions .style-opt').forEach(b=>{
+    b.classList.toggle('active', b.dataset.style === style);
+  });
+  renderWfhButtons();
+  const vac = loadVacation();
+  if(document.getElementById('vacStart')){
+    document.getElementById('vacStart').value = (vac && vac.start) || '';
+    document.getElementById('vacEnd').value = (vac && vac.end) || '';
+  }
+  renderVacTipoButtons();
+  renderAllShopLists();
+  renderHoy();
+}
+
+function pushSync(){
+  clearTimeout(syncPushTimer);
+  syncPushTimer = setTimeout(()=>{
+    const body = { id: 1, data: JSON.stringify(collectSyncState()) };
+    fetch(SUPABASE_URL + '/rest/v1/estado?on_conflict=id', {
+      method: 'POST',
+      cache: 'no-store',
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify(body)
+    }).catch(()=>{ /* sin conexión: se queda solo en local, no pasa nada */ });
+  }, 500);
+}
+
+async function pullSync(){
+  try{
+    const res = await fetch(SUPABASE_URL + '/rest/v1/estado?id=eq.1&select=data', {
+      cache: 'no-store',
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Cache-Control': 'no-cache' }
+    });
+    if(!res.ok) return;
+    const rows = await res.json();
+    if(!rows || !rows[0] || !rows[0].data) return;
+    const remoteState = JSON.parse(rows[0].data);
+    applySyncState(remoteState);
+    rerenderAfterSync();
+  }catch(e){ /* sin conexión o primera vez sin datos remotos: seguimos con lo local */ }
+}
+pullSync();
 
 const MAXP=150, MAXC=220, MAXF=100;
 
