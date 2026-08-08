@@ -264,13 +264,31 @@
 
     <div class="settings-row">
       <div>🏠 Días de teletrabajo</div>
-      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Marca los que apliquen — puedes tocar varios a la vez (ej. martes y jueves). Hoy te avisará esos días de que tienes más margen para cocinar algo fresco en vez de tupper.</p>
+      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Marca los que apliquen cada semana — puedes tocar varios a la vez (ej. martes y jueves).</p>
       <div class="style-options" id="wfhDays">
         <button class="style-opt" data-day="0" onclick="toggleWfhDay(0)">L</button>
         <button class="style-opt" data-day="1" onclick="toggleWfhDay(1)">M</button>
         <button class="style-opt" data-day="2" onclick="toggleWfhDay(2)">X</button>
         <button class="style-opt" data-day="3" onclick="toggleWfhDay(3)">J</button>
         <button class="style-opt" data-day="4" onclick="toggleWfhDay(4)">V</button>
+      </div>
+      <p style="font-size:.78rem; color:var(--muted); margin:10px 0 6px;">O añade un día suelto de teletrabajo puntual (aunque no sea tu día fijo):</p>
+      <div id="wfhDateList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:8px;"></div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <input type="date" id="wfhDateInput" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink); font-size:.78rem;">
+        <button onclick="addWfhDate()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-family:inherit; font-size:.78rem; font-weight:700; cursor:pointer;">+ Añadir</button>
+      </div>
+    </div>
+
+    <div class="settings-row">
+      <div>🥗 Días de bowl (Ametller Origen)</div>
+      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Los días que marques, Hoy sabe que no hace falta tupper porque comes el bowl.</p>
+      <div class="style-options" id="bowlDays">
+        <button class="style-opt" data-day="0" onclick="toggleBowlDay(0)">L</button>
+        <button class="style-opt" data-day="1" onclick="toggleBowlDay(1)">M</button>
+        <button class="style-opt" data-day="2" onclick="toggleBowlDay(2)">X</button>
+        <button class="style-opt" data-day="3" onclick="toggleBowlDay(3)">J</button>
+        <button class="style-opt" data-day="4" onclick="toggleBowlDay(4)">V</button>
       </div>
     </div>
 
@@ -663,6 +681,8 @@ function resetAllSettings(){
   setColor('');
   setStyle('');
   document.querySelectorAll('#wfhDays .style-opt').forEach(b=>b.classList.remove('active'));
+  renderWfhDateList();
+  document.querySelectorAll('#bowlDays .style-opt').forEach(b=>b.classList.remove('active'));
   renderVacationList();
   renderAllShopLists();
   document.querySelectorAll('#tab-recetas > details .fav-star').forEach(s=>{ s.textContent = '☆'; });
@@ -703,6 +723,67 @@ function renderWfhButtons(){
   document.querySelectorAll('#wfhDays .style-opt').forEach(b=>{
     b.classList.toggle('active', days.includes(Number(b.dataset.day)));
   });
+}
+
+function loadWfhDates(){
+  try{ return JSON.parse(localStorage.getItem('planAlimentacionWfhDates')) || []; }catch(e){ return []; }
+}
+function addWfhDate(){
+  const input = document.getElementById('wfhDateInput');
+  const value = input.value;
+  if(!value) return;
+  const dates = loadWfhDates();
+  if(!dates.includes(value)) dates.push(value);
+  try{ localStorage.setItem('planAlimentacionWfhDates', JSON.stringify(dates)); }catch(e){}
+  input.value = '';
+  renderWfhDateList();
+  renderHoy();
+  pushSync();
+}
+function removeWfhDate(dateStr){
+  const dates = loadWfhDates().filter(d=>d!==dateStr);
+  try{ localStorage.setItem('planAlimentacionWfhDates', JSON.stringify(dates)); }catch(e){}
+  renderWfhDateList();
+  renderHoy();
+  pushSync();
+}
+function renderWfhDateList(){
+  const container = document.getElementById('wfhDateList');
+  if(!container) return;
+  const dates = loadWfhDates().slice().sort();
+  if(dates.length === 0){ container.innerHTML = ''; return; }
+  container.innerHTML = dates.map(d=>
+    '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:6px 10px;">'
+    + '<span style="font-size:.8rem;">🏠 '+d+'</span>'
+    + '<button onclick="removeWfhDate(\''+d+'\')" style="background:none; border:none; color:var(--warn); font-size:1rem; cursor:pointer; padding:2px 6px;" aria-label="Quitar">🗑️</button>'
+    + '</div>'
+  ).join('');
+}
+function isWfhOn(date){
+  const dayIdx = (date.getDay()+6)%7;
+  if(loadWfhDays().includes(dayIdx)) return true;
+  return loadWfhDates().includes(calDateKeyLocal(date));
+}
+
+function loadBowlDays(){
+  try{ return JSON.parse(localStorage.getItem('planAlimentacionBowlDays')) || []; }catch(e){ return []; }
+}
+function toggleBowlDay(day){
+  let days = loadBowlDays();
+  days = days.includes(day) ? days.filter(d=>d!==day) : [...days, day];
+  try{ localStorage.setItem('planAlimentacionBowlDays', JSON.stringify(days)); }catch(e){}
+  renderBowlButtons();
+  renderHoy();
+  pushSync();
+}
+function renderBowlButtons(){
+  const days = loadBowlDays();
+  document.querySelectorAll('#bowlDays .style-opt').forEach(b=>{
+    b.classList.toggle('active', days.includes(Number(b.dataset.day)));
+  });
+}
+function isBowlOn(date){
+  return loadBowlDays().includes((date.getDay()+6)%7);
 }
 
 const VAC_TIPO_LABEL = { descansando:'🛋️ Descansando', viaje:'🧳 De viaje', otro:'📌 Otro' };
@@ -761,10 +842,12 @@ function renderVacationList(){
       + '</div>';
   }).join('');
 }
-function vacationPeriodToday(){
-  const todayKey = calDateKeyLocal(new Date());
-  return loadVacations().find(v => todayKey >= v.start && todayKey <= v.end) || null;
+function vacationPeriodOn(date){
+  const key = calDateKeyLocal(date || new Date());
+  return loadVacations().find(v => key >= v.start && key <= v.end) || null;
 }
+function vacationPeriodToday(){ return vacationPeriodOn(new Date()); }
+function isVacationOn(date){ return !!vacationPeriodOn(date); }
 function isVacationToday(){
   return !!vacationPeriodToday();
 }
@@ -791,6 +874,8 @@ function calDateKeyLocal(date){
       b.classList.toggle('active', b.dataset.style === style);
     });
     renderWfhButtons();
+    renderWfhDateList();
+    renderBowlButtons();
     renderVacationList();
   });
 })();
@@ -842,7 +927,8 @@ renderAllShopLists();
 const SUPABASE_URL = 'https://ibouktzmckphsvqabgig.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_8pdb7ItwgBzII8SMsdWjzA_kunVAiq5';
 const SYNC_KEYS = [
-  'planAlimentacionColor','planAlimentacionStyle','planAlimentacionWfh','planAlimentacionVacaciones',
+  'planAlimentacionColor','planAlimentacionStyle','planAlimentacionWfh','planAlimentacionWfhDates',
+  'planAlimentacionBowlDays','planAlimentacionVacaciones',
   'planAlimentacionShop_despensa','planAlimentacionShop_fresco1','planAlimentacionShop_fresco2',
   'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4','planAlimentacionFavRecetas'
 ];
@@ -876,6 +962,8 @@ function rerenderAfterSync(){
     b.classList.toggle('active', b.dataset.style === style);
   });
   renderWfhButtons();
+  renderWfhDateList();
+  renderBowlButtons();
   renderVacationList();
   renderAllShopLists();
   renderHoy();
@@ -1065,19 +1153,52 @@ function getISOWeek(date){
   return 1 + Math.round(diff / 7);
 }
 
+function isLastFridayOfMonth(date){
+  if(date.getDay() !== 5) return false; // 5 = viernes en JS (0=domingo)
+  const nextWeek = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7);
+  return nextWeek.getMonth() !== date.getMonth();
+}
+
+// Devuelve { d, week, isTeamLunch } — el día del menú que corresponde a esa fecha,
+// sustituyendo por la comida de equipo si es el último viernes laboral real del mes.
+function getDayForDate(date){
+  const dayIndex = (date.getDay() + 6) % 7; // 0=Lunes ... 6=Domingo
+  const isoWeek = getISOWeek(date);
+  const cycleIndex = (isoWeek - 1) % weeksData.length;
+  const week = weeksData[cycleIndex];
+  if(isLastFridayOfMonth(date) && !isVacationOn(date)){
+    const teamWeek = weeksData[3]; // semana 4: la que tiene la comida de equipo
+    return { d: teamWeek.days[4], week: teamWeek, isTeamLunch: true };
+  }
+  return { d: week.days[dayIndex], week, isTeamLunch: false };
+}
+
+function renderTomorrowCard(){
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dayIdx = (tomorrow.getDay() + 6) % 7; // 0=Lunes ... 6=Domingo
+  if(dayIdx > 4) return ''; // fin de semana, no aplica
+  if(isVacationOn(tomorrow)) return '';
+
+  const { d, isTeamLunch } = getDayForDate(tomorrow);
+  if(isTeamLunch) return '<div class="tip">🍕 Mañana es la comida de equipo del trabajo — no hace falta que prepares nada.</div>';
+  if(isWfhOn(tomorrow)) return '<div class="tip">🏠 Mañana teletrabajas — nada de tupper, cocinas fresco a mediodía.</div>';
+  if(isBowlOn(tomorrow)) return '<div class="tip">🥗 Mañana toca bowl del Ametller Origen — no hace falta que prepares tupper.</div>';
+  return '<div class="tip">🍱 <b>Prepara esto para el tupper de mañana:</b> ' + d.comida + '</div>';
+}
+
 function renderHoy(){
   const now = new Date();
   const dayIndex = (now.getDay() + 6) % 7; // 0=Lunes ... 6=Domingo
-  const isoWeek = getISOWeek(now);
-  const cycleIndex = (isoWeek - 1) % weeksData.length;
-  const week = weeksData[cycleIndex];
-  const d = week.days[dayIndex];
+  const { d, week, isTeamLunch } = getDayForDate(now);
 
   const dateStr = now.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
   const dateCap = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
   document.getElementById('hoyDate').textContent = dateCap;
   const dayNameClean = d.day.replace(/\s*\S+$/, '').trim();
-  document.getElementById('hoyWeekLabel').textContent = 'Semana ' + week.n + ' del ciclo · ' + dayNameClean;
+  document.getElementById('hoyWeekLabel').textContent = isTeamLunch
+    ? 'Último viernes laboral del mes · ' + dayNameClean
+    : 'Semana ' + week.n + ' del ciclo · ' + dayNameClean;
 
   const vacTipo = vacationTipoToday();
   let tipHtml = '';
@@ -1098,10 +1219,12 @@ function renderHoy(){
     tipHtml = '<div class="tip">🏖️ Estás de vacaciones — no hace falta que sigas el menú si no quieres. Disfruta sin culpa, el plan te espera cuando vuelvas.</div>';
     contentHtml = dayCardHtml(d);
   } else {
-    if(loadWfhDays().includes(dayIndex)){
+    if(isWfhOn(now)){
       tipHtml += '<div class="tip">🏠 Hoy teletrabajas: nada de tupper, cocina la comida fresca a mediodía tranquilamente en casa.</div>';
+    } else if(isBowlOn(now) && !isTeamLunch){
+      tipHtml += '<div class="tip">🥗 Hoy toca bowl del Ametller Origen — no hace falta tupper.</div>';
     }
-    if(d.pizza){
+    if(isTeamLunch || d.pizza){
       tipHtml += '<div class="tip">🍕 Hoy toca la comida de equipo del trabajo (pizza, hamburguesa o milanesas, según toque) — sin sustituirla por nada, disfrútala.</div>';
     } else if(d.libre){
       tipHtml += '<div class="tip">🎉 Esta noche es cena libre — disfruta sin contar nada y retoma el plan sin culpa mañana.</div>';
@@ -1110,6 +1233,8 @@ function renderHoy(){
     }
     contentHtml = dayCardHtml(d);
   }
+
+  tipHtml += renderTomorrowCard();
 
   document.getElementById('hoyTip').innerHTML = tipHtml;
   document.getElementById('hoyContent').innerHTML = contentHtml;
