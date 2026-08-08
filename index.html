@@ -142,6 +142,12 @@
 
   details{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); margin-bottom:10px; box-shadow:var(--shadow); overflow:hidden;}
   details summary{padding:14px 16px; cursor:pointer; font-weight:700; font-size:.95rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:8px; transition:background .15s;}
+  .fav-star{background:none; border:none; font-size:1.15rem; line-height:1; cursor:pointer; padding:0; flex-shrink:0;}
+  .recipe-title-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; flex:1; min-width:0;}
+  #surpriseBtn{
+    width:100%; background:var(--accent-soft); color:var(--accent); border:none; border-radius:14px;
+    padding:12px 14px; font-family:inherit; font-size:.88rem; font-weight:700; cursor:pointer; margin-bottom:14px;
+  }
   details summary:active{background:var(--accent-soft);}
   button:active{transform:scale(.96); transition:transform .1s;}
   .bottomnav button:active{transform:none;}
@@ -287,6 +293,7 @@
     </div>
 
     <button class="settings-close" onclick="closeSettings()">Listo</button>
+    <button onclick="resetAllSettings()" style="width:100%; margin-top:8px; background:none; border:none; color:var(--warn); font-family:inherit; font-size:.78rem; font-weight:600; cursor:pointer; padding:8px;">Restablecer todos los ajustes</button>
   </div>
 </div>
 
@@ -411,6 +418,7 @@
 <div id="tab-recetas" class="tabpanel">
   <h2>🍳 Recetas rápidas</h2>
   <p style="color:var(--muted); font-size:.9rem;">Todas en menos de 30 min, pocos ingredientes. Cada una cubre varios platos del menú que usan la misma técnica — solo cambia la proteína o la verdura de turno.</p>
+  <button id="surpriseBtn" onclick="surpriseRecipe()">🎲 Sorpréndeme</button>
 
   <details><summary>🐟 Salmón (horno, plancha o airfryer) con limón <span style="font-weight:400;color:var(--muted);font-size:.8rem;">10 min</span></summary>
     <div class="content"><p><b>Ingredientes:</b> lomo de salmón, aceite de oliva, sal, limón, ajo en polvo, eneldo o perejil (opcional).</p>
@@ -649,6 +657,18 @@ function openSettings(){
 function closeSettings(){
   document.getElementById('settingsOverlay').classList.remove('show');
 }
+function resetAllSettings(){
+  if(!confirm('¿Restablecer color, estilo, teletrabajo, vacaciones, lista de la compra marcada y favoritas? No se puede deshacer.')) return;
+  [...SYNC_KEYS].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+  setColor('');
+  setStyle('');
+  document.querySelectorAll('#wfhDays .style-opt').forEach(b=>b.classList.remove('active'));
+  renderVacationList();
+  renderAllShopLists();
+  document.querySelectorAll('#tab-recetas > details .fav-star').forEach(s=>{ s.textContent = '☆'; });
+  renderHoy();
+  pushSync();
+}
 
 function setColor(color){
   document.documentElement.setAttribute('data-color', color);
@@ -824,7 +844,7 @@ const SUPABASE_KEY = 'sb_publishable_8pdb7ItwgBzII8SMsdWjzA_kunVAiq5';
 const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionStyle','planAlimentacionWfh','planAlimentacionVacaciones',
   'planAlimentacionShop_despensa','planAlimentacionShop_fresco1','planAlimentacionShop_fresco2',
-  'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4'
+  'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4','planAlimentacionFavRecetas'
 ];
 let syncPushTimer = null;
 
@@ -859,6 +879,11 @@ function rerenderAfterSync(){
   renderVacationList();
   renderAllShopLists();
   renderHoy();
+  const favs = loadFavRecetas();
+  document.querySelectorAll('#tab-recetas > details').forEach(d=>{
+    const star = d.querySelector('.fav-star');
+    if(star) star.textContent = favs.includes(Number(d.dataset.recipeId)) ? '⭐' : '☆';
+  });
 }
 
 function pushSync(){
@@ -972,6 +997,51 @@ function renderWeeks(){
 renderWeeks();
 renderHoy();
 badgeifyHeadings();
+initRecipeFavorites();
+
+/* ===== Favoritos y sorpréndeme en Recetas ===== */
+function loadFavRecetas(){
+  try{ return JSON.parse(localStorage.getItem('planAlimentacionFavRecetas')) || []; }catch(e){ return []; }
+}
+function saveFavRecetas(list){
+  try{ localStorage.setItem('planAlimentacionFavRecetas', JSON.stringify(list)); }catch(e){}
+}
+function toggleFavReceta(id){
+  let favs = loadFavRecetas();
+  favs = favs.includes(id) ? favs.filter(f=>f!==id) : [...favs, id];
+  saveFavRecetas(favs);
+  const star = document.querySelector('#tab-recetas details[data-recipe-id="'+id+'"] .fav-star');
+  if(star) star.textContent = favs.includes(id) ? '⭐' : '☆';
+  pushSync();
+}
+function initRecipeFavorites(){
+  const detailsEls = document.querySelectorAll('#tab-recetas > details');
+  const favs = loadFavRecetas();
+  detailsEls.forEach((d, i)=>{
+    d.dataset.recipeId = i;
+    const summary = d.querySelector('summary');
+    if(summary.querySelector('.fav-star')) return;
+    const wrap = document.createElement('span');
+    wrap.className = 'recipe-title-wrap';
+    while(summary.firstChild){ wrap.appendChild(summary.firstChild); }
+    const star = document.createElement('button');
+    star.className = 'fav-star';
+    star.type = 'button';
+    star.textContent = favs.includes(i) ? '⭐' : '☆';
+    star.setAttribute('aria-label', 'Marcar como favorita');
+    star.addEventListener('click', (e)=>{ e.preventDefault(); e.stopPropagation(); toggleFavReceta(i); });
+    summary.appendChild(star);
+    summary.appendChild(wrap);
+  });
+}
+function surpriseRecipe(){
+  const detailsEls = [...document.querySelectorAll('#tab-recetas > details')];
+  if(detailsEls.length === 0) return;
+  detailsEls.forEach(d=>{ d.open = false; });
+  const pick = detailsEls[Math.floor(Math.random() * detailsEls.length)];
+  pick.open = true;
+  pick.scrollIntoView({ behavior:'smooth', block:'center' });
+}
 
 function badgeifyHeadings(){
   const emojiRe = /^(\p{Extended_Pictographic}️?)\s*/u;
