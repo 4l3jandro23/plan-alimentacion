@@ -258,7 +258,7 @@
 
     <div class="settings-row">
       <div>🏠 Días de teletrabajo</div>
-      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Hoy te avisará si tienes más margen para cocinar algo fresco en vez de tupper.</p>
+      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Marca los que apliquen — puedes tocar varios a la vez (ej. martes y jueves). Hoy te avisará esos días de que tienes más margen para cocinar algo fresco en vez de tupper.</p>
       <div class="style-options" id="wfhDays">
         <button class="style-opt" data-day="0" onclick="toggleWfhDay(0)">L</button>
         <button class="style-opt" data-day="1" onclick="toggleWfhDay(1)">M</button>
@@ -270,17 +270,20 @@
 
     <div class="settings-row">
       <div>🏖️ Vacaciones</div>
-      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Mientras duren, Hoy se adapta según qué tipo de vacaciones sean.</p>
+      <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Añade tantos periodos como quieras (ej. una semana en agosto y un puente en octubre) — cada uno con su tipo. Hoy se adapta según el periodo que toque ese día.</p>
+
+      <div id="vacList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
+
       <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
-        <label style="font-size:.78rem; color:var(--muted);">Desde <input type="date" id="vacStart" onchange="saveVacation()" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
-        <label style="font-size:.78rem; color:var(--muted);">Hasta <input type="date" id="vacEnd" onchange="saveVacation()" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
+        <label style="font-size:.78rem; color:var(--muted);">Desde <input type="date" id="vacStart" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
+        <label style="font-size:.78rem; color:var(--muted);">Hasta <input type="date" id="vacEnd" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
       </div>
       <div class="style-options" id="vacTipo">
-        <button class="style-opt" data-tipo="descansando" onclick="setVacTipo('descansando')">🛋️ Descansando</button>
-        <button class="style-opt" data-tipo="viaje" onclick="setVacTipo('viaje')">🧳 De viaje</button>
-        <button class="style-opt" data-tipo="otro" onclick="setVacTipo('otro')">📌 Otro</button>
+        <button class="style-opt active" data-tipo="descansando" onclick="setNewVacTipo('descansando')">🛋️ Descansando</button>
+        <button class="style-opt" data-tipo="viaje" onclick="setNewVacTipo('viaje')">🧳 De viaje</button>
+        <button class="style-opt" data-tipo="otro" onclick="setNewVacTipo('otro')">📌 Otro</button>
       </div>
-      <button onclick="clearVacation()" style="margin-top:10px; background:var(--warn-soft); color:var(--warn); border:none; border-radius:8px; padding:6px 10px; font-family:inherit; font-size:.78rem; font-weight:600; cursor:pointer;">Quitar vacaciones</button>
+      <button onclick="addVacationPeriod()" style="margin-top:10px; background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:.8rem; font-weight:700; cursor:pointer;">+ Añadir periodo</button>
     </div>
 
     <button class="settings-close" onclick="closeSettings()">Listo</button>
@@ -673,54 +676,72 @@ function renderWfhButtons(){
   });
 }
 
-function loadVacation(){
-  try{ return JSON.parse(localStorage.getItem('planAlimentacionVacaciones')) || null; }catch(e){ return null; }
+const VAC_TIPO_LABEL = { descansando:'🛋️ Descansando', viaje:'🧳 De viaje', otro:'📌 Otro' };
+let newVacTipo = 'descansando';
+
+function loadVacations(){
+  try{
+    const raw = JSON.parse(localStorage.getItem('planAlimentacionVacaciones'));
+    if(!raw) return [];
+    return Array.isArray(raw) ? raw : [raw]; // migra el formato antiguo (un solo periodo) a lista
+  }catch(e){ return []; }
 }
-function saveVacation(){
-  const start = document.getElementById('vacStart').value;
-  const end = document.getElementById('vacEnd').value;
-  const prev = loadVacation();
-  const tipo = (prev && prev.tipo) || 'descansando';
-  if(start && end){
-    try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify({start, end, tipo})); }catch(e){}
-  }
-  renderVacTipoButtons();
-  renderHoy();
-  pushSync();
+function saveVacations(list){
+  try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify(list)); }catch(e){}
 }
-function setVacTipo(tipo){
-  const vac = loadVacation() || {};
-  vac.tipo = tipo;
-  try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify(vac)); }catch(e){}
-  renderVacTipoButtons();
-  renderHoy();
-  pushSync();
-}
-function renderVacTipoButtons(){
-  const vac = loadVacation();
-  const tipo = (vac && vac.tipo) || 'descansando';
+function setNewVacTipo(tipo){
+  newVacTipo = tipo;
   document.querySelectorAll('#vacTipo .style-opt').forEach(b=>{
     b.classList.toggle('active', b.dataset.tipo === tipo);
   });
 }
-function clearVacation(){
+function addVacationPeriod(){
+  const start = document.getElementById('vacStart').value;
+  const end = document.getElementById('vacEnd').value;
+  if(!start || !end) return;
+  const list = loadVacations();
+  list.push({ start, end: end < start ? start : end, tipo: newVacTipo });
+  saveVacations(list);
   document.getElementById('vacStart').value = '';
   document.getElementById('vacEnd').value = '';
-  try{ localStorage.removeItem('planAlimentacionVacaciones'); }catch(e){}
-  renderVacTipoButtons();
+  renderVacationList();
   renderHoy();
   pushSync();
 }
-function isVacationToday(){
-  const vac = loadVacation();
-  if(!vac || !vac.start || !vac.end) return false;
+function deleteVacationPeriod(index){
+  const list = loadVacations();
+  list.splice(index, 1);
+  saveVacations(list);
+  renderVacationList();
+  renderHoy();
+  pushSync();
+}
+function renderVacationList(){
+  const container = document.getElementById('vacList');
+  if(!container) return;
+  const list = loadVacations();
+  if(list.length === 0){
+    container.innerHTML = '<p style="font-size:.8rem; color:var(--muted); margin:0;">Sin periodos añadidos.</p>';
+    return;
+  }
+  container.innerHTML = list.map((v,i)=>{
+    const label = VAC_TIPO_LABEL[v.tipo] || VAC_TIPO_LABEL.descansando;
+    return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:8px 10px;">'
+      + '<span style="font-size:.82rem;">'+label+' &nbsp;'+v.start+' → '+v.end+'</span>'
+      + '<button onclick="deleteVacationPeriod('+i+')" style="background:none; border:none; color:var(--warn); font-size:1rem; cursor:pointer; padding:2px 6px;" aria-label="Borrar periodo">🗑️</button>'
+      + '</div>';
+  }).join('');
+}
+function vacationPeriodToday(){
   const todayKey = calDateKeyLocal(new Date());
-  return todayKey >= vac.start && todayKey <= vac.end;
+  return loadVacations().find(v => todayKey >= v.start && todayKey <= v.end) || null;
+}
+function isVacationToday(){
+  return !!vacationPeriodToday();
 }
 function vacationTipoToday(){
-  if(!isVacationToday()) return null;
-  const vac = loadVacation();
-  return (vac && vac.tipo) || 'descansando';
+  const v = vacationPeriodToday();
+  return v ? (v.tipo || 'descansando') : null;
 }
 function calDateKeyLocal(date){
   const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
@@ -741,12 +762,7 @@ function calDateKeyLocal(date){
       b.classList.toggle('active', b.dataset.style === style);
     });
     renderWfhButtons();
-    const vac = loadVacation();
-    if(vac){
-      document.getElementById('vacStart').value = vac.start || '';
-      document.getElementById('vacEnd').value = vac.end || '';
-    }
-    renderVacTipoButtons();
+    renderVacationList();
   });
 })();
 
@@ -831,12 +847,7 @@ function rerenderAfterSync(){
     b.classList.toggle('active', b.dataset.style === style);
   });
   renderWfhButtons();
-  const vac = loadVacation();
-  if(document.getElementById('vacStart')){
-    document.getElementById('vacStart').value = (vac && vac.start) || '';
-    document.getElementById('vacEnd').value = (vac && vac.end) || '';
-  }
-  renderVacTipoButtons();
+  renderVacationList();
   renderAllShopLists();
   renderHoy();
 }
