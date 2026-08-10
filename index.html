@@ -24,6 +24,9 @@
     --font-display:'Fraunces',Georgia,serif;
     --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --font-mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+    /* Escala tipográfica: 7 pasos deliberados, sin valores intermedios sueltos */
+    --t-2xs:.66rem; --t-xs:.76rem; --t-sm:.84rem; --t-base:.92rem;
+    --t-md:1.05rem; --t-lg:1.25rem; --t-xl:1.5rem;
     --bg:#faf9f5; --card:#ffffff; --ink:#2b2b28; --muted:#6b6b63;
     --accent:#2f7a5f; --accent2:#57a686; --accent-soft:#e7f3ee; --warn:#b5651d; --warn-soft:#fbeee2;
     --border:#dcd9d0; --radius:3px; --shadow:none;
@@ -65,10 +68,10 @@
     border-radius:0;
   }
   .headtop{display:flex; justify-content:space-between; align-items:center;}
-  header h1{margin:0 0 4px; font-size:1.5rem; font-family:var(--font-display); font-weight:600; letter-spacing:-.2px;}
-  header p{margin:0; opacity:.92; font-size:.85rem;}
+  header h1{margin:0 0 4px; font-size:var(--t-xl); font-family:var(--font-display); font-weight:600; letter-spacing:-.2px;}
+  header p{margin:0; opacity:.92; font-size:var(--t-sm);}
   .headbtns{display:flex; gap:8px; flex-shrink:0;}
-  .headbtns button{background:rgba(255,255,255,.22); border:none; color:#fff; font-size:1.1rem; width:38px; height:38px; border-radius:50%; cursor:pointer; flex-shrink:0;}
+  .headbtns button{background:rgba(255,255,255,.22); border:none; color:#fff; font-size:var(--t-lg); width:38px; height:38px; border-radius:50%; cursor:pointer; flex-shrink:0;}
 
   /* Panel de Ajustes */
   .settings-overlay{
@@ -80,59 +83,69 @@
     background:var(--card); width:100%; max-width:520px; border-radius:4px 4px 0 0;
     padding:18px 18px calc(20px + env(safe-area-inset-bottom)); max-height:82vh; overflow-y:auto;
   }
-  .settings-panel h3{margin:0 0 4px; font-size:1.15rem; font-family:var(--font-display); font-weight:600; color:var(--ink);}
+  .settings-panel h3{margin:0 0 4px; font-size:var(--t-lg); font-family:var(--font-display); font-weight:600; color:var(--ink);}
   .settings-row{margin:16px 0;}
-  .settings-row > div:first-child{font-size:.8rem; font-weight:700; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:.3px;}
+  .settings-row > div:first-child{font-size:var(--t-sm); font-weight:700; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:.3px;}
   .swatches{display:flex; gap:10px; flex-wrap:wrap;}
   .swatch{
     width:38px; height:38px; border-radius:50%; cursor:pointer; border:2px solid transparent;
     position:relative; flex-shrink:0;
   }
   .swatch.active{border-color:var(--ink);}
-  .swatch.active::after{content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:.9rem; text-shadow:0 1px 2px rgba(0,0,0,.4);}
+  .swatch.active::after{content:"✓"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:var(--t-base); text-shadow:0 1px 2px rgba(0,0,0,.4);}
   .style-options{display:flex; gap:10px;}
   .style-opt{
     flex:1; border:1px solid var(--border); border-radius:3px; padding:12px; text-align:center;
-    cursor:pointer; font-family:inherit; font-size:.82rem; font-weight:600; color:var(--ink); background:var(--bg);
+    cursor:pointer; font-family:inherit; font-size:var(--t-sm); font-weight:600; color:var(--ink); background:var(--bg);
   }
   .style-opt.active{border-color:var(--accent); background:var(--accent-soft); color:var(--accent);}
   .settings-group{border-top:1px solid var(--border); margin-top:6px;}
   .settings-group summary{
-    padding:14px 0; cursor:pointer; font-weight:700; font-size:.95rem; list-style:none;
+    padding:14px 0; cursor:pointer; font-weight:700; font-size:var(--t-md); list-style:none;
     display:flex; justify-content:space-between; align-items:center; color:var(--ink);
   }
   .settings-group summary::-webkit-details-marker{display:none;}
-  .settings-group summary::after{content:"⌄"; color:var(--accent); font-size:1.1rem; transition:transform .2s;}
+  .settings-group summary::after{content:"⌄"; color:var(--accent); font-size:var(--t-lg); transition:transform .2s;}
   .settings-group[open] summary::after{transform:rotate(180deg);}
   .settings-group .settings-row:first-of-type{margin-top:0;}
   .settings-close{
     width:100%; margin-top:8px; background:var(--accent); color:#fff; border:none; border-radius:3px;
-    padding:12px; font-family:inherit; font-size:.9rem; font-weight:700; cursor:pointer;
+    padding:12px; font-family:inherit; font-size:var(--t-base); font-weight:700; cursor:pointer;
   }
 
   main{max-width:760px; margin:0 auto; padding:18px 16px 6px;}
   .tabpanel{display:none; animation:fade .25s ease;}
   .tabpanel.active{display:block;}
   @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  /* Suelo de calidad: foco de teclado visible y respeto por "reducir movimiento" */
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px;}
+  .headbtns button:focus-visible{outline-color:#fff;}
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+      animation-duration:.01ms !important; animation-iteration-count:1 !important;
+      transition-duration:.01ms !important; scroll-behavior:auto !important;
+    }
+  }
   h2{
-    font-family:var(--font-display); font-weight:600; font-size:1.3rem; color:var(--ink);
+    font-family:var(--font-display); font-weight:600; font-size:var(--t-lg); color:var(--ink);
     margin:28px 0 14px; display:flex; align-items:center; gap:10px; letter-spacing:-.2px;
   }
   main > .tabpanel > h2:first-child, .tabpanel h2:first-of-type{margin-top:4px;}
   .h2-badge{
     display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
     width:32px; height:32px; border-radius:3px; background:var(--accent-soft);
-    font-size:1rem;
+    font-size:var(--t-md);
   }
-  h3{font-family:var(--font-display); font-weight:600; font-size:1.08rem; margin:20px 0 8px; letter-spacing:-.1px;}
+  h3{font-family:var(--font-display); font-weight:600; font-size:var(--t-md); margin:20px 0 8px; letter-spacing:-.1px;}
   .card{
     background:transparent; border:none; border-top:1px solid var(--border); border-radius:0;
     padding:20px 0; margin:0;
   }
   .section-divider{display:flex; justify-content:center; padding:22px 0 6px;}
-  .tip{background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 3px 3px 0; padding:12px 14px; font-size:.92rem; margin:14px 0;}
-  .warn{background:var(--warn-soft); border-left:3px solid var(--warn); border-radius:0 3px 3px 0; padding:12px 14px; font-size:.92rem; margin:14px 0;}
-  table{width:100%; border-collapse:collapse; font-size:.85rem; margin:14px 0;}
+  .tip{background:var(--accent-soft); border-left:3px solid var(--accent); border-radius:0 3px 3px 0; padding:12px 14px; font-size:var(--t-base); margin:14px 0;}
+  .warn{background:var(--warn-soft); border-left:3px solid var(--warn); border-radius:0 3px 3px 0; padding:12px 14px; font-size:var(--t-base); margin:14px 0;}
+  table{width:100%; border-collapse:collapse; font-size:var(--t-sm); margin:14px 0;}
   th,td{border:none; border-bottom:1px solid var(--border); padding:9px 8px; text-align:left;}
   th{background:transparent; font-family:var(--font-display); font-weight:600; border-bottom:2px solid var(--ink);}
   td:last-child{font-family:var(--font-mono); white-space:nowrap;}
@@ -140,62 +153,62 @@
   li{margin-bottom:4px;}
   .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
   @media (max-width:480px){.grid2{grid-template-columns:1fr;}}
-  .pill{display:inline-block; background:var(--accent-soft); color:var(--accent); padding:4px 11px; border-radius:3px; font-size:.75rem; margin:2px 4px 2px 0; font-weight:600;}
+  .pill{display:inline-block; background:var(--accent-soft); color:var(--accent); padding:4px 11px; border-radius:3px; font-size:var(--t-xs); margin:2px 4px 2px 0; font-weight:600;}
   .pill.no{background:#fbeaea; color:#a33333;}
   html.dark .pill.no{background:#3a1f1f; color:#e07a7a;}
-  footer{text-align:center; font-size:.76rem; color:var(--muted); padding:20px 20px 8px; border-top:1px solid var(--border); margin-top:10px;}
+  footer{text-align:center; font-size:var(--t-xs); color:var(--muted); padding:20px 20px 8px; border-top:1px solid var(--border); margin-top:10px;}
 
   /* Stat cards */
   .statgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; margin:4px 0 18px; background:var(--border); border:1px solid var(--border);}
   .stat{background:var(--card); border-radius:0; padding:14px 6px; text-align:center; box-shadow:none;}
-  .stat b{display:block; font-size:1.25rem; margin-bottom:2px; font-family:var(--font-mono); font-weight:700;}
-  .stat span{font-size:.64rem; color:var(--muted); line-height:1.2; display:block;}
+  .stat b{display:block; font-size:var(--t-lg); margin-bottom:2px; font-family:var(--font-mono); font-weight:700;}
+  .stat span{font-size:var(--t-2xs); color:var(--muted); line-height:1.2; display:block;}
   .stat:nth-child(1) b{color:var(--accent);}
   .stat:nth-child(2) b{color:var(--warn);}
   .stat:nth-child(3) b{color:var(--fat);}
 
   details{background:transparent; border:none; border-top:1px solid var(--border); border-radius:0; margin-bottom:0; box-shadow:none;}
-  details summary{padding:16px 2px; cursor:pointer; font-weight:600; font-family:var(--font-display); font-size:1.05rem; list-style:none; display:flex; justify-content:space-between; align-items:center; gap:8px; transition:background .15s;}
-  .fav-star{background:none; border:none; font-size:1.15rem; line-height:1; cursor:pointer; padding:0; flex-shrink:0;}
+  details summary{padding:16px 2px; cursor:pointer; font-weight:600; font-family:var(--font-display); font-size:var(--t-md); list-style:none; display:flex; justify-content:space-between; align-items:center; gap:8px; transition:background .15s;}
+  .fav-star{background:none; border:none; font-size:var(--t-lg); line-height:1; cursor:pointer; padding:0; flex-shrink:0;}
   .recipe-title-wrap{display:flex; justify-content:space-between; align-items:center; gap:8px; flex:1; min-width:0;}
-  .recipe-title-wrap .dur{font-family:var(--font-mono); font-weight:400; color:var(--muted); font-size:.78rem;}
+  .recipe-title-wrap .dur{font-family:var(--font-mono); font-weight:400; color:var(--muted); font-size:var(--t-xs);}
   #surpriseBtn{
     width:100%; background:var(--accent-soft); color:var(--accent); border:none; border-radius:3px;
-    padding:12px 14px; font-family:inherit; font-size:.88rem; font-weight:700; cursor:pointer; margin-bottom:14px;
+    padding:12px 14px; font-family:inherit; font-size:var(--t-base); font-weight:700; cursor:pointer; margin-bottom:14px;
   }
   details summary:active{background:var(--accent-soft);}
   button:active{transform:scale(.96); transition:transform .1s;}
   .bottomnav button:active{transform:none;}
   details summary::-webkit-details-marker{display:none;}
-  details summary::after{content:"⌄"; color:var(--accent); font-size:1.2rem; transition:transform .2s; flex-shrink:0; font-family:var(--font-body);}
+  details summary::after{content:"⌄"; color:var(--accent); font-size:var(--t-lg); transition:transform .2s; flex-shrink:0; font-family:var(--font-body);}
   details[open] summary::after{transform:rotate(180deg);}
-  details .content{padding:0 2px 20px; font-size:.9rem;}
+  details .content{padding:0 2px 20px; font-size:var(--t-base);}
 
   .week{margin-bottom:0;}
-  .week > summary{font-size:1.15rem;}
-  .week-avg{font-size:.72rem; font-weight:400; font-family:var(--font-mono); color:var(--muted); margin-left:2px; display:block;}
+  .week > summary{font-size:var(--t-lg);}
+  .week-avg{font-size:var(--t-xs); font-weight:400; font-family:var(--font-mono); color:var(--muted); margin-left:2px; display:block;}
   .weekdays{display:flex; flex-direction:column; gap:1px; padding:2px 0 14px; background:var(--border);}
   .daycard{background:var(--bg); border:none; border-radius:0; padding:14px 12px;}
   .daycard-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;}
-  .dayname{font-weight:700; font-family:var(--font-display); color:var(--accent); font-size:.98rem;}
-  .kcal{font-weight:700; font-family:var(--font-mono); font-size:.82rem; background:var(--accent-soft); color:var(--accent); padding:3px 9px; border-radius:3px;}
-  .meal{font-size:.87rem; margin:4px 0;}
+  .dayname{font-weight:700; font-family:var(--font-display); color:var(--accent); font-size:var(--t-md);}
+  .kcal{font-weight:700; font-family:var(--font-mono); font-size:var(--t-sm); background:var(--accent-soft); color:var(--accent); padding:3px 9px; border-radius:3px;}
+  .meal{font-size:var(--t-base); margin:4px 0;}
   .plate-progress{margin-top:12px; display:flex; align-items:center; gap:14px;}
-  .plate-legend{display:flex; flex-direction:column; gap:4px; font-size:.74rem; color:var(--muted);}
+  .plate-legend{display:flex; flex-direction:column; gap:4px; font-size:var(--t-xs); color:var(--muted);}
   .plate-legend span{display:flex; align-items:center; gap:6px;}
   .plate-legend i{width:8px; height:8px; border-radius:50%; flex-shrink:0; display:inline-block;}
   .plate-legend b{font-family:var(--font-mono); color:var(--ink); font-weight:600; margin-left:2px;}
-  .libre-tag{background:var(--warn-soft); color:var(--warn); padding:2px 8px; border-radius:3px; font-size:.7rem; font-weight:600;}
-  .pizza-tag{background:#ffe3c2; color:#8a4b00; padding:2px 8px; border-radius:3px; font-size:.7rem; font-weight:600;}
+  .libre-tag{background:var(--warn-soft); color:var(--warn); padding:2px 8px; border-radius:3px; font-size:var(--t-xs); font-weight:600;}
+  .pizza-tag{background:#ffe3c2; color:#8a4b00; padding:2px 8px; border-radius:3px; font-size:var(--t-xs); font-weight:600;}
   html.dark .pizza-tag{background:#4a3418; color:#ffb96b;}
 
   .shoplist{columns:2; column-gap:20px; list-style:none; padding:0;}
   @media (max-width:480px){.shoplist{columns:1;}}
   .shoplist li{break-inside:avoid;}
-  .shop-item{display:flex; align-items:center; gap:8px; padding:5px 0; cursor:pointer; font-size:.92rem;}
+  .shop-item{display:flex; align-items:center; gap:8px; padding:5px 0; cursor:pointer; font-size:var(--t-base);}
   .shop-item input{width:18px; height:18px; accent-color:var(--accent); flex-shrink:0; cursor:pointer;}
   .shop-item.checked span{color:var(--muted); text-decoration:line-through;}
-  .shop-clear{background:none; border:none; color:var(--accent); font-family:inherit; font-size:.78rem; font-weight:700; cursor:pointer; padding:8px 0 0; display:block;}
+  .shop-clear{background:none; border:none; color:var(--accent); font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer; padding:8px 0 0; display:block;}
 
   /* Bottom tab bar (iOS style) */
   .bottomnav{
@@ -207,17 +220,17 @@
   }
   .bottomnav button{
     flex:1; background:none; border:none; display:flex; flex-direction:column;
-    align-items:center; gap:2px; font-size:.6rem; color:var(--muted);
+    align-items:center; gap:2px; font-size:var(--t-2xs); color:var(--muted);
     padding:6px 1px 4px; font-family:inherit; cursor:pointer; font-weight:600;
     min-width:0;
   }
-  .bottomnav button .ic{font-size:1.25rem; line-height:1;}
+  .bottomnav button .ic{font-size:var(--t-lg); line-height:1;}
   .bottomnav button.active{color:var(--accent);}
 
   /* Offline / update banners */
   .banner{
     position:fixed; left:12px; right:12px; z-index:40; padding:10px 14px; border-radius:3px;
-    font-size:.82rem; font-weight:600; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,.15);
+    font-size:var(--t-sm); font-weight:600; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,.15);
     top:-200px; visibility:hidden; transition:top .25s ease, visibility .25s;
   }
   .banner.show{top:calc(10px + env(safe-area-inset-top)); visibility:visible;}
@@ -228,7 +241,7 @@
   }
   #updateBanner button{
     background:var(--accent); color:#fff; border:none; border-radius:3px; padding:5px 12px;
-    font-size:.78rem; font-weight:700; cursor:pointer;
+    font-size:var(--t-xs); font-weight:700; cursor:pointer;
   }
 </style>
 </head>
@@ -253,7 +266,7 @@
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
   <div class="settings-panel">
     <h3>⚙️ Ajustes</h3>
-    <p style="font-size:.82rem; color:var(--muted); margin:2px 0 0;">Se guarda y sincroniza entre tus dispositivos.</p>
+    <p style="font-size:var(--t-sm); color:var(--muted); margin:2px 0 0;">Se guarda y sincroniza entre tus dispositivos.</p>
 
     <details class="settings-group" open>
       <summary>🎨 Apariencia</summary>
@@ -277,7 +290,7 @@
 
       <div class="settings-row">
         <div>🏠 Días de teletrabajo</div>
-        <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Marca los que apliquen cada semana — puedes tocar varios a la vez (ej. martes y jueves).</p>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Marca los que apliquen cada semana — puedes tocar varios a la vez (ej. martes y jueves).</p>
         <div class="style-options" id="wfhDays">
           <button class="style-opt" data-day="0" onclick="toggleWfhDay(0)">L</button>
           <button class="style-opt" data-day="1" onclick="toggleWfhDay(1)">M</button>
@@ -285,17 +298,17 @@
           <button class="style-opt" data-day="3" onclick="toggleWfhDay(3)">J</button>
           <button class="style-opt" data-day="4" onclick="toggleWfhDay(4)">V</button>
         </div>
-        <p style="font-size:.78rem; color:var(--muted); margin:10px 0 6px;">O añade un día suelto de teletrabajo puntual (aunque no sea tu día fijo):</p>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 6px;">O añade un día suelto de teletrabajo puntual (aunque no sea tu día fijo):</p>
         <div id="wfhDateList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:8px;"></div>
         <div style="display:flex; gap:8px; align-items:center;">
-          <input type="date" id="wfhDateInput" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink); font-size:.78rem;">
-          <button onclick="addWfhDate()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-family:inherit; font-size:.78rem; font-weight:700; cursor:pointer;">+ Añadir</button>
+          <input type="date" id="wfhDateInput" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink); font-size:var(--t-xs);">
+          <button onclick="addWfhDate()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;">+ Añadir</button>
         </div>
       </div>
 
       <div class="settings-row">
         <div>🥗 Días de bowl (Ametller Origen)</div>
-        <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Los días que marques, Hoy sabe que no hace falta tupper porque comes el bowl.</p>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Los días que marques, Hoy sabe que no hace falta tupper porque comes el bowl.</p>
         <div class="style-options" id="bowlDays">
           <button class="style-opt" data-day="0" onclick="toggleBowlDay(0)">L</button>
           <button class="style-opt" data-day="1" onclick="toggleBowlDay(1)">M</button>
@@ -310,25 +323,25 @@
       <summary>🏖️ Vacaciones</summary>
 
       <div class="settings-row">
-        <p style="font-size:.78rem; color:var(--muted); margin:0 0 8px;">Añade tantos periodos como quieras (ej. una semana en agosto y un puente en octubre) — cada uno con su tipo. Hoy se adapta según el periodo que toque ese día.</p>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Añade tantos periodos como quieras (ej. una semana en agosto y un puente en octubre) — cada uno con su tipo. Hoy se adapta según el periodo que toque ese día.</p>
 
         <div id="vacList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
 
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
-          <label style="font-size:.78rem; color:var(--muted);">Desde <input type="date" id="vacStart" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
-          <label style="font-size:.78rem; color:var(--muted);">Hasta <input type="date" id="vacEnd" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
+          <label style="font-size:var(--t-xs); color:var(--muted);">Desde <input type="date" id="vacStart" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
+          <label style="font-size:var(--t-xs); color:var(--muted);">Hasta <input type="date" id="vacEnd" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
         </div>
         <div class="style-options" id="vacTipo">
           <button class="style-opt active" data-tipo="descansando" onclick="setNewVacTipo('descansando')">🛋️ Descansando</button>
           <button class="style-opt" data-tipo="viaje" onclick="setNewVacTipo('viaje')">🧳 De viaje</button>
           <button class="style-opt" data-tipo="otro" onclick="setNewVacTipo('otro')">📌 Otro</button>
         </div>
-        <button onclick="addVacationPeriod()" style="margin-top:10px; background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:.8rem; font-weight:700; cursor:pointer;">+ Añadir periodo</button>
+        <button onclick="addVacationPeriod()" style="margin-top:10px; background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">+ Añadir periodo</button>
       </div>
     </details>
 
     <button class="settings-close" onclick="closeSettings()">Listo</button>
-    <button onclick="resetAllSettings()" style="width:100%; margin-top:8px; background:none; border:none; color:var(--warn); font-family:inherit; font-size:.78rem; font-weight:600; cursor:pointer; padding:8px;">Restablecer todos los ajustes</button>
+    <button onclick="resetAllSettings()" style="width:100%; margin-top:8px; background:none; border:none; color:var(--warn); font-family:inherit; font-size:var(--t-xs); font-weight:600; cursor:pointer; padding:8px;">Restablecer todos los ajustes</button>
   </div>
 </div>
 
@@ -338,12 +351,12 @@
 <div id="tab-hoy" class="tabpanel active">
   <h2>☀️ Hoy</h2>
   <div class="card" id="hoyDateCard">
-    <p id="hoyDate" style="margin:0 0 4px; font-size:1.05rem; font-weight:700; color:var(--accent);"></p>
-    <p id="hoyWeekLabel" style="margin:0; font-size:.85rem; color:var(--muted);"></p>
+    <p id="hoyDate" style="margin:0 0 4px; font-size:var(--t-md); font-weight:700; color:var(--accent);"></p>
+    <p id="hoyWeekLabel" style="margin:0; font-size:var(--t-sm); color:var(--muted);"></p>
   </div>
   <div id="hoyTip"></div>
 
-  <button id="hardDayBtn" onclick="toggleHardDay()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:14px; font-family:inherit; font-size:.88rem; font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">😮‍💨 Hoy no tengo fuerzas para esto</button>
+  <button id="hardDayBtn" onclick="toggleHardDay()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:14px; font-family:inherit; font-size:var(--t-base); font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">😮‍💨 Hoy no tengo fuerzas para esto</button>
 
   <div id="hardDayCard" class="card" style="display:none;">
     <h3 style="margin-top:0;">🌱 Plan mínimo de hoy</h3>
@@ -452,7 +465,7 @@
 <!-- ==================== RECETAS ==================== -->
 <div id="tab-recetas" class="tabpanel">
   <h2>🍳 Recetas rápidas</h2>
-  <p style="color:var(--muted); font-size:.9rem;">Todas en menos de 30 min, pocos ingredientes. Cada una cubre varios platos del menú que usan la misma técnica — solo cambia la proteína o la verdura de turno.</p>
+  <p style="color:var(--muted); font-size:var(--t-base);">Todas en menos de 30 min, pocos ingredientes. Cada una cubre varios platos del menú que usan la misma técnica — solo cambia la proteína o la verdura de turno.</p>
   <button id="surpriseBtn" onclick="surpriseRecipe()">🎲 Sorpréndeme</button>
 
   <details><summary>🐟 Salmón (horno, plancha o airfryer) con limón <span class="dur">10 min</span></summary>
@@ -557,7 +570,7 @@
 
   <div class="card">
     <h3>💶 Dónde comprar y precios aproximados</h3>
-    <p style="font-size:.8rem;color:var(--muted);">Precios orientativos en supermercados económicos de Barcelona (Mercadona / Lidl) — varían según tienda, oferta y momento. Consulta la app del súper para el precio exacto del día.</p>
+    <p style="font-size:var(--t-sm);color:var(--muted);">Precios orientativos en supermercados económicos de Barcelona (Mercadona / Lidl) — varían según tienda, oferta y momento. Consulta la app del súper para el precio exacto del día.</p>
     <table>
       <tr><th>Producto</th><th>Dónde</th><th>Precio aprox.</th></tr>
       <tr><td>🍗 Pechuga de pollo</td><td>Mercadona</td><td>5-6 €/kg</td></tr>
@@ -592,7 +605,7 @@
       <tr><td>🫒 Aceite de oliva virgen extra (1L)</td><td>Mercadona / Lidl</td><td>7-10 € <span style="font-size:.75em;">(precio subido, variable)</span></td></tr>
       <tr><td>🍫 Chocolate negro</td><td>Mercadona / Lidl</td><td>1,50-2 €</td></tr>
     </table>
-    <p style="font-size:.82rem;">💡 Frutería/mercado de barrio suele salir más barato para comprar poca cantidad de fruta y verdura fresca — justo lo que necesitas para no desperdiciar.</p>
+    <p style="font-size:var(--t-sm);">💡 Frutería/mercado de barrio suele salir más barato para comprar poca cantidad de fruta y verdura fresca — justo lo que necesitas para no desperdiciar.</p>
   </div>
 
   <div class="card">
@@ -611,7 +624,7 @@
     <div class="content"><ul class="shoplist" id="frescoList3"></ul><button class="shop-clear" onclick="clearShopList('fresco3')">Desmarcar todo</button></div>
   </details>
   <details><summary>🗓️ Semana 4 — fresco a comprar</summary>
-    <div class="content"><ul class="shoplist" id="frescoList4"></ul><button class="shop-clear" onclick="clearShopList('fresco4')">Desmarcar todo</button><p style="font-size:.82rem; color:var(--muted); margin-top:8px;">Viernes: comida de equipo en el trabajo — pizza, hamburguesa o milanesas —, no hace falta comprar nada para ese día.</p></div>
+    <div class="content"><ul class="shoplist" id="frescoList4"></ul><button class="shop-clear" onclick="clearShopList('fresco4')">Desmarcar todo</button><p style="font-size:var(--t-sm); color:var(--muted); margin-top:8px;">Viernes: comida de equipo en el trabajo — pizza, hamburguesa o milanesas —, no hace falta comprar nada para ese día.</p></div>
   </details>
 </div>
 
@@ -655,12 +668,17 @@
 </nav>
 
 <script>
+// El scroll suave lanzado desde JS no lo frena la media query de CSS: hay que consultarla aquí.
+function scrollBehavior(){
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+}
+
 function showTab(name, btn){
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('#tabnav button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  window.scrollTo({top:0, behavior:'smooth'});
+  window.scrollTo({top:0, behavior:scrollBehavior()});
 }
 
 function toggleHardDay(){
@@ -761,8 +779,8 @@ function renderWfhDateList(){
   if(dates.length === 0){ container.innerHTML = ''; return; }
   container.innerHTML = dates.map(d=>
     '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:6px 10px;">'
-    + '<span style="font-size:.8rem;">🏠 '+d+'</span>'
-    + '<button onclick="removeWfhDate(\''+d+'\')" style="background:none; border:none; color:var(--warn); font-size:1.05rem; cursor:pointer; width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;" aria-label="Quitar">🗑️</button>'
+    + '<span style="font-size:var(--t-sm);">🏠 '+d+'</span>'
+    + '<button onclick="removeWfhDate(\''+d+'\')" style="background:none; border:none; color:var(--warn); font-size:var(--t-md); cursor:pointer; width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;" aria-label="Quitar">🗑️</button>'
     + '</div>'
   ).join('');
 }
@@ -838,14 +856,14 @@ function renderVacationList(){
   if(!container) return;
   const list = loadVacations();
   if(list.length === 0){
-    container.innerHTML = '<p style="font-size:.8rem; color:var(--muted); margin:0;">Sin periodos añadidos.</p>';
+    container.innerHTML = '<p style="font-size:var(--t-sm); color:var(--muted); margin:0;">Sin periodos añadidos.</p>';
     return;
   }
   container.innerHTML = list.map((v,i)=>{
     const label = VAC_TIPO_LABEL[v.tipo] || VAC_TIPO_LABEL.descansando;
     return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:8px 10px;">'
-      + '<span style="font-size:.82rem;">'+label+' &nbsp;'+v.start+' → '+v.end+'</span>'
-      + '<button onclick="deleteVacationPeriod('+i+')" style="background:none; border:none; color:var(--warn); font-size:1.05rem; cursor:pointer; width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;" aria-label="Borrar periodo">🗑️</button>'
+      + '<span style="font-size:var(--t-sm);">'+label+' &nbsp;'+v.start+' → '+v.end+'</span>'
+      + '<button onclick="deleteVacationPeriod('+i+')" style="background:none; border:none; color:var(--warn); font-size:var(--t-md); cursor:pointer; width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;" aria-label="Borrar periodo">🗑️</button>'
       + '</div>';
   }).join('');
 }
@@ -1168,7 +1186,7 @@ function surpriseRecipe(){
   detailsEls.forEach(d=>{ d.open = false; });
   const pick = detailsEls[Math.floor(Math.random() * detailsEls.length)];
   pick.open = true;
-  pick.scrollIntoView({ behavior:'smooth', block:'center' });
+  pick.scrollIntoView({ behavior:scrollBehavior(), block:'center' });
 }
 
 function badgeifyHeadings(){
