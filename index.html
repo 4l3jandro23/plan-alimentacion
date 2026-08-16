@@ -39,6 +39,12 @@
     --protein:#5fd3a4; --carbs:#e0b25a; --fat:#e07a7a; --barbg:#232b30;
   }
 
+  /* Texto grande (Ajustes → Apariencia) */
+  html[data-textsize="grande"]{
+    --t-2xs:.76rem; --t-xs:.88rem; --t-sm:.96rem; --t-base:1.08rem;
+    --t-md:1.22rem; --t-lg:1.42rem; --t-xl:1.7rem;
+  }
+
   /* Temas de color alternativos (Ajustes) */
   html[data-color="azul"]{ --accent:#2b6cb0; --accent2:#4a8fd1; --accent-soft:#e5eef8; --protein:#2b6cb0; }
   html.dark[data-color="azul"]{ --accent:#6fb3f0; --accent2:#4a8fd1; --accent-soft:#1b2c3d; --protein:#6fb3f0; }
@@ -208,6 +214,8 @@
   .shop-item{display:flex; align-items:center; gap:8px; padding:5px 0; cursor:pointer; font-size:var(--t-base);}
   .shop-item input{width:18px; height:18px; accent-color:var(--accent); flex-shrink:0; cursor:pointer;}
   .shop-item.checked span{color:var(--muted); text-decoration:line-through;}
+  .shop-item.have span{opacity:.5; text-decoration:line-through;}
+  .shop-group-label{list-style:none; font-size:var(--t-xs); font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.3px; margin:10px 0 2px; break-inside:avoid;}
   .shop-clear{background:none; border:none; color:var(--accent); font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer; padding:8px 0 0; display:block;}
 
   /* Bottom tab bar (iOS style) */
@@ -283,6 +291,26 @@
         </div>
       </div>
 
+      <div class="settings-row">
+        <div>Tamaño de texto</div>
+        <div class="style-options" id="textSizeOpts">
+          <button class="style-opt active" data-size="" onclick="setTextSize('')">Normal</button>
+          <button class="style-opt" data-size="grande" onclick="setTextSize('grande')">Grande</button>
+        </div>
+      </div>
+
+    </details>
+
+    <details class="settings-group">
+      <summary>💾 Copia de seguridad</summary>
+      <div class="settings-row">
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Guarda un archivo con tus ajustes, lista de la compra y favoritas, o recupéralos desde uno guardado antes.</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button onclick="exportBackup()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">⬇️ Exportar</button>
+          <button onclick="document.getElementById('backupFileInput').click()" style="background:var(--accent-soft); color:var(--accent); border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">⬆️ Importar</button>
+          <input type="file" id="backupFileInput" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
+        </div>
+      </div>
     </details>
 
     <details class="settings-group">
@@ -356,7 +384,8 @@
   </div>
   <div id="hoyTip"></div>
 
-  <button id="hardDayBtn" onclick="toggleHardDay()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:14px; font-family:inherit; font-size:var(--t-base); font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">😮‍💨 Hoy no tengo fuerzas para esto</button>
+  <button id="hardDayBtn" onclick="toggleHardDay()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:10px; font-family:inherit; font-size:var(--t-base); font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">😮‍💨 Hoy no tengo fuerzas para esto</button>
+  <button id="noCookBtn" onclick="toggleNoCook()" style="width:100%; text-align:left; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; margin-bottom:14px; font-family:inherit; font-size:var(--t-base); font-weight:600; color:var(--ink); cursor:pointer; box-shadow:var(--shadow);">🥫 Hoy no puedo cocinar</button>
 
   <div id="hardDayCard" class="card" style="display:none;">
     <h3 style="margin-top:0;">🌱 Plan mínimo de hoy</h3>
@@ -369,11 +398,29 @@
     <div class="tip">El menú completo sigue aquí abajo tal cual, por si en algún momento del día te apetece. No hay que recuperar nada ni empezar de cero mañana — solo retomar.</div>
   </div>
 
+  <div id="noCookCard" class="card" style="display:none;">
+    <h3 style="margin-top:0;">🥫 Sin cocinar, en menos de 2 minutos</h3>
+    <p>Elige lo que tengas más a mano, sin pensarlo más:</p>
+    <ul>
+      <li>🐟 Atún o sardinas en lata + pan o un puñado de fruto seco</li>
+      <li>🥚 2 huevos cocidos (si ya los tienes hervidos) + fruta</li>
+      <li>🧀 Queso fresco o yogur griego + fruta</li>
+      <li>🫘 Legumbre de bote escurrida + un chorrito de aceite y sal</li>
+      <li>🐟 Salmón ahumado directo del sobre + un puñado de ensalada</li>
+    </ul>
+    <div class="tip">Cualquiera de estas cuenta como comida hecha. No hace falta que sea el plato del día.</div>
+  </div>
+
   <div id="hoyContent"></div>
 </div>
 
 <!-- ==================== INICIO ==================== -->
 <div id="tab-inicio" class="tabpanel">
+
+  <a href="https://4l3jandro23.github.io/plan-ejercicio/" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--accent-soft); color:var(--accent); border-radius:8px; padding:12px 14px; margin-bottom:16px; text-decoration:none; font-weight:700; font-size:var(--t-sm);">
+    <span>💪 Ir a tu plan de ejercicio</span>
+    <span aria-hidden="true">→</span>
+  </a>
 
   <div class="statgrid">
     <div class="stat"><b>58-78</b><span>kg rango sano</span></div>
@@ -459,6 +506,11 @@
     <p>Todo es intercambiable: si un día no te apetece lo propuesto, cambia por otra opción de la misma categoría. Lunes-jueves con tupper en el trabajo; viernes y sábado noche, libres siempre.</p>
     <div class="tip">🔢 Las <b>kcal y macros son una estimación orientativa</b> (no un cálculo clínico exacto) — de media rondan los <b>~1.740 kcal/día</b>, un déficit moderado y sostenible. Los días con cena libre o pizza no cuentan esa comida en el total. Si quieres precisión real, pesa ingredientes con Fitia.</div>
   </div>
+  <div class="style-options" id="menuFilter" style="margin-bottom:14px;">
+    <button class="style-opt active" data-filter="all" onclick="setMenuFilter('all')">Todo</button>
+    <button class="style-opt" data-filter="comida" onclick="setMenuFilter('comida')">Solo comidas</button>
+    <button class="style-opt" data-filter="cena" onclick="setMenuFilter('cena')">Solo cenas</button>
+  </div>
   <div id="weeksContainer"></div>
 </div>
 
@@ -467,6 +519,12 @@
   <h2>🍳 Recetas rápidas</h2>
   <p style="color:var(--muted); font-size:var(--t-base);">Todas en menos de 30 min, pocos ingredientes. Cada una cubre varios platos del menú que usan la misma técnica — solo cambia la proteína o la verdura de turno.</p>
   <button id="surpriseBtn" onclick="surpriseRecipe()">🎲 Sorpréndeme</button>
+
+  <div style="display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap;">
+    <input type="search" id="recipeSearch" placeholder="🔎 Buscar por ingrediente (ej. pollo, huevo...)" oninput="filterRecipes()" style="flex:1; min-width:180px; border:1px solid var(--border); border-radius:8px; padding:9px 12px; font-family:inherit; font-size:var(--t-sm); background:var(--card); color:var(--ink);">
+    <button id="recipeFastBtn" class="style-opt" style="flex:none; padding:9px 14px;" onclick="toggleRecipeFast()">⏱️ &lt;15 min</button>
+  </div>
+  <p id="recipeEmptyMsg" style="display:none; color:var(--muted); font-size:var(--t-sm);">Ninguna receta coincide — prueba con otro ingrediente.</p>
 
   <details><summary>🐟 Salmón (horno, plancha o airfryer) con limón <span class="dur">10 min</span></summary>
     <div class="content"><p><b>Ingredientes:</b> lomo de salmón, aceite de oliva, sal, limón, ajo en polvo, eneldo o perejil (opcional).</p>
@@ -555,6 +613,7 @@
 <!-- ==================== COMPRA ==================== -->
 <div id="tab-compra" class="tabpanel">
   <h2>🛒 Lista de la compra</h2>
+  <button onclick="shareShopList()" style="background:var(--accent-soft); color:var(--accent); border:none; border-radius:8px; padding:9px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer; margin-bottom:14px;">📤 Compartir lo pendiente</button>
 
   <div class="card">
     <h3>😩 Se te caduca la comida — cómo evitarlo</h3>
@@ -718,6 +777,14 @@ function toggleHardDay(){
   card.style.display = isOpen ? 'none' : 'block';
   btn.textContent = isOpen ? '😮‍💨 Hoy no tengo fuerzas para esto' : '✅ Volver al plan de hoy';
 }
+function toggleNoCook(){
+  const card = document.getElementById('noCookCard');
+  const btn = document.getElementById('noCookBtn');
+  const isOpen = card.style.display !== 'none';
+  card.style.display = isOpen ? 'none' : 'block';
+  btn.textContent = isOpen ? '🥫 Hoy no puedo cocinar' : '✅ Volver al plan de hoy';
+  if(!isOpen) card.scrollIntoView({ behavior:scrollBehavior(), block:'center' });
+}
 
 function toggleTheme(){
   const isDark = document.documentElement.classList.toggle('dark');
@@ -744,6 +811,7 @@ function resetAllSettings(){
   if(!confirm('¿Restablecer color, teletrabajo, vacaciones, lista de la compra marcada y favoritas? No se puede deshacer.')) return;
   [...SYNC_KEYS].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
   setColor('');
+  setTextSize('');
   document.querySelectorAll('#wfhDays .style-opt').forEach(b=>b.classList.remove('active'));
   renderWfhDateList();
   document.querySelectorAll('#bowlDays .style-opt').forEach(b=>b.classList.remove('active'));
@@ -759,6 +827,14 @@ function setColor(color){
   try{ localStorage.setItem('planAlimentacionColor', color); }catch(e){}
   document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
     s.classList.toggle('active', s.dataset.color === color);
+  });
+  pushSync();
+}
+function setTextSize(size){
+  document.documentElement.setAttribute('data-textsize', size);
+  try{ localStorage.setItem('planAlimentacionTextSize', size); }catch(e){}
+  document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
+    b.classList.toggle('active', b.dataset.size === size);
   });
   pushSync();
 }
@@ -919,9 +995,15 @@ function calDateKeyLocal(date){
   let color = '';
   try{ color = localStorage.getItem('planAlimentacionColor') || ''; }catch(e){}
   document.documentElement.setAttribute('data-color', color);
+  let textSize = '';
+  try{ textSize = localStorage.getItem('planAlimentacionTextSize') || ''; }catch(e){}
+  document.documentElement.setAttribute('data-textsize', textSize);
   document.addEventListener('DOMContentLoaded', ()=>{
     document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
       s.classList.toggle('active', s.dataset.color === color);
+    });
+    document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
+      b.classList.toggle('active', b.dataset.size === textSize);
     });
     renderWfhButtons();
     renderWfhDateList();
@@ -958,20 +1040,77 @@ function clearShopList(key){
   renderShopList(key);
   pushSync();
 }
+function loadShopHave(key){
+  try{ return JSON.parse(localStorage.getItem('planAlimentacionShopHave_'+key)) || []; }catch(e){ return []; }
+}
+function saveShopHave(key, arr){
+  try{ localStorage.setItem('planAlimentacionShopHave_'+key, JSON.stringify(arr)); }catch(e){}
+}
+function toggleShopHave(key, item){
+  let have = loadShopHave(key);
+  have = have.includes(item) ? have.filter(i=>i!==item) : [...have, item];
+  saveShopHave(key, have);
+  renderShopList(key);
+  pushSync();
+}
+function classifyItem(item){
+  const t = item.toLowerCase();
+  if(/salmón|salmon|merluza|pollo|pechuga|muslo|pavo|calamar|pulpo|solomillo|cerdo|ternera|bacalao|sardinas|atún|atun/.test(t)) return '🥩 Proteína';
+  if(/patata|espinaca|espárrago|esparrago|pimient|champiñ|champin|ensalada|tomate|brócoli|brocoli|verdura|fruta/.test(t)) return '🥦 Verdura y fruta';
+  return '🧺 Otros';
+}
+function shopItemHtml(key, item, isChecked, isHave){
+  return '<li><span class="shop-item'+(isChecked?' checked':'')+(isHave?' have':'')+'">'
+    + '<label style="display:flex; align-items:center; gap:8px; flex:1; cursor:pointer;"><input type="checkbox" '+(isChecked?'checked':'')+' onchange="toggleShopItem(\''+key+'\', '+JSON.stringify(item).replace(/"/g,'&quot;')+')"><span>'+item+'</span></label>'
+    + '<button type="button" title="Ya lo tengo en casa" onclick="toggleShopHave(\''+key+'\', '+JSON.stringify(item).replace(/"/g,'&quot;')+')" style="background:none; border:none; cursor:pointer; font-size:var(--t-base); opacity:'+(isHave?'1':'.3')+'; flex-shrink:0; padding:0 2px;">🏠</button>'
+    + '</span></li>';
+}
 function renderShopList(key){
   const items = SHOP_LISTS[key];
   const checked = loadShopChecked(key);
+  const have = loadShopHave(key);
   const container = document.getElementById(SHOP_LIST_ELS[key]);
   if(!container) return;
-  container.innerHTML = items.map(item=>{
-    const isChecked = checked.includes(item);
-    return '<li><label class="shop-item'+(isChecked?' checked':'')+'"><input type="checkbox" '+(isChecked?'checked':'')+' onchange="toggleShopItem(\''+key+'\', '+JSON.stringify(item).replace(/"/g,'&quot;')+')"><span>'+item+'</span></label></li>';
-  }).join('');
+  const byHaveLast = (a,b) => (have.includes(a)?1:0) - (have.includes(b)?1:0);
+  if(key === 'despensa'){
+    container.innerHTML = [...items].sort(byHaveLast).map(item=>shopItemHtml(key, item, checked.includes(item), have.includes(item))).join('');
+    return;
+  }
+  const groups = { '🥩 Proteína':[], '🥦 Verdura y fruta':[], '🧺 Otros':[] };
+  items.forEach(item=>{ groups[classifyItem(item)].push(item); });
+  let html = '';
+  Object.keys(groups).forEach(label=>{
+    const list = groups[label];
+    if(list.length === 0) return;
+    html += '<li class="shop-group-label">'+label+'</li>';
+    html += list.sort(byHaveLast).map(item=>shopItemHtml(key, item, checked.includes(item), have.includes(item))).join('');
+  });
+  container.innerHTML = html;
 }
 function renderAllShopLists(){
   Object.keys(SHOP_LISTS).forEach(renderShopList);
 }
 renderAllShopLists();
+function shareShopList(){
+  const lines = [];
+  Object.keys(SHOP_LISTS).forEach(key=>{
+    const checked = loadShopChecked(key);
+    const have = loadShopHave(key);
+    const pending = SHOP_LISTS[key].filter(i => !checked.includes(i) && !have.includes(i));
+    if(pending.length === 0) return;
+    const label = key === 'despensa' ? '🏠 Despensa' : '🗓️ Fresco semana ' + key.replace('fresco', '');
+    lines.push(label + ':');
+    pending.forEach(i => lines.push('- ' + i));
+    lines.push('');
+  });
+  const text = lines.join('\n').trim();
+  if(!text){ alert('No queda nada pendiente 🎉'); return; }
+  if(navigator.share){
+    navigator.share({ title:'Lista de la compra', text }).catch(()=>{});
+  } else {
+    window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+  }
+}
 
 /* ===== Sincronización entre dispositivos (Supabase) ===== */
 const SUPABASE_URL = 'https://ibouktzmckphsvqabgig.supabase.co';
@@ -980,7 +1119,9 @@ const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones',
   'planAlimentacionShop_despensa','planAlimentacionShop_fresco1','planAlimentacionShop_fresco2',
-  'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4','planAlimentacionFavRecetas'
+  'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4','planAlimentacionFavRecetas',
+  'planAlimentacionShopHave_despensa','planAlimentacionShopHave_fresco1','planAlimentacionShopHave_fresco2',
+  'planAlimentacionShopHave_fresco3','planAlimentacionShopHave_fresco4','planAlimentacionTextSize'
 ];
 let syncPushTimer = null;
 
@@ -1000,11 +1141,41 @@ function applySyncState(state){
     }
   });
 }
+function exportBackup(){
+  const blob = new Blob([JSON.stringify(collectSyncState(), null, 2)], { type:'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'plan-alimentacion-backup-' + calDateKeyLocal(new Date()) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+function importBackup(file){
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const state = JSON.parse(reader.result);
+      applySyncState(state);
+      rerenderAfterSync();
+      pushSync();
+      alert('Copia restaurada.');
+    }catch(e){
+      alert('El archivo no es una copia de seguridad válida.');
+    }
+  };
+  reader.readAsText(file);
+}
 function rerenderAfterSync(){
   const color = localStorage.getItem('planAlimentacionColor') || '';
   document.documentElement.setAttribute('data-color', color);
   document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
     s.classList.toggle('active', s.dataset.color === color);
+  });
+  const textSize = localStorage.getItem('planAlimentacionTextSize') || '';
+  document.documentElement.setAttribute('data-textsize', textSize);
+  document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
+    b.classList.toggle('active', b.dataset.size === textSize);
   });
   renderWfhButtons();
   renderWfhDateList();
@@ -1124,14 +1295,48 @@ function plateSVG(segments, size){
     + '<circle cx="'+cx+'" cy="'+cy+'" r="'+innerR+'" style="fill:var(--bg)"/></svg>';
 }
 
-function dayCardHtml(d){
+function weekdayIndexFromDay(dayStr){
+  const map = {'Lunes':0,'Martes':1,'Miércoles':2,'Jueves':3,'Viernes':4,'Sábado':5,'Domingo':6};
+  return map.hasOwnProperty(dayStr.split(' ')[0]) ? map[dayStr.split(' ')[0]] : -1;
+}
+const SUSTITUCIONES = [
+  { test:/pollo|pavo|muslit|contramusl|brochetas/i, texto:'Sin pollo/pavo: pescado blanco, calamar o legumbre a la plancha, misma cantidad.' },
+  { test:/salmón|merluza|bacalao|caballa|sardinas|pescado|calamar|pulpo/i, texto:'Sin este pescado/marisco: pollo o pavo a la plancha, o huevo si no hay tiempo.' },
+  { test:/lentejas|garbanzos|alubias|legumbres/i, texto:'Sin legumbre: atún o huevo con la misma verdura de acompañamiento.' },
+  { test:/solomillo|ternera|bistec|cerdo/i, texto:'Sin carne roja: pechuga de pollo o pavo a la plancha, mismo tiempo de cocción.' },
+  { test:/huevo|tortilla|revuelto/i, texto:'Sin huevo: yogur griego o queso fresco con la misma verdura.' }
+];
+function sustitucionPara(texto){
+  const m = SUSTITUCIONES.find(s => s.test.test(texto));
+  return m ? m.texto : null;
+}
+function dayCardHtml(d, filterMode){
+  filterMode = filterMode || 'all';
+  const wIdx = weekdayIndexFromDay(d.day);
+  const isWfhDay = wIdx>=0 && loadWfhDays().includes(wIdx);
+  const isBowlDay = wIdx>=0 && loadBowlDays().includes(wIdx);
+  const badges = (isWfhDay?' <span class="pizza-tag">🏠 teletrabajo</span>':'') + (isBowlDay?' <span class="pizza-tag">🥗 bowl</span>':'');
+  const showComida = filterMode !== 'cena';
+  const showCena = filterMode !== 'comida';
+  const subComida = sustitucionPara(d.comida);
+  const subCena = sustitucionPara(d.cena);
   let html = '<div class="daycard">';
-  html += '<div class="daycard-header"><span class="dayname">'+d.day+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
-  html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+' + ☕ café con leche</div>';
-  html += '<div class="meal">'+d.media+'</div>';
-  html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
-  html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
-  html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
+  html += '<div class="daycard-header"><span class="dayname">'+d.day+badges+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
+  if(filterMode === 'all'){
+    html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+' + ☕ café con leche</div>';
+    html += '<div class="meal">'+d.media+'</div>';
+  }
+  if(showComida){
+    html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
+    if(subComida) html += '<div class="meal" style="font-size:var(--t-xs); color:var(--muted);">🔁 '+subComida+'</div>';
+  }
+  if(filterMode === 'all'){
+    html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
+  }
+  if(showCena){
+    html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
+    if(subCena) html += '<div class="meal" style="font-size:var(--t-xs); color:var(--muted);">🔁 '+subCena+'</div>';
+  }
   html += '<div class="plate-progress">';
   html += plateSVG([{value:d.p,colorVar:'--protein'},{value:d.c,colorVar:'--carbs'},{value:d.f,colorVar:'--fat'}], 52);
   html += '<div class="plate-legend">';
@@ -1142,6 +1347,14 @@ function dayCardHtml(d){
   return html;
 }
 
+let menuFilterMode = 'all';
+function setMenuFilter(mode){
+  menuFilterMode = mode;
+  document.querySelectorAll('#menuFilter .style-opt').forEach(b=>{
+    b.classList.toggle('active', b.dataset.filter === mode);
+  });
+  renderWeeks();
+}
 function renderWeeks(){
   const container = document.getElementById('weeksContainer');
   let html = '';
@@ -1149,7 +1362,7 @@ function renderWeeks(){
     html += '<details class="week"'+(w.n===1?' open':'')+'>';
     html += '<summary>🗓️ Semana '+w.n+'<span class="week-avg">media ~'+w.avg+' kcal/día</span></summary>';
     html += '<div class="weekdays">';
-    w.days.forEach(d=>{ html += dayCardHtml(d); });
+    w.days.forEach(d=>{ html += dayCardHtml(d, menuFilterMode); });
     html += '</div></details>';
   });
   container.innerHTML = html;
@@ -1209,6 +1422,31 @@ function initRecipeFavorites(){
     summary.appendChild(star);
     summary.appendChild(wrap);
   });
+}
+let recipeFastOnly = false;
+function normalizeText(s){
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+}
+function toggleRecipeFast(){
+  recipeFastOnly = !recipeFastOnly;
+  document.getElementById('recipeFastBtn').classList.toggle('active', recipeFastOnly);
+  filterRecipes();
+}
+function filterRecipes(){
+  const query = normalizeText(document.getElementById('recipeSearch').value.trim());
+  const detailsEls = [...document.querySelectorAll('#tab-recetas > details')];
+  let visibleCount = 0;
+  detailsEls.forEach(d=>{
+    const text = normalizeText(d.textContent);
+    const matchesQuery = query === '' || text.includes(query);
+    const durEl = d.querySelector('.dur');
+    const mins = durEl ? parseInt(durEl.textContent, 10) : 0;
+    const matchesFast = !recipeFastOnly || (mins > 0 && mins <= 15);
+    const visible = matchesQuery && matchesFast;
+    d.style.display = visible ? '' : 'none';
+    if(visible) visibleCount++;
+  });
+  document.getElementById('recipeEmptyMsg').style.display = visibleCount === 0 ? 'block' : 'none';
 }
 function surpriseRecipe(){
   const detailsEls = [...document.querySelectorAll('#tab-recetas > details')];
