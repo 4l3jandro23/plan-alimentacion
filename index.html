@@ -368,6 +368,14 @@
       </div>
     </details>
 
+    <details class="settings-group">
+      <summary>🔔 Aviso del tupper</summary>
+      <div class="settings-row">
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Aviso la noche antes de los días que toca preparar tupper (no en teletrabajo, bowl, fin de semana o vacaciones). Requiere tener la app instalada en la pantalla de inicio.</p>
+        <button id="pushToggleBtn" onclick="togglePushSubscription()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">🔔 Activar aviso</button>
+      </div>
+    </details>
+
     <button class="settings-close" onclick="closeSettings()">Listo</button>
     <button onclick="resetAllSettings()" style="width:100%; margin-top:8px; background:none; border:none; color:var(--warn); font-family:inherit; font-size:var(--t-xs); font-weight:600; cursor:pointer; padding:8px;">Restablecer todos los ajustes</button>
   </div>
@@ -1166,6 +1174,63 @@ function importBackup(file){
   };
   reader.readAsText(file);
 }
+/* ===== Aviso push del tupper (Web Push + Supabase + Edge Function) ===== */
+const VAPID_PUBLIC_KEY = 'BKpRdX9mnjYijjtQ_fKgQzwq9GbuVjGXV4UG0AcCgaQKDNQMPnM_aLF1FEY5AWdpUVGdcOzcljoVEVvX98B7Eyc';
+function urlBase64ToUint8Array(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const raw = atob(base64);
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+function updatePushButton(isOn){
+  const btn = document.getElementById('pushToggleBtn');
+  if(!btn) return;
+  btn.textContent = isOn ? '🔕 Desactivar aviso' : '🔔 Activar aviso';
+}
+async function togglePushSubscription(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+    alert('Este navegador no soporta notificaciones push. En iPhone, instala la app en la pantalla de inicio primero.');
+    return;
+  }
+  const reg = await navigator.serviceWorker.ready;
+  const existing = await reg.pushManager.getSubscription();
+  if(existing){
+    try{
+      await fetch(SUPABASE_URL + '/rest/v1/push_subscriptions?endpoint=eq.' + encodeURIComponent(existing.endpoint), {
+        method: 'DELETE',
+        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+      });
+    }catch(e){}
+    await existing.unsubscribe();
+    updatePushButton(false);
+    return;
+  }
+  const perm = await Notification.requestPermission();
+  if(perm !== 'granted'){ alert('No se ha dado permiso de notificaciones.'); return; }
+  const sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
+  const json = sub.toJSON();
+  await fetch(SUPABASE_URL + '/rest/v1/push_subscriptions', {
+    method: 'POST',
+    headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates' },
+    body: JSON.stringify({ endpoint: json.endpoint, p256dh: json.keys.p256dh, auth: json.keys.auth })
+  });
+  updatePushButton(true);
+}
+if('serviceWorker' in navigator && 'PushManager' in window){
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    try{
+      const reg = await navigator.serviceWorker.ready;
+      const existing = await reg.pushManager.getSubscription();
+      updatePushButton(!!existing);
+    }catch(e){}
+  });
+} else {
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const btn = document.getElementById('pushToggleBtn');
+    if(btn){ btn.textContent = 'No disponible en este navegador'; btn.disabled = true; btn.style.opacity = '.5'; }
+  });
+}
+
 function rerenderAfterSync(){
   const color = localStorage.getItem('planAlimentacionColor') || '';
   document.documentElement.setAttribute('data-color', color);
