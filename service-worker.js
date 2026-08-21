@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'plan-alimentacion-v26';
+const CACHE_VERSION = 'plan-alimentacion-v27';
 const APP_SHELL = [
   './',
   './index.html',
@@ -56,6 +56,23 @@ self.addEventListener('notificationclick', event => {
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
+
+  // El documento principal va red-primero: así una actualización se ve al momento,
+  // sin depender de que el navegador detecte y active un service worker nuevo antes.
+  // Cae a caché solo si no hay red (banner de "sin conexión" ya avisa de eso).
+  const isDocument = event.request.mode === 'navigate' || event.request.url.endsWith('/index.html');
+  if (isDocument) {
+    event.respondWith(
+      fetch(event.request).then(response => {
+        if (response && response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_VERSION).then(cache => cache.put(event.request, clone));
+        }
+        return response;
+      }).catch(() => caches.match(event.request))
+    );
+    return;
+  }
 
   event.respondWith(
     caches.match(event.request).then(cached => {

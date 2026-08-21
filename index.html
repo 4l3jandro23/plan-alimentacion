@@ -31,6 +31,8 @@
     --accent:#2f7a5f; --accent2:#57a686; --accent-soft:#e7f3ee; --warn:#b5651d; --warn-soft:#fbeee2;
     --border:#dcd9d0; --radius:3px; --shadow:none;
     --protein:#2f7a5f; --carbs:#c98a2b; --fat:#a33333; --barbg:#eee9df;
+    --ease-out:cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-drawer:cubic-bezier(0.32, 0.72, 0, 1);
   }
   html.dark{
     --bg:#12161a; --card:#1b2126; --ink:#eceef0; --muted:#98a1aa;
@@ -81,14 +83,19 @@
 
   /* Panel de Ajustes */
   .settings-overlay{
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:50;
-    align-items:flex-end; justify-content:center;
+    position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:50;
+    display:flex; align-items:flex-end; justify-content:center;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transition:opacity 220ms ease, visibility 220ms;
   }
-  .settings-overlay.show{display:flex;}
+  .settings-overlay.show{ opacity:1; visibility:visible; pointer-events:auto; }
   .settings-panel{
     background:var(--card); width:100%; max-width:520px; border-radius:4px 4px 0 0;
     padding:18px 18px calc(20px + env(safe-area-inset-bottom)); max-height:82vh; overflow-y:auto;
+    transform:translateY(100%);
+    transition:transform 320ms var(--ease-drawer);
   }
+  .settings-overlay.show .settings-panel{ transform:translateY(0); }
   .settings-panel h3{margin:0 0 4px; font-size:var(--t-lg); font-family:var(--font-display); font-weight:600; color:var(--ink);}
   .settings-row{margin:16px 0;}
   .settings-row > div:first-child{font-size:var(--t-sm); font-weight:700; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:.3px;}
@@ -120,7 +127,7 @@
   }
 
   main{max-width:760px; margin:0 auto; padding:18px 16px 6px;}
-  .tabpanel{display:none; animation:fade .25s ease;}
+  .tabpanel{display:none; animation:fade .2s var(--ease-out);}
   .tabpanel.active{display:block;}
   @keyframes fade{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
 
@@ -183,7 +190,13 @@
     padding:12px 14px; font-family:inherit; font-size:var(--t-base); font-weight:700; cursor:pointer; margin-bottom:14px;
   }
   details summary:active{background:var(--accent-soft);}
-  button:active{transform:scale(.96); transition:transform .1s;}
+  button:active{transform:scale(.96); transition:transform 140ms var(--ease-out);}
+  .exercise-link{transition:transform 140ms var(--ease-out);}
+  .exercise-link:active{transform:scale(.97);}
+  .exercise-link-arrow{transition:transform 160ms var(--ease-out);}
+  @media (hover:hover) and (pointer:fine){
+    .exercise-link:hover .exercise-link-arrow{transform:translateX(3px);}
+  }
   .bottomnav button:active{transform:none;}
   details summary::-webkit-details-marker{display:none;}
   details summary::after{content:"⌄"; color:var(--accent); font-size:var(--t-lg); transition:transform .2s; flex-shrink:0; font-family:var(--font-body);}
@@ -239,7 +252,7 @@
   .banner{
     position:fixed; left:12px; right:12px; z-index:40; padding:10px 14px; border-radius:3px;
     font-size:var(--t-sm); font-weight:600; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,.15);
-    top:-200px; visibility:hidden; transition:top .25s ease, visibility .25s;
+    top:-200px; visibility:hidden; transition:top 240ms var(--ease-out), visibility 240ms;
   }
   .banner.show{top:calc(10px + env(safe-area-inset-top)); visibility:visible;}
   #offlineBanner{background:var(--warn-soft); color:var(--warn);}
@@ -425,9 +438,9 @@
 <!-- ==================== INICIO ==================== -->
 <div id="tab-inicio" class="tabpanel">
 
-  <a href="https://4l3jandro23.github.io/plan-ejercicio/" target="_blank" rel="noopener" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--accent-soft); color:var(--accent); border-radius:8px; padding:12px 14px; margin-bottom:16px; text-decoration:none; font-weight:700; font-size:var(--t-sm);">
+  <a href="https://4l3jandro23.github.io/plan-ejercicio/" target="_blank" rel="noopener" class="exercise-link" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--accent-soft); color:var(--accent); border-radius:8px; padding:12px 14px; margin-bottom:16px; text-decoration:none; font-weight:700; font-size:var(--t-sm);">
     <span>💪 Ir a tu plan de ejercicio</span>
-    <span aria-hidden="true">→</span>
+    <span class="exercise-link-arrow" aria-hidden="true">→</span>
   </a>
 
   <div class="statgrid">
@@ -1514,10 +1527,12 @@ function filterRecipes(){
   document.getElementById('recipeEmptyMsg').style.display = visibleCount === 0 ? 'block' : 'none';
 }
 function surpriseRecipe(){
-  const detailsEls = [...document.querySelectorAll('#tab-recetas > details')];
-  if(detailsEls.length === 0) return;
-  detailsEls.forEach(d=>{ d.open = false; });
-  const pick = detailsEls[Math.floor(Math.random() * detailsEls.length)];
+  const allEls = [...document.querySelectorAll('#tab-recetas > details')];
+  const visibleEls = allEls.filter(d => d.style.display !== 'none');
+  const pool = visibleEls.length > 0 ? visibleEls : allEls;
+  if(pool.length === 0) return;
+  allEls.forEach(d=>{ d.open = false; });
+  const pick = pool[Math.floor(Math.random() * pool.length)];
   pick.open = true;
   pick.scrollIntoView({ behavior:scrollBehavior(), block:'center' });
 }
