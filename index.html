@@ -264,9 +264,217 @@
     background:var(--accent); color:#fff; border:none; border-radius:3px; padding:5px 12px;
     font-size:var(--t-xs); font-weight:700; cursor:pointer;
   }
+
+  /* ==================== ICONOS VECTORIALES ====================
+     Dibujados a mano como símbolos SVG dentro del propio HTML: sin librería,
+     sin CDN y sin una petición más. La app tiene que seguir funcionando
+     entera sin conexión, y meter Lucide por CDN rompía justo eso. */
+  .ic-v{
+    width:1.15em; height:1.15em; flex-shrink:0; vertical-align:-0.18em;
+    fill:none; stroke:currentColor; stroke-width:1.75;
+    stroke-linecap:round; stroke-linejoin:round;
+  }
+  .bottomnav .ic-v{width:22px; height:22px; vertical-align:0;}
+  .ic-lg{width:1.6em; height:1.6em;}
+
+  /* ==================== FICHA DEL PLATO ==================== */
+  .ficha-back{
+    position:fixed; inset:0; z-index:90; background:rgba(30,28,24,.55);
+    display:none; align-items:flex-end; justify-content:center;
+    backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+  }
+  .ficha-back.show{display:flex; animation:fichaFade .22s ease;}
+  @keyframes fichaFade{from{opacity:0;} to{opacity:1;}}
+  .ficha{
+    background:var(--bg); width:100%; max-width:560px;
+    border-radius:20px 20px 0 0; max-height:92vh;
+    display:flex; flex-direction:column; overflow:hidden;
+    box-shadow:0 -8px 40px rgba(0,0,0,.28);
+    animation:fichaSube .32s cubic-bezier(.32,.72,0,1);
+  }
+  @keyframes fichaSube{from{transform:translateY(28px);} to{transform:translateY(0);}}
+  @media (min-width:640px){
+    .ficha-back{align-items:center;}
+    .ficha{border-radius:20px; max-height:88vh;}
+  }
+
+  .ficha-top{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 16px 10px; flex-shrink:0;
+  }
+  .ficha-tipo{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:var(--t-sm); font-weight:700; color:var(--muted);
+  }
+  .ficha-x{
+    width:36px; height:36px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--card); color:var(--ink); display:grid; place-items:center;
+    box-shadow:0 1px 3px rgba(0,0,0,.1); flex-shrink:0;
+    transition:background .18s ease, transform .15s ease;
+  }
+  .ficha-x:active{transform:scale(.9);}
+
+  .ficha-scroll{overflow-y:auto; padding:0 16px 22px; -webkit-overflow-scrolling:touch;}
+
+  /* Cabecera: cuadrado con degradado y el icono de la familia del plato.
+     No hay fotos de los platos y no me las voy a inventar, así que la
+     identidad visual la da el color de la categoría. */
+  .ficha-hero{
+    width:132px; height:132px; margin:2px auto 16px; border-radius:18px;
+    display:grid; place-items:center; color:#fff;
+    box-shadow:0 8px 24px rgba(0,0,0,.16);
+  }
+  .ficha-hero .ic-v{width:60px; height:60px; stroke-width:1.5;}
+  .ficha-titulo{
+    font-family:var(--font-display); font-weight:600; font-size:var(--t-xl);
+    text-align:center; margin:0 0 5px; line-height:1.2; letter-spacing:-.3px;
+  }
+  .ficha-sub{text-align:center; color:var(--muted); font-size:var(--t-sm); margin:0 0 14px;}
+
+  .ficha-chips{display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin:0 0 18px;}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    background:var(--card); border:1px solid var(--border); border-radius:999px;
+    padding:6px 13px; font-size:var(--t-xs); font-weight:600; color:var(--ink);
+  }
+  .chip .ic-v{width:14px; height:14px; color:var(--muted);}
+
+  .ficha-cta{
+    width:100%; border:none; border-radius:12px; cursor:pointer;
+    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;
+    padding:15px; font-family:inherit; font-size:var(--t-md); font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:9px;
+    box-shadow:0 4px 14px rgba(0,0,0,.14); margin:0 0 16px;
+    transition:box-shadow .2s ease, transform .14s ease, filter .2s ease;
+  }
+  .ficha-cta:active{transform:scale(.985); filter:brightness(.96);}
+  .ficha-cta.hecho{background:var(--neutral,#e8e5dd); color:var(--muted); box-shadow:none;}
+
+  /* Pestañas de la ficha, tipo segmentado */
+  .ficha-tabs{
+    display:flex; gap:3px; background:var(--card); border:1px solid var(--border);
+    border-radius:999px; padding:4px; margin:0 auto 18px; width:fit-content; max-width:100%;
+  }
+  .ficha-tabs button{
+    border:none; background:none; cursor:pointer; border-radius:999px;
+    padding:8px 15px; font-family:inherit; font-size:var(--t-xs); font-weight:700;
+    color:var(--muted); display:inline-flex; align-items:center; gap:6px;
+    transition:background .2s ease, color .2s ease;
+  }
+  .ficha-tabs button.on{background:var(--accent-soft); color:var(--accent);}
+  .ficha-pane{display:none; animation:fichaFade .25s ease;}
+  .ficha-pane.on{display:block;}
+
+  .ficha-bloque{margin:0 0 20px;}
+  .ficha-h{
+    display:flex; align-items:center; gap:8px; margin:0 0 9px;
+    font-size:var(--t-2xs); font-weight:700; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.9px;
+  }
+  .ficha-h .ic-v{width:15px; height:15px;}
+
+  /* Ingredientes */
+  .ing-lista{list-style:none; padding:0; margin:0; background:var(--card); border-radius:12px; overflow:hidden; border:1px solid var(--border);}
+  .ing-lista li{display:flex; gap:12px; padding:12px 14px; font-size:var(--t-sm); border-bottom:1px solid var(--border); align-items:baseline;}
+  .ing-lista li:last-child{border-bottom:none;}
+  .ing-q{font-family:var(--font-mono); font-weight:700; color:var(--accent); font-size:var(--t-xs); min-width:86px; flex-shrink:0;}
+  .ing-txt b{font-weight:600;}
+  .ing-txt i{display:block; font-style:normal; color:var(--muted); font-size:var(--t-xs); margin-top:2px;}
+
+  /* Pasos numerados */
+  .paso-lista{list-style:none; padding:0; margin:0; counter-reset:paso;}
+  .paso-lista li{
+    display:flex; gap:13px; padding:0 0 16px; font-size:var(--t-base); line-height:1.55;
+    counter-increment:paso; position:relative;
+  }
+  .paso-lista li::before{
+    content:counter(paso); flex-shrink:0;
+    width:27px; height:27px; border-radius:50%;
+    background:var(--accent-soft); color:var(--accent);
+    display:grid; place-items:center;
+    font-family:var(--font-mono); font-weight:700; font-size:var(--t-xs);
+  }
+
+  /* Cajas de aviso dentro de la ficha */
+  .ficha-nota{border-radius:12px; padding:13px 15px; font-size:var(--t-sm); margin:0 0 12px; line-height:1.5;}
+  .ficha-nota.tip{background:var(--accent-soft); border-left:3px solid var(--accent);}
+  .ficha-nota.ojo{background:var(--warn-soft); border-left:3px solid var(--warn);}
+  .ficha-nota.gris{background:var(--card); border:1px solid var(--border);}
+  .ficha-nota b{display:block; margin-bottom:3px;}
+
+  /* Los números, al final y en pequeño: su pauta es método del plato y tiene
+     historial de restricción. Aquí lo primero es siempre cómo se hace. */
+  .ficha-macros{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden;}
+  .ficha-macro{background:var(--card); padding:12px 4px; text-align:center;}
+  .ficha-macro b{display:block; font-family:var(--font-mono); font-weight:700; font-size:var(--t-md); color:var(--ink);}
+  .ficha-macro span{font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; font-weight:700;}
+
+  /* La comida del menú, pulsable */
+  .meal.tocable{
+    cursor:pointer; border-radius:9px; margin:2px -8px; padding:7px 8px;
+    display:flex; align-items:baseline; gap:7px;
+    transition:background .16s ease;
+  }
+  .meal.tocable:active{background:var(--accent-soft);}
+  .meal.tocable .flecha{margin-left:auto; color:var(--muted); flex-shrink:0; align-self:center;}
+  .meal.tocable .flecha .ic-v{width:15px; height:15px;}
+  @media (hover:hover) and (pointer:fine){
+    .meal.tocable:hover{background:var(--accent-soft);}
+    .ficha-x:hover{background:var(--border);}
+    .ficha-cta:hover{box-shadow:0 8px 22px rgba(0,0,0,.2);}
+  }
+
 </style>
 </head>
 <body>
+<!-- ==================== ICONOS ====================
+     Símbolos dibujados a mano, sin librería externa: la app tiene que
+     funcionar entera sin conexión y una CDN rompía justo eso. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6"/></symbol>
+  <symbol id="i-casa" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7"/><path d="M5.5 9.6V20h13V9.6"/><path d="M9.8 20v-5.6h4.4V20"/></symbol>
+  <symbol id="i-calendario" viewBox="0 0 24 24"><rect x="3.2" y="5" width="17.6" height="16" rx="2.6"/><path d="M3.2 9.8h17.6M8.2 3v4M15.8 3v4"/></symbol>
+  <symbol id="i-sarten" viewBox="0 0 24 24"><circle cx="10" cy="13" r="6.4"/><path d="M16.2 10.4 21.5 7.6"/><path d="M10 6.6V4.2"/></symbol>
+  <symbol id="i-carrito" viewBox="0 0 24 24"><path d="M2.6 3.4h2.6l2.4 11.2h9.9l2.1-8H6.2"/><circle cx="9.4" cy="19.2" r="1.5"/><circle cx="17.4" cy="19.2" r="1.5"/></symbol>
+  <symbol id="i-grafico" viewBox="0 0 24 24"><path d="M4 20V10.5M10 20V4.5M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-legumbre" viewBox="0 0 24 24"><path d="M15.6 3.6c3.6 1.6 5.2 6 3.4 9.9-1.8 3.9-6.2 5.8-9.9 4.4-2.6-1-3.4-3.2-2.4-5 1.1-2 3.6-1.6 4.5-3.4.9-1.9-.6-3.4.6-5 .8-1 2.3-1.4 3.8-.9Z"/><path d="M4.4 20.4c1.6-1.8 3.4-3.2 5.4-4.2"/></symbol>
+  <symbol id="i-pescado" viewBox="0 0 24 24"><path d="M3.2 12c2.6-4 6-6 9.2-6 3.6 0 6.4 2.4 8.4 6-2 3.6-4.8 6-8.4 6-3.2 0-6.6-2-9.2-6Z"/><path d="M20.8 12c.9-.9 1.6-2 2-3.2v6.4c-.4-1.2-1.1-2.3-2-3.2Z"/><circle cx="9" cy="10.6" r=".9" fill="currentColor" stroke="none"/><path d="M13.5 9c-.8 2-.8 4 0 6"/></symbol>
+  <symbol id="i-marisco" viewBox="0 0 24 24"><path d="M7.4 10.4c0-2.9 2-5 4.6-5s4.6 2.1 4.6 5c0 1.5-.5 2.6-1.2 3.4H8.6c-.7-.8-1.2-1.9-1.2-3.4Z"/><path d="M9 14c-.4 2.2-1.4 4-2.6 5.4M12 14c0 2.4.2 4.2.6 5.8M15 14c.4 2.2 1.4 4 2.6 5.4"/><circle cx="10.3" cy="10" r=".85" fill="currentColor" stroke="none"/><circle cx="13.7" cy="10" r=".85" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-ave" viewBox="0 0 24 24"><path d="M14.6 3.6c2.8 0 5 2.2 5 5 0 2.6-1.9 4.7-4.4 5l-1.6.2-3 3"/><path d="M10.6 16.8 6.4 21l-1.6-1.6L9 15.2"/><circle cx="7.4" cy="17.4" r="2.6"/><path d="M9.6 8.6c0-2.8 2.2-5 5-5"/></symbol>
+  <symbol id="i-carne" viewBox="0 0 24 24"><path d="M4.6 9.4C4.6 5.8 8 3.2 12.4 3.2s7.4 2.6 7.4 6.2c0 4.4-3.6 6-5.6 7.6-1.6 1.3-1.6 3.8-4 3.8-2.6 0-5.6-2.4-5.6-6 0-2.4 0-4 0-5.4Z"/><ellipse cx="11" cy="9.6" rx="2.8" ry="2.2"/></symbol>
+  <symbol id="i-huevo" viewBox="0 0 24 24"><path d="M12 3c3.4 0 6.2 4.6 6.2 8.8 0 4.2-2.8 7-6.2 7s-6.2-2.8-6.2-7C5.8 7.6 8.6 3 12 3Z"/><ellipse cx="12" cy="12.4" rx="2.4" ry="2"/></symbol>
+  <symbol id="i-ensalada" viewBox="0 0 24 24"><path d="M3 11.4h18c0 4.6-3.2 8-8 8h-2c-4.8 0-8-3.4-8-8Z"/><path d="M7.6 11.4c-.6-2 .4-3.8 2.2-4.4M12 11.4c-.4-2.6.8-4.8 3-5.6M16 11.4c.2-1.6 1.2-2.8 2.6-3.2"/><path d="M2 19.4h20"/></symbol>
+  <symbol id="i-desayuno" viewBox="0 0 24 24"><path d="M3.6 5.6h13v7.2c0 2.6-2 4.6-4.6 4.6H8.2c-2.6 0-4.6-2-4.6-4.6V5.6Z"/><path d="M16.6 7.6h1.8a2.6 2.6 0 0 1 0 5.2h-1.8"/><path d="M2.6 20.4h15"/></symbol>
+  <symbol id="i-media" viewBox="0 0 24 24"><path d="M6 3.4v3M10 2.6v3.8M14 3.4v3"/><path d="M4 9.4h14v5.4c0 2.8-2.2 5-5 5H9c-2.8 0-5-2.2-5-5V9.4Z"/><path d="M18 11h1.6a2.4 2.4 0 0 1 0 4.8H18"/></symbol>
+  <symbol id="i-capricho" viewBox="0 0 24 24"><path d="M3 17.4c2-5.6 5.2-9 9-9s7 3.4 9 9"/><path d="M3 17.4h18"/><path d="M8 12.6c1-1.4 2.4-2.2 4-2.2s3 .8 4 2.2"/><path d="M12 8.4V5.6M12 5.6c0-1 .8-1.8 1.8-1.8"/></symbol>
+  <symbol id="i-equipo" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.4"/><path d="M2.8 19.6c0-3.2 2.8-5.4 6.2-5.4s6.2 2.2 6.2 5.4"/><path d="M16.4 5.2a3.4 3.4 0 0 1 0 6.4M17.8 14.6c2.1.7 3.4 2.4 3.4 5"/></symbol>
+  <symbol id="i-libre" viewBox="0 0 24 24"><path d="M12 2.8 13.9 8l5.3 1.9-5.3 1.9L12 17l-1.9-5.2L4.8 9.9 10.1 8 12 2.8Z"/><path d="M18.6 15.4l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8.8-2.2Z"/></symbol>
+  <symbol id="i-reloj" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 6.8V12l3.4 2"/></symbol>
+  <symbol id="i-tupper" viewBox="0 0 24 24"><path d="M3.4 8.6h17.2v9.6a2 2 0 0 1-2 2H5.4a2 2 0 0 1-2-2V8.6Z"/><path d="M2.4 5.4h19.2v3.2H2.4z"/><path d="M9.6 12.6h4.8"/></symbol>
+  <symbol id="i-lista" viewBox="0 0 24 24"><path d="M8.6 6.4h12M8.6 12h12M8.6 17.6h12"/><circle cx="4.2" cy="6.4" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.2" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.2" cy="17.6" r="1.1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-bombilla" viewBox="0 0 24 24"><path d="M9.2 17.6c0-2-.9-2.9-1.9-4a5.8 5.8 0 1 1 9.4-4.6c0 1.9-.7 3.2-1.9 4.6-1 1.1-1.9 2-1.9 4"/><path d="M9.8 20.4h4.4M10.4 17.6h3.2"/></symbol>
+  <symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 3.6 21.4 20H2.6L12 3.6Z"/><path d="M12 9.8v4.4"/><circle cx="12" cy="17" r=".95" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-nevera" viewBox="0 0 24 24"><path d="M12 2.8v18.4M4 7.4l16 9.2M20 7.4 4 16.6"/><path d="M9.4 4.6 12 7.2l2.6-2.6M9.4 19.4 12 16.8l2.6 2.6"/></symbol>
+  <symbol id="i-rayo" viewBox="0 0 24 24"><path d="M13.4 2.6 4.6 13.6h6.4l-1.4 7.8 8.8-11h-6.4l1.4-7.8Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.2 6.2 17.8 17.8M17.8 6.2 6.2 17.8"/></symbol>
+  <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M9.2 5.4 15.8 12l-6.6 6.6"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5.4"/><circle cx="12" cy="7.9" r=".95" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.6 12.6 9.4 17.4 19.4 6.6"/></symbol>
+  <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-corazon" viewBox="0 0 24 24"><path d="M12 20.4S3.4 15.2 3.4 9.4a4.8 4.8 0 0 1 8.6-2.9 4.8 4.8 0 0 1 8.6 2.9c0 5.8-8.6 11-8.6 11Z"/></symbol>
+</defs></svg>
+
+<!-- Ficha de un plato: se rellena al abrirla -->
+<div class="ficha-back" id="fichaBack" onclick="if(event.target===this)cerrarFicha()">
+  <div class="ficha" role="dialog" aria-modal="true" aria-labelledby="fichaTitulo">
+    <div class="ficha-top">
+      <span class="ficha-tipo" id="fichaTipo"></span>
+      <button class="ficha-x" onclick="cerrarFicha()" aria-label="Cerrar"><svg class="ic-v"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="ficha-scroll" id="fichaScroll"></div>
+  </div>
+</div>
+
 
 <div id="offlineBanner" class="banner">📡 Sin conexión — viendo datos guardados</div>
 <div id="updateBanner" class="banner"><span>🔄 Hay una versión nueva</span><button onclick="applyUpdate()">Actualizar</button></div>
@@ -633,7 +841,10 @@
 
 <!-- ==================== COMPRA ==================== -->
 <div id="tab-compra" class="tabpanel">
-  <h2>🛒 Lista de la compra</h2>
+  <h2>Lista de la compra</h2>
+
+  <h3 style="margin-top:4px;">De las fichas de los platos</h3>
+  <div id="listaRapida"></div>
   <button onclick="shareShopList()" style="background:var(--accent-soft); color:var(--accent); border:none; border-radius:8px; padding:9px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer; margin-bottom:14px;">📤 Compartir lo pendiente</button>
 
   <div class="card">
@@ -769,16 +980,287 @@
 <footer>🌱 Plan orientativo de salud general — no sustituye la valoración de tu dietista, psicóloga o médico. · Actualizado julio 2026</footer>
 
 <nav class="bottomnav" id="tabnav">
-  <button class="active" onclick="showTab('hoy', this)"><span class="ic">☀️</span>Hoy</button>
-  <button onclick="showTab('inicio', this)"><span class="ic">🏠</span>Inicio</button>
-  <button onclick="showTab('menu', this)"><span class="ic">📅</span>Menú</button>
-  <button onclick="showTab('recetas', this)"><span class="ic">🍳</span>Recetas</button>
-  <button onclick="showTab('compra', this)"><span class="ic">🛒</span>Compra</button>
-  <button onclick="showTab('progreso', this)"><span class="ic">📊</span>Progreso</button>
+  <button class="active" onclick="showTab('hoy', this)"><span class="ic"><svg class="ic-v"><use href="#i-sol"/></svg></span>Hoy</button>
+  <button onclick="showTab('inicio', this)"><span class="ic"><svg class="ic-v"><use href="#i-casa"/></svg></span>Inicio</button>
+  <button onclick="showTab('menu', this)"><span class="ic"><svg class="ic-v"><use href="#i-calendario"/></svg></span>Menú</button>
+  <button onclick="showTab('recetas', this)"><span class="ic"><svg class="ic-v"><use href="#i-sarten"/></svg></span>Recetas</button>
+  <button onclick="showTab('compra', this)"><span class="ic"><svg class="ic-v"><use href="#i-carrito"/></svg></span>Compra</button>
+  <button onclick="showTab('progreso', this)"><span class="ic"><svg class="ic-v"><use href="#i-grafico"/></svg></span>Progreso</button>
 </nav>
 
+<script src="platos.js"></script>
 <script>
 // El scroll suave lanzado desde JS no lo frena la media query de CSS: hay que consultarla aquí.
+/* Escapa el texto que se pinta desde datos. */
+function esc(x){ return String(x).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+
+/* ==================== ICONOS ====================
+   ico('reloj') devuelve el SVG del símbolo. Los emoji del menú se traducen a
+   su icono con emojiAIcono(), para no tener que reescribir weeksData. */
+function ico(nombre, clase){
+  return '<svg class="ic-v' + (clase ? ' ' + clase : '') + '" aria-hidden="true"><use href="#i-' + nombre + '"/></svg>';
+}
+/* Color por familia de plato. Son los que dan identidad visual a la ficha,
+   ya que no hay fotos de los platos y no me las voy a inventar. */
+const ICONO_COLOR = {
+  legumbre:['#9a6b2f','#c9a05a'],
+  pescado :['#2f6d8a','#5aa8c9'],
+  marisco :['#6b4a8a','#a07ac9'],
+  ave     :['#8a5a2f','#c98f5a'],
+  carne   :['#8a3535','#c96060'],
+  huevo   :['#9a7a1f','#d4b23f'],
+  ensalada:['#3d7a3d','#68b268'],
+  desayuno:['#7a5a3d','#b28d68'],
+  media   :['#5a5a7a','#8d8db2'],
+  capricho:['#a05a7a','#d48db2'],
+  equipo  :['#c25a2f','#e8925a'],
+  libre   :['#2f7a5f','#57a686']
+};
+/* Los textos del menú llevan emoji desde el principio; se traducen aquí en vez
+   de reescribir los cuatro menús a mano. */
+const EMOJI_ICONO = {
+  '🐟':'pescado','🍗':'ave','🫘':'legumbre','🦑':'marisco','🐙':'marisco',
+  '🥩':'carne','🥚':'huevo','🍕':'equipo','🎉':'libre','🥐':'capricho',
+  '🍞':'desayuno','🍳':'huevo','🥣':'desayuno','☕':'media','🍎':'media',
+  '🍫':'capricho','🥗':'ensalada','🔥':'rayo','🏠':'casa','🧳':'libre'
+};
+function iconoDeTexto(txt){
+  if(!txt) return 'info';
+  const plato = platoDe(txt);
+  if(plato) return plato.icono;
+  const primer = Array.from(String(txt))[0];
+  return EMOJI_ICONO[primer] || 'info';
+}
+/* Quita el emoji del principio de un texto del menú. */
+function sinEmoji(txt){
+  return String(txt || '').replace(/^[^\p{L}\p{N}]+/u, '').trim();
+}
+
+/* ==================== FICHA DEL PLATO ==================== */
+let fichaSlugActual = null;
+
+function abrirFicha(slug, momento){
+  const p = PLATOS[slug];
+  if(!p) return;
+  fichaSlugActual = slug;
+  const col = ICONO_COLOR[p.icono] || ICONO_COLOR.libre;
+
+  const etiquetaMomento = { desayuno:'Desayuno', media:'Media mañana', comida:'Comida', merienda:'Merienda', cena:'Cena' }[momento] || 'Plato';
+  document.getElementById('fichaTipo').innerHTML = ico(p.icono) + ' ' + etiquetaMomento;
+
+  const chips = [];
+  if(p.tiempo) chips.push('<span class="chip">' + ico('reloj') + p.tiempo + ' min</span>');
+  if(p.donde)  chips.push('<span class="chip">' + ico('sarten') + esc(p.donde) + '</span>');
+  if(p.tupper && p.tupper !== '—') chips.push('<span class="chip">' + ico('tupper') + esc(p.tupper.split('—')[0].trim()) + '</span>');
+
+  const ingredientes = p.ingredientes.map(i =>
+    '<li><span class="ing-q">' + esc(i.q) + '</span><span class="ing-txt"><b>' + esc(i.item) + '</b>' +
+    (i.nota ? '<i>' + esc(i.nota) + '</i>' : '') + '</span></li>'
+  ).join('');
+
+  const pasos = p.pasos.map(s => '<li>' + esc(s) + '</li>').join('');
+  const trucos = (p.trucos || []).map(t => '<div class="ficha-nota tip">' + esc(t) + '</div>').join('');
+
+  const enCompra = enListaRapida(slug);
+
+  document.getElementById('fichaScroll').innerHTML =
+    '<div class="ficha-hero" style="background:linear-gradient(140deg,' + col[0] + ',' + col[1] + ')">' + ico(p.icono) + '</div>' +
+    '<h2 class="ficha-titulo" id="fichaTitulo">' + esc(p.nombre) + '</h2>' +
+    '<p class="ficha-sub">' + esc(p.donde) + (p.tiempo ? ' · ' + p.tiempo + ' minutos' : '') + '</p>' +
+    '<div class="ficha-chips">' + chips.join('') + '</div>' +
+
+    (p.ingredientes.length && p.ingredientes[0].item !== 'lo que te apetezca' && p.ingredientes[0].q !== '—'
+      ? '<button class="ficha-cta' + (enCompra ? ' hecho' : '') + '" id="fichaCta" onclick="alternarListaRapida()">' +
+        ico(enCompra ? 'check' : 'carrito') + '<span>' + (enCompra ? 'Ya está en tu lista' : 'Añadir a la lista de la compra') + '</span></button>'
+      : '') +
+
+    '<div class="ficha-tabs" role="tablist">' +
+      '<button class="on" onclick="fichaTab(this,0)">' + ico('lista') + 'Cocinar</button>' +
+      '<button onclick="fichaTab(this,1)">' + ico('carrito') + 'Comprar</button>' +
+      '<button onclick="fichaTab(this,2)">' + ico('info') + 'Info</button>' +
+    '</div>' +
+
+    /* --- Cocinar --- */
+    '<div class="ficha-pane on">' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas</div>' +
+        '<ul class="ing-lista">' + ingredientes + '</ul></div>' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('sarten') + 'Cómo se hace</div>' +
+        '<ol class="paso-lista">' + pasos + '</ol></div>' +
+      (p.ojo && p.ojo !== 'Nada.' && p.ojo !== 'Nada especial.' && p.ojo !== '—'
+        ? '<div class="ficha-nota ojo"><b>' + '⚠ Lo que suele salir mal' + '</b>' + esc(p.ojo) + '</div>' : '') +
+      (trucos ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('bombilla') + 'Trucos</div>' + trucos + '</div>' : '') +
+    '</div>' +
+
+    /* --- Comprar --- */
+    '<div class="ficha-pane">' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('carrito') + 'Dónde y qué comprar</div>' +
+        '<div class="ficha-nota gris">' + esc(p.compra) + '</div></div>' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Cantidades para una persona</div>' +
+        '<ul class="ing-lista">' + ingredientes + '</ul>' +
+        '<p style="font-size:var(--t-xs); color:var(--muted); margin:9px 0 0;">Para llevar tupper al día siguiente, dobla todo.</p></div>' +
+      (p.conservar && p.conservar !== '—'
+        ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('nevera') + 'Cuánto aguanta</div>' +
+          '<div class="ficha-nota gris">' + esc(p.conservar) + '</div></div>' : '') +
+    '</div>' +
+
+    /* --- Info --- */
+    '<div class="ficha-pane">' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('corazon') + 'Por qué está en tu plan</div>' +
+        '<div class="ficha-nota tip">' + esc(p.porQue) + '</div></div>' +
+      (p.diaMalo && p.diaMalo !== '—'
+        ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('rayo') + 'Versión para un día malo</div>' +
+          '<div class="ficha-nota gris">' + esc(p.diaMalo) + '</div></div>' : '') +
+      (p.kcal ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('grafico') + 'Aproximado por ración</div>' +
+        '<div class="ficha-macros">' +
+          '<div class="ficha-macro"><b>' + p.kcal + '</b><span>kcal</span></div>' +
+          '<div class="ficha-macro"><b>' + p.p + '</b><span>proteína</span></div>' +
+          '<div class="ficha-macro"><b>' + p.c + '</b><span>carbos</span></div>' +
+          '<div class="ficha-macro"><b>' + p.f + '</b><span>grasa</span></div>' +
+        '</div>' +
+        '<p style="font-size:var(--t-xs); color:var(--muted); margin:9px 0 0;">Orientativo, y a propósito lo último de la ficha. Tu pauta es método del plato: lo que importa es cómo se reparte el plato, no cuadrar un número.</p></div>' : '') +
+    '</div>';
+
+  document.getElementById('fichaBack').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarFicha(){
+  document.getElementById('fichaBack').classList.remove('show');
+  document.body.style.overflow = '';
+  fichaSlugActual = null;
+}
+
+function fichaTab(btn, i){
+  const cont = document.getElementById('fichaScroll');
+  Array.prototype.forEach.call(cont.querySelectorAll('.ficha-tabs button'), b => b.classList.remove('on'));
+  btn.classList.add('on');
+  Array.prototype.forEach.call(cont.querySelectorAll('.ficha-pane'), (p, j) => p.classList.toggle('on', j === i));
+  cont.scrollTop = cont.querySelector('.ficha-tabs').offsetTop - 12;
+}
+
+/* Abre la ficha desde el texto del menú, si ese plato tiene una. */
+function abrirFichaDeTexto(texto, momento){
+  const slug = slugDePlato(texto);
+  if(slug) abrirFicha(slug, momento);
+}
+
+/* ==================== LISTA RÁPIDA DE LA COMPRA ====================
+   Los ingredientes de las fichas que marques van a una lista aparte, encima
+   de las listas fijas de la pestaña Compra. Se guarda y se sincroniza igual
+   que el resto. */
+const K_RAPIDA = 'planAlimentacionCompraRapida';
+function loadListaRapida(){
+  try{ return JSON.parse(localStorage.getItem(K_RAPIDA)) || {}; }catch(e){ return {}; }
+}
+function saveListaRapida(obj){
+  try{ localStorage.setItem(K_RAPIDA, JSON.stringify(obj)); }catch(e){}
+  if(typeof pushSync === 'function') pushSync();
+}
+function enListaRapida(slug){ return !!loadListaRapida()[slug]; }
+
+function alternarListaRapida(){
+  if(!fichaSlugActual) return;
+  const lista = loadListaRapida();
+  const p = PLATOS[fichaSlugActual];
+  if(lista[fichaSlugActual]){
+    delete lista[fichaSlugActual];
+  } else {
+    lista[fichaSlugActual] = {
+      nombre: p.nombre,
+      items: p.ingredientes.map(i => i.q + ' · ' + i.item)
+    };
+  }
+  saveListaRapida(lista);
+  const activo = !!lista[fichaSlugActual];
+  const btn = document.getElementById('fichaCta');
+  if(btn){
+    btn.classList.toggle('hecho', activo);
+    btn.innerHTML = ico(activo ? 'check' : 'carrito') +
+      '<span>' + (activo ? 'Ya está en tu lista' : 'Añadir a la lista de la compra') + '</span>';
+  }
+  renderListaRapida();
+}
+
+function quitarDeListaRapida(slug){
+  const lista = loadListaRapida();
+  delete lista[slug];
+  saveListaRapida(lista);
+  renderListaRapida();
+}
+
+function renderListaRapida(){
+  const cont = document.getElementById('listaRapida');
+  if(!cont) return;
+  const lista = loadListaRapida();
+  const slugs = Object.keys(lista);
+  if(!slugs.length){
+    cont.innerHTML = '<p class="lead" style="margin:0;">Aquí aparecen los ingredientes de los platos que marques desde su ficha. Toca cualquier comida del menú y pulsa "Añadir a la lista de la compra".</p>';
+    return;
+  }
+  cont.innerHTML = slugs.map(slug => {
+    const r = lista[slug];
+    return '<div class="card" style="margin-bottom:12px;">' +
+      '<div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">' +
+        '<b style="flex:1; font-family:var(--font-display);">' + esc(r.nombre) + '</b>' +
+        '<button class="ficha-x" style="width:30px;height:30px;" onclick="quitarDeListaRapida(\'' + slug + '\')" aria-label="Quitar">' + ico('x') + '</button>' +
+      '</div>' +
+      '<ul style="margin:0; padding-left:19px; font-size:var(--t-sm);">' +
+        r.items.map(i => '<li>' + esc(i) + '</li>').join('') +
+      '</ul></div>';
+  }).join('');
+}
+
+/* ==================== FESTIVOS DE BARCELONA ====================
+   "Último viernes LABORAL" no es lo mismo que "último viernes del mes": si
+   ese viernes cae en festivo (Viernes Santo, Navidad, la Mercè...), la comida
+   de equipo se mueve al viernes anterior. Sin esta lista, un año de cada dos
+   la app la ponía en un día en que la oficina está cerrada. */
+function pascua(anio){
+  /* Algoritmo de Gauss-Butcher: devuelve el Domingo de Pascua de ese año. */
+  const a = anio % 19, b = Math.floor(anio / 100), c = anio % 100;
+  const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4), k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const mes = Math.floor((h + l - 7 * m + 114) / 31);
+  const dia = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(anio, mes - 1, dia);
+}
+function festivosDe(anio){
+  const f = new Set();
+  const k = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  /* Fijos estatales y de Cataluña / Barcelona */
+  [[0,1],[0,6],[4,1],[5,24],[7,15],[8,11],[8,24],[9,12],[10,1],[11,6],[11,8],[11,25],[11,26]]
+    .forEach(([m, d]) => f.add(k(new Date(anio, m, d))));
+  /* Móviles ligados a la Pascua: Viernes Santo cae SIEMPRE en viernes. */
+  const p = pascua(anio);
+  const viernesSanto = new Date(p); viernesSanto.setDate(p.getDate() - 2);
+  const lunesPascua  = new Date(p); lunesPascua.setDate(p.getDate() + 1);
+  f.add(k(viernesSanto)); f.add(k(lunesPascua));
+  return f;
+}
+const _festivosCache = {};
+function esFestivo(date){
+  const y = date.getFullYear();
+  if(!_festivosCache[y]) _festivosCache[y] = festivosDe(y);
+  const k = y + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+  return _festivosCache[y].has(k);
+}
+/* El último viernes del mes que además es laborable. Si el último cae en
+   festivo, se retrocede al anterior. */
+function ultimoViernesLaboralDe(anio, mes){
+  const d = new Date(anio, mes + 1, 0);            // último día del mes
+  while(d.getDay() !== 5) d.setDate(d.getDate() - 1);
+  while(esFestivo(d)) d.setDate(d.getDate() - 7);
+  return d;
+}
+function esUltimoViernesLaboral(date){
+  if(date.getDay() !== 5) return false;
+  const u = ultimoViernesLaboralDe(date.getFullYear(), date.getMonth());
+  return u.getDate() === date.getDate();
+}
+
 function scrollBehavior(){
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
 }
@@ -838,6 +1320,7 @@ function resetAllSettings(){
   document.querySelectorAll('#bowlDays .style-opt').forEach(b=>b.classList.remove('active'));
   renderVacationList();
   renderAllShopLists();
+  renderListaRapida();
   document.querySelectorAll('#tab-recetas > details .fav-star').forEach(s=>{ s.textContent = '☆'; });
   renderHoy();
   pushSync();
@@ -1112,6 +1595,7 @@ function renderAllShopLists(){
   Object.keys(SHOP_LISTS).forEach(renderShopList);
 }
 renderAllShopLists();
+renderListaRapida();
 function shareShopList(){
   const lines = [];
   Object.keys(SHOP_LISTS).forEach(key=>{
@@ -1142,7 +1626,8 @@ const SYNC_KEYS = [
   'planAlimentacionShop_despensa','planAlimentacionShop_fresco1','planAlimentacionShop_fresco2',
   'planAlimentacionShop_fresco3','planAlimentacionShop_fresco4','planAlimentacionFavRecetas',
   'planAlimentacionShopHave_despensa','planAlimentacionShopHave_fresco1','planAlimentacionShopHave_fresco2',
-  'planAlimentacionShopHave_fresco3','planAlimentacionShopHave_fresco4','planAlimentacionTextSize'
+  'planAlimentacionShopHave_fresco3','planAlimentacionShopHave_fresco4','planAlimentacionTextSize',
+  'planAlimentacionCompraRapida'
 ];
 let syncPushTimer = null;
 
@@ -1260,6 +1745,7 @@ function rerenderAfterSync(){
   renderBowlButtons();
   renderVacationList();
   renderAllShopLists();
+  renderListaRapida();
   renderHoy();
   const favs = loadFavRecetas();
   document.querySelectorAll('#tab-recetas > details').forEach(d=>{
@@ -1388,6 +1874,30 @@ function sustitucionPara(texto){
   const m = SUSTITUCIONES.find(s => s.test.test(texto));
   return m ? m.texto : null;
 }
+/* Una linea de comida del menu. Si el plato tiene ficha se abre al tocarla;
+   si no, se pinta igual pero sin ser pulsable. */
+/* La pestana Menu ensena el ciclo de 4 semanas en abstracto, asi que aqui no
+   hay una fecha con la que comparar. En vez de dar por hecho que la comida de
+   equipo cae en el viernes de la semana 4 del ciclo -- que casi nunca coincide
+   con el ultimo viernes laboral real -- se dice cual es la fecha de verdad. */
+function etiquetaComidaEquipo(){
+  const hoy = new Date();
+  let d = ultimoViernesLaboralDe(hoy.getFullYear(), hoy.getMonth());
+  if(d < new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate())){
+    d = ultimoViernesLaboralDe(hoy.getFullYear(), hoy.getMonth() + 1);
+  }
+  const MES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return 'comida de equipo \u00b7 viernes ' + d.getDate() + ' ' + MES[d.getMonth()];
+}
+
+function mealHtml(etiqueta, texto, momento, extra){
+  const slug = (typeof slugDePlato === "function") ? slugDePlato(texto) : null;
+  const cuerpo = "<b>" + etiqueta + ":</b> " + ico(iconoDeTexto(texto)) + " " + esc(sinEmoji(texto)) + (extra || "");
+  if(!slug) return '<div class="meal">' + cuerpo + '</div>';
+  return '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slug + '&quot;,&quot;' + momento + '&quot;)">' +
+         cuerpo + '<span class="flecha">' + ico("flecha") + '</span></div>';
+}
+
 function dayCardHtml(d, filterMode){
   filterMode = filterMode || 'all';
   const wIdx = weekdayIndexFromDay(d.day);
@@ -1401,18 +1911,18 @@ function dayCardHtml(d, filterMode){
   let html = '<div class="daycard">';
   html += '<div class="daycard-header"><span class="dayname">'+d.day+badges+'</span><span class="kcal">🔥 '+d.kcal+' kcal</span></div>';
   if(filterMode === 'all'){
-    html += '<div class="meal"><b>Desayuno:</b> '+d.desayuno+' + ☕ café con leche</div>';
-    html += '<div class="meal">'+d.media+'</div>';
+    html += mealHtml('Desayuno', d.desayuno, 'desayuno');
+    html += mealHtml('Media manana', d.media, 'media');
   }
   if(showComida){
-    html += '<div class="meal"><b>Comida:</b> '+d.comida+(d.pizza?' <span class="pizza-tag">último viernes de mes</span>':'')+'</div>';
+    html += mealHtml('Comida', d.comida, 'comida', d.pizza ? ' <span class="pizza-tag">' + esc(etiquetaComidaEquipo()) + '</span>' : '');
     if(subComida) html += '<div class="meal" style="font-size:var(--t-xs); color:var(--muted);">🔁 '+subComida+'</div>';
   }
   if(filterMode === 'all'){
-    html += '<div class="meal"><b>Merienda:</b> '+d.merienda+'</div>';
+    html += mealHtml('Merienda', d.merienda, 'merienda');
   }
   if(showCena){
-    html += '<div class="meal"><b>Cena:</b> '+d.cena+(d.libre?' <span class="libre-tag">no contabilizada</span>':'')+'</div>';
+    html += mealHtml('Cena', d.cena, 'cena', d.libre?' <span class="libre-tag">no contabilizada</span>':'');
     if(subCena) html += '<div class="meal" style="font-size:var(--t-xs); color:var(--muted);">🔁 '+subCena+'</div>';
   }
   html += '<div class="plate-progress">';
@@ -1559,11 +2069,11 @@ function getISOWeek(date){
   return 1 + Math.round(diff / 7);
 }
 
-function isLastFridayOfMonth(date){
-  if(date.getDay() !== 5) return false; // 5 = viernes en JS (0=domingo)
-  const nextWeek = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7);
-  return nextWeek.getMonth() !== date.getMonth();
-}
+/* Antes devolvia el ultimo viernes del mes a secas, sin mirar festivos. Y
+   ademas la pestana Menu marcaba la comida de equipo en el viernes de la
+   semana 4 del ciclo, que casi nunca cae en el ultimo viernes real: en
+   septiembre de 2026 la marcaba el dia 4 en vez del 25. */
+function isLastFridayOfMonth(date){ return esUltimoViernesLaboral(date); }
 
 // Devuelve { d, week, isTeamLunch } — el día del menú que corresponde a esa fecha,
 // sustituyendo por la comida de equipo si es el último viernes laboral real del mes.
