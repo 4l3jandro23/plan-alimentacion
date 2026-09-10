@@ -809,6 +809,115 @@
     .filtro:hover{border-color:var(--accent);}
     .bottomnav button:hover{color:var(--accent);}
   }
+  /* Colores propios del plato, no los del tema.
+     Con el tema verde, --accent y --protein son el MISMO color: la verdura y
+     la proteína salían idénticas y el dibujo no se entendía. Estos cuatro son
+     los mismos que ya usan los iconos de comida, así que la app sigue hablando
+     el mismo idioma: verde ensalada, rojo carne, dorado cereal, marrón legumbre. */
+  :root{
+    --plato-verdura:#3d7a3d; --plato-proteina:#a33f3f;
+    --plato-carbo:#c98a2b;   --plato-legumbre:#9a6b2f;
+  }
+  html.dark{
+    --plato-verdura:#68b268; --plato-proteina:#e07a7a;
+    --plato-carbo:#e0b25a;   --plato-legumbre:#c9a05a;
+  }
+
+  /* ===== El plato dibujado de cada ficha =====
+     Sustituye al cuadrado de color con un icono. Es la imagen que faltaba:
+     cómo tiene que quedar el plato de verdad, con la comida de ESTE plato
+     puesta en su sitio. Cada porción se puede tocar. */
+  .plato-vis{
+    width:210px; height:210px; margin:2px auto 2px; position:relative;
+    display:grid; place-items:center;
+  }
+  .plato-vis svg{width:100%; height:100%; display:block; overflow:visible;}
+  .plato-vis .porcion{
+    cursor:pointer; transition:opacity .2s var(--ease-out), transform .2s var(--ease-out);
+    transform-origin:105px 105px;
+  }
+  .plato-vis .porcion:active{transform:scale(.97);}
+  .plato-vis[data-sel] .porcion{opacity:.35;}
+  .plato-vis[data-sel="verdura"] .porcion[data-parte="verdura"],
+  .plato-vis[data-sel="proteina"] .porcion[data-parte="proteina"],
+  .plato-vis[data-sel="carbo"] .porcion[data-parte="carbo"],
+  .plato-vis[data-sel="legumbre"] .porcion[data-parte="legumbre"]{opacity:1;}
+  .plato-vis .plato-hueco{fill:var(--card); stroke:var(--border); stroke-width:1.5;}
+  .plato-vis .plato-borde{fill:none; stroke:var(--border); stroke-width:1.5;}
+
+  .plato-partes{
+    display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin:6px 0 0;
+  }
+  .plato-parte{
+    display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border);
+    background:var(--card); border-radius:999px; padding:6px 12px; cursor:pointer;
+    font-family:inherit; font-size:var(--t-2xs); font-weight:700; color:var(--ink);
+    transition:border-color .2s var(--ease-out), background .2s var(--ease-out);
+  }
+  .plato-parte .punto{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
+  .plato-parte.on{border-color:currentColor;}
+  .plato-detalle{
+    margin:10px 0 16px; padding:12px 14px; border-radius:var(--r-md);
+    background:var(--accent-soft); font-size:var(--t-sm); line-height:1.5;
+    min-height:64px;
+  }
+  .plato-detalle b{display:block; margin-bottom:3px;}
+  .plato-detalle .lista-parte{margin:6px 0 0; color:var(--muted); font-size:var(--t-xs);}
+  .plato-detalle.vacio{background:var(--bg2); color:var(--muted); text-align:center;}
+
+  /* ===== Súpers del barrio (pestaña Compra) ===== */
+  .super{
+    display:flex; gap:12px; align-items:flex-start; padding:13px 14px;
+    border-radius:var(--r-md); background:var(--card); border:1px solid var(--border);
+    margin-bottom:8px;
+  }
+  .super.destacado{border-color:color-mix(in srgb, var(--accent) 45%, transparent); background:var(--accent-soft);}
+  .super-min{
+    flex-shrink:0; width:46px; text-align:center; font-family:var(--font-mono);
+    line-height:1.1;
+  }
+  .super-min b{display:block; font-size:var(--t-lg); color:var(--accent);}
+  .super-min span{font-size:var(--t-2xs); color:var(--muted); text-transform:uppercase; letter-spacing:.04em;}
+  .super-txt{min-width:0;}
+  .super-txt h4{margin:0 0 1px; font-size:var(--t-base); font-weight:700;}
+  .super-txt .dir{font-size:var(--t-2xs); color:var(--muted); margin:0 0 6px;}
+  .super-txt p{margin:0 0 4px; font-size:var(--t-sm); line-height:1.45;}
+  .super-txt .nota{font-size:var(--t-xs); color:var(--muted); margin:0;}
+  .super-h{font-size:var(--t-2xs); color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:0 0 4px;}
+
+  /* ===== Bloque plegable de consulta ===== */
+  details.ref{
+    border:1px solid var(--border); border-radius:var(--r-md); background:var(--card);
+    margin-bottom:10px; overflow:hidden;
+  }
+  details.ref > summary{
+    cursor:pointer; padding:13px 15px; font-weight:700; font-size:var(--t-base);
+    list-style:none; display:flex; align-items:center; gap:9px;
+  }
+  details.ref > summary::-webkit-details-marker{display:none;}
+  details.ref > summary::after{
+    content:""; margin-left:auto; width:8px; height:8px; flex-shrink:0;
+    border-right:2px solid var(--muted); border-bottom:2px solid var(--muted);
+    transform:rotate(45deg) translateY(-2px); transition:transform .2s var(--ease-out);
+  }
+  details.ref[open] > summary::after{transform:rotate(-135deg) translateY(-2px);}
+  details.ref > summary .ic-v{width:18px; height:18px; color:var(--accent);}
+  details.ref .ref-cuerpo{padding:0 15px 15px;}
+
+  /* ===== Mi semana (ajustes) ===== */
+  .semana-dia{
+    display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:10px;
+    background:var(--bg); border:1px solid var(--border); margin-bottom:6px;
+  }
+  .semana-dia .dia-nom{width:78px; flex-shrink:0; font-size:var(--t-sm); font-weight:700;}
+  .semana-dia .dia-estado{
+    flex:1; display:flex; align-items:center; gap:8px; border:none; background:none;
+    font-family:inherit; font-size:var(--t-sm); color:var(--ink); cursor:pointer;
+    padding:6px 8px; border-radius:8px; text-align:left; min-height:38px;
+  }
+  .semana-dia .dia-estado:active{background:var(--accent-soft);}
+  .semana-dia .dia-estado .ic-v{width:17px; height:17px; color:var(--accent); flex-shrink:0;}
+  .semana-dia .dia-estado i{font-style:normal; color:var(--muted); font-size:var(--t-xs);}
 </style>
 </head>
 <body>
@@ -908,7 +1017,7 @@
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
   <div class="settings-panel">
     <h3>⚙️ Ajustes</h3>
-    <p style="font-size:var(--t-sm); color:var(--muted); margin:2px 0 0;">Se guarda y sincroniza entre tus dispositivos.</p>
+    <p style="font-size:var(--t-sm); color:var(--muted); margin:2px 0 0;">Se guarda en este móvil. Para llevártelo a otro sitio, usa la copia de seguridad de aquí abajo.</p>
 
     <details class="settings-group" open>
       <summary>🎨 Apariencia</summary>
@@ -948,65 +1057,31 @@
     </details>
 
     <details class="settings-group">
-      <summary>📅 Rutina semanal</summary>
-
+      <summary>📅 Mi semana</summary>
       <div class="settings-row">
-        <div>🏠 Días de teletrabajo</div>
-        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Marca los que apliquen cada semana — puedes tocar varios a la vez (ej. martes y jueves).</p>
-        <div class="style-options" id="wfhDays">
-          <button class="style-opt" data-day="0" onclick="toggleWfhDay(0)">L</button>
-          <button class="style-opt" data-day="1" onclick="toggleWfhDay(1)">M</button>
-          <button class="style-opt" data-day="2" onclick="toggleWfhDay(2)">X</button>
-          <button class="style-opt" data-day="3" onclick="toggleWfhDay(3)">J</button>
-          <button class="style-opt" data-day="4" onclick="toggleWfhDay(4)">V</button>
-        </div>
-        <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 6px;">O añade un día suelto de teletrabajo puntual (aunque no sea tu día fijo):</p>
-        <div id="wfhDateList" style="display:flex; flex-direction:column; gap:6px; margin-bottom:8px;"></div>
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input type="date" id="wfhDateInput" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink); font-size:var(--t-xs);">
-          <button onclick="addWfhDate()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:6px 12px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;">+ Añadir</button>
-        </div>
-      </div>
-
-      <div class="settings-row">
-        <div>🥗 Días de bowl (Ametller Origen)</div>
-        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Los días que marques, Hoy sabe que no hace falta tupper porque comes el bowl.</p>
-        <div class="style-options" id="bowlDays">
-          <button class="style-opt" data-day="0" onclick="toggleBowlDay(0)">L</button>
-          <button class="style-opt" data-day="1" onclick="toggleBowlDay(1)">M</button>
-          <button class="style-opt" data-day="2" onclick="toggleBowlDay(2)">X</button>
-          <button class="style-opt" data-day="3" onclick="toggleBowlDay(3)">J</button>
-          <button class="style-opt" data-day="4" onclick="toggleBowlDay(4)">V</button>
-        </div>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 10px;">Toca cada día para cambiarlo. Con esto la pestaña Hoy ya sabe si te toca preparar tupper o no, y deja de decírtelo los días que no hace falta.</p>
+        <div id="semanaLista"></div>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Sábado y domingo van siempre libres, no hay nada que configurar. Y si un día suelto acabas trabajando en casa, se cambia desde <b>Hoy</b> sin tocar esto.</p>
       </div>
     </details>
 
     <details class="settings-group">
-      <summary>🏖️ Vacaciones</summary>
-
+      <summary>🏖️ Pausar el plan</summary>
       <div class="settings-row">
-        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Añade tantos periodos como quieras (ej. una semana en agosto y un puente en octubre) — cada uno con su tipo. Hoy se adapta según el periodo que toque ese día.</p>
-
-        <div id="vacList" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;"></div>
-
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
-          <label style="font-size:var(--t-xs); color:var(--muted);">Desde <input type="date" id="vacStart" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
-          <label style="font-size:var(--t-xs); color:var(--muted);">Hasta <input type="date" id="vacEnd" style="border:1px solid var(--border); border-radius:8px; padding:5px 7px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>
-        </div>
-        <div class="style-options" id="vacTipo">
-          <button class="style-opt active" data-tipo="descansando" onclick="setNewVacTipo('descansando')">🛋️ Descansando</button>
-          <button class="style-opt" data-tipo="viaje" onclick="setNewVacTipo('viaje')">🧳 De viaje</button>
-          <button class="style-opt" data-tipo="otro" onclick="setNewVacTipo('otro')">📌 Otro</button>
-        </div>
-        <button onclick="addVacationPeriod()" style="margin-top:10px; background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">+ Añadir periodo</button>
+        <div id="pausaEstado"></div>
       </div>
     </details>
 
     <details class="settings-group">
-      <summary>🔔 Aviso del tupper</summary>
+      <summary>🔔 Que te avise el iPhone</summary>
       <div class="settings-row">
-        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 8px;">Aviso la noche antes de los días que toca preparar tupper (no en teletrabajo, bowl, fin de semana o vacaciones). Requiere tener la app instalada en la pantalla de inicio.</p>
-        <button id="pushToggleBtn" onclick="togglePushSubscription()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">🔔 Activar aviso</button>
+        <p style="font-size:var(--t-sm); margin:0 0 10px;">Lo útil es acordarte de dejar el tupper hecho <b>la noche antes</b>, no por la mañana con prisa. Se hace en un minuto con la app de Recordatorios y funciona aunque no abras esto:</p>
+        <ol style="font-size:var(--t-sm); margin:0 0 10px; padding-left:20px; line-height:1.55;">
+          <li>Abre <b>Recordatorios</b> y crea uno: «Dejar el tupper hecho».</li>
+          <li>Dale a la <b>i</b> → <b>Fecha</b> y <b>Hora</b>: las 21:30.</li>
+          <li>Activa <b>Repetir</b> → <b>Personalizado</b> → semanal, y marca los días que te toca tupper.</li>
+        </ol>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0;">Antes esto era un aviso desde la propia app, pero dependía de un servidor que ya no existe. El recordatorio del iPhone hace lo mismo y no depende de nada.</p>
       </div>
     </details>
 
@@ -1272,6 +1347,7 @@
 <!-- ==================== COMPRA ==================== -->
 <div id="tab-compra" class="tabpanel">
   <h2>🛒 Tu lista</h2>
+  <p class="lead">Una sola lista para todo. Se ordena sola por el recorrido del súper — la lees de arriba abajo y no tienes que dar vueltas ni volver atrás.</p>
 
   <div class="compra-cab" id="compraCab"></div>
 
@@ -1289,9 +1365,21 @@
     <button class="btn-mini" onclick="vaciarCompra()"><svg class="ic-v"><use href="#i-basura"/></svg> Vaciar</button>
   </div>
 
-  <h2>➕ Añadir de golpe</h2>
-  <p class="lead">En vez de ir plato por plato, mete un bloque entero de una vez.</p>
+  <h2>➕ Llenar la lista sin pensar</h2>
+  <p class="lead">Tres botones. No hace falta ir plato por plato: esto mete un bloque entero de una vez y luego ya quitas lo que te sobre.</p>
   <div id="atajosCompra"></div>
+
+  <h2>🏠 Dónde comprar</h2>
+  <p class="lead">Todos los súper que tienes andando desde casa, ordenados por lo que tardas en llegar. Dentro de siete minutos a pie hay <b id="supersTotal">28</b> supermercados: el problema nunca va a ser que no haya dónde comprar.</p>
+
+  <div class="tip" id="supersRegla"></div>
+
+  <div id="supersLista"></div>
+
+  <details class="ref">
+    <summary><svg class="ic-v"><use href="#i-buscar"/></svg> Los demás que hay, por si acaso</summary>
+    <div class="ref-cuerpo" id="supersResto"></div>
+  </details>
 
   <h2>🧯 Despensa de rescate</h2>
   <div class="card">
@@ -1301,92 +1389,101 @@
     <button class="btn-mini solid" onclick="addRescate()" style="margin-top:12px;"><svg class="ic-v"><use href="#i-mas"/></svg> Añadir las diez a la lista</button>
   </div>
 
-  <h2>😩 Se te caduca la comida</h2>
-  <div class="card">
-    <p>No es falta de organización: es que la compra grande semanal no encaja con tu ritmo. Vives solo, no siempre cenas en casa, y la mitad de lo fresco llega al viernes intacto.</p>
-    <ul>
-      <li><b>Congelado como primera opción</b> para proteína (pollo, pescado, calamar): no caduca y sacas solo la ración de hoy. Fresco solo si lo vas a cocinar en 1-2 días.</li>
-      <li><b>Congela en raciones el mismo día de compra.</b> Bandeja de pechugas → cuatro bolsitas. Es el gesto que más comida te salva.</li>
-      <li><b>Compra pequeña dos veces por semana</b> (ej. lunes y jueves) en vez de una grande.</li>
-      <li><b>Verdura congelada</b> para el día a día: mismo valor nutricional, dura meses.</li>
-      <li><b>Lo viejo delante</b> en la nevera, para acordarte de usarlo primero.</li>
-      <li><b>Pan de molde al congelador</b> al llegar a casa. Del congelador al tostador directo, sin descongelar.</li>
-    </ul>
-  </div>
+  <h2>📖 Para consultar</h2>
+  <p class="lead">Esto no hace falta leerlo ahora. Está aquí para cuando tengas la duda concreta.</p>
 
-  <h2>⏳ Cuánto aguanta cada cosa</h2>
-  <div class="card">
-    <p style="font-size:var(--t-sm);color:var(--muted); margin-top:0;">Media aproximada desde que lo compras (no desde que lo abres, salvo que se indique).</p>
-    <div class="tabla-scroll">
-    <table>
-      <tr><th>Producto</th><th>Nevera</th><th>Congelador</th></tr>
-      <tr><td>Pollo/pavo crudo (fresco)</td><td>1-2 días</td><td>6-9 meses</td></tr>
-      <tr><td>Cerdo/ternera crudo (fresco)</td><td>2-3 días</td><td>6-12 meses</td></tr>
-      <tr><td>Pescado fresco (salmón, merluza)</td><td>1-2 días</td><td>3-6 meses</td></tr>
-      <tr><td>Calamar fresco</td><td>1-2 días</td><td>3-4 meses</td></tr>
-      <tr><td>Pulpo cocido (bolsa cerrada)</td><td>hasta su fecha</td><td>2-3 meses</td></tr>
-      <tr><td>Fiambre loncheado (abierto)</td><td>3-5 días</td><td>no</td></tr>
-      <tr><td>Huevos</td><td>3-4 semanas</td><td>—</td></tr>
-      <tr><td>Leche (abierta)</td><td>4-7 días</td><td>—</td></tr>
-      <tr><td>Yogur / kéfir</td><td>1-2 semanas</td><td>—</td></tr>
-      <tr><td>Queso fresco 0%</td><td>5-7 días abierto</td><td>—</td></tr>
-      <tr><td>Espinacas baby / ensalada bolsa</td><td>3-5 días</td><td>no (cruda)</td></tr>
-      <tr><td>Champiñones</td><td>4-6 días</td><td>—</td></tr>
-      <tr><td>Pimiento / tomate</td><td>5-7 días</td><td>—</td></tr>
-      <tr><td>Brócoli / espárragos</td><td>3-4 días</td><td>8-10 meses</td></tr>
-      <tr><td>Patata</td><td>2-3 semanas (fuera de nevera)</td><td>—</td></tr>
-      <tr><td>Fruta variada</td><td>3-7 días</td><td>—</td></tr>
-      <tr><td>Gazpacho fresco (abierto)</td><td>2-3 días</td><td>—</td></tr>
-      <tr><td>Hummus (abierto)</td><td>3-5 días</td><td>—</td></tr>
-      <tr><td>Legumbre de bote (abierta, en tarro)</td><td>3-4 días</td><td>—</td></tr>
-      <tr><td>Pan de molde</td><td>—</td><td>3-4 meses</td></tr>
-      <tr><td>Aceite, frutos secos, botes cerrados, café</td><td colspan="2">meses en despensa</td></tr>
-    </table>
+  <details class="ref">
+    <summary><svg class="ic-v"><use href="#i-nevera"/></svg> Cuánto aguanta cada cosa</summary>
+    <div class="ref-cuerpo">
+      <p style="font-size:var(--t-sm);color:var(--muted); margin-top:0;">Media aproximada desde que lo compras (no desde que lo abres, salvo que se indique).</p>
+      <div class="tabla-scroll">
+      <table>
+        <tr><th>Producto</th><th>Nevera</th><th>Congelador</th></tr>
+        <tr><td>Pollo/pavo crudo (fresco)</td><td>1-2 días</td><td>6-9 meses</td></tr>
+        <tr><td>Cerdo/ternera crudo (fresco)</td><td>2-3 días</td><td>6-12 meses</td></tr>
+        <tr><td>Pescado fresco (salmón, merluza)</td><td>1-2 días</td><td>3-6 meses</td></tr>
+        <tr><td>Calamar fresco</td><td>1-2 días</td><td>3-4 meses</td></tr>
+        <tr><td>Pulpo cocido (bolsa cerrada)</td><td>hasta su fecha</td><td>2-3 meses</td></tr>
+        <tr><td>Fiambre loncheado (abierto)</td><td>3-5 días</td><td>no</td></tr>
+        <tr><td>Huevos</td><td>3-4 semanas</td><td>—</td></tr>
+        <tr><td>Leche (abierta)</td><td>4-7 días</td><td>—</td></tr>
+        <tr><td>Yogur / kéfir</td><td>1-2 semanas</td><td>—</td></tr>
+        <tr><td>Queso fresco 0%</td><td>5-7 días abierto</td><td>—</td></tr>
+        <tr><td>Espinacas baby / ensalada bolsa</td><td>3-5 días</td><td>no (cruda)</td></tr>
+        <tr><td>Champiñones</td><td>4-6 días</td><td>—</td></tr>
+        <tr><td>Pimiento / tomate</td><td>5-7 días</td><td>—</td></tr>
+        <tr><td>Brócoli / espárragos</td><td>3-4 días</td><td>8-10 meses</td></tr>
+        <tr><td>Patata</td><td>2-3 semanas (fuera de nevera)</td><td>—</td></tr>
+        <tr><td>Fruta variada</td><td>3-7 días</td><td>—</td></tr>
+        <tr><td>Gazpacho fresco (abierto)</td><td>2-3 días</td><td>—</td></tr>
+        <tr><td>Hummus (abierto)</td><td>3-5 días</td><td>—</td></tr>
+        <tr><td>Legumbre de bote (abierta, en tarro)</td><td>3-4 días</td><td>—</td></tr>
+        <tr><td>Pan de molde</td><td>—</td><td>3-4 meses</td></tr>
+        <tr><td>Aceite, frutos secos, botes cerrados, café</td><td colspan="2">meses en despensa</td></tr>
+      </table>
+      </div>
+      <div class="tip">Regla rápida: si no lo vas a cocinar en 1-2 días, congélalo el mismo día de compra. Así no dependes de acertar la fecha.</div>
     </div>
-    <div class="tip">Regla rápida: si no lo vas a cocinar en 1-2 días, congélalo el mismo día de compra. Así no dependes de acertar la fecha.</div>
-  </div>
+  </details>
 
-  <h2>💶 Dónde comprar y cuánto cuesta</h2>
-  <div class="card">
-    <p style="font-size:var(--t-sm);color:var(--muted); margin-top:0;">Precios orientativos en Barcelona. Varían según tienda y oferta.</p>
-    <div class="tabla-scroll">
-    <table>
-      <tr><th>Producto</th><th>Dónde</th><th>Aprox.</th></tr>
-      <tr><td>Pechuga de pollo</td><td>Mercadona</td><td>5-6 €/kg</td></tr>
-      <tr><td>Pavo (filete/contramuslo)</td><td>Mercadona</td><td>4-6 €/kg</td></tr>
-      <tr><td>Pavo cocido loncheado 93-95% (Delizias, Casa Forner, El Pozo Bienstar)</td><td>Bon Preu</td><td>3-4 €</td></tr>
-      <tr><td>Salmón congelado</td><td>Lidl / Mercadona</td><td>7-9 €/kg</td></tr>
-      <tr><td>Salmón ahumado (Ocean Sea)</td><td>Lidl</td><td>5,79 €/200g</td></tr>
-      <tr><td>Calamar congelado</td><td>Lidl / Mercadona</td><td>6-8 €/kg</td></tr>
-      <tr><td>Pulpo cocido (bolsa)</td><td>Mercadona</td><td>4-6 €</td></tr>
-      <tr><td>Merluza/bacalao congelado</td><td>Mercadona</td><td>7-9 €/kg</td></tr>
-      <tr><td>Caballa o sardinas al natural (Albo)</td><td>Bon Preu / Mercadona</td><td>1,19-1,59 €</td></tr>
-      <tr><td>Solomillo de cerdo</td><td>Mercadona</td><td>7-9 €/kg</td></tr>
-      <tr><td>Queso fresco 0% (Burgo de Arias)</td><td>Bon Preu / Mercadona</td><td>2-3 €</td></tr>
-      <tr><td>Huevos camperos (docena)</td><td>Bon Preu / Mercadona / Lidl</td><td>2,35-4,59 €</td></tr>
-      <tr><td>Legumbres de bote (marca blanca)</td><td>Bon Preu / Mercadona</td><td>0,65-1,30 €</td></tr>
-      <tr><td>Hummus clásico</td><td>Lidl</td><td>0,69-0,85 €</td></tr>
-      <tr><td>Atún al natural (pack 3)</td><td>Mercadona</td><td>2,5-3 €</td></tr>
-      <tr><td>Arroz integral (1kg)</td><td>Mercadona / Lidl</td><td>1,20-1,50 €</td></tr>
-      <tr><td>Quinoa en vasito (Brillante)</td><td>Bon Preu</td><td>~1,50 €</td></tr>
-      <tr><td>Pasta integral (500g)</td><td>Mercadona / Lidl</td><td>0,90-1,10 €</td></tr>
-      <tr><td>Avena (500g)</td><td>Mercadona / Lidl</td><td>~1 €</td></tr>
-      <tr><td>Pan 100% integral de blat (Bon Preu, caja azul)</td><td>Bon Preu</td><td>1-1,80 €</td></tr>
-      <tr><td>Leche Pascual semi</td><td>Bon Preu / Mercadona / Lidl</td><td>0,90-1,10 €/L</td></tr>
-      <tr><td>Yogur griego Oikos o Danone</td><td>Bon Preu / Mercadona / Lidl</td><td>1,30-1,80 €</td></tr>
-      <tr><td>Kéfir (Kaiku o I love Kéfir)</td><td>Mercadona / Bon Preu</td><td>1,50-2 €</td></tr>
-      <tr><td>Espinacas baby lavadas (Chef Select)</td><td>Lidl</td><td>1,09 €/100g</td></tr>
-      <tr><td>Champiñones</td><td>Lidl</td><td>1,49-1,55 €</td></tr>
-      <tr><td>Gazpacho fresco (Chef Select, García Millán)</td><td>Lidl</td><td>2,55-2,99 €</td></tr>
-      <tr><td>Fruta variada</td><td>Frutería o Mercadona</td><td>1,20-2 €/kg</td></tr>
-      <tr><td>Frutos secos (500g)</td><td>Lidl</td><td>3-5 €</td></tr>
-      <tr><td>Verdura congelada (1kg)</td><td>Mercadona / Lidl</td><td>1,20-1,80 €</td></tr>
-      <tr><td>Aceite de oliva virgen extra (1L)</td><td>Mercadona / Lidl</td><td>7-10 €</td></tr>
-      <tr><td>Chocolate negro</td><td>Mercadona / Lidl</td><td>1,50-2 €</td></tr>
-    </table>
+  <details class="ref">
+    <summary><svg class="ic-v"><use href="#i-agobio"/></svg> Se te caduca media compra</summary>
+    <div class="ref-cuerpo">
+      <p>No es falta de organización: es que la compra grande semanal no encaja con tu ritmo. Vives solo, no siempre cenas en casa, y la mitad de lo fresco llega al viernes intacto.</p>
+      <ul>
+        <li><b>Compra dos veces por semana, poco.</b> Con Bonpreu a dos minutos y BonÀrea enfrente, la compra grande del sábado no tiene mucho sentido — es más fácil bajar el lunes y el jueves a por lo de tres días.</li>
+        <li><b>Congelado como primera opción</b> para proteína (pollo, pescado, calamar): no caduca y sacas solo la ración de hoy. Fresco solo si lo vas a cocinar en 1-2 días.</li>
+        <li><b>Congela en raciones el mismo día de compra.</b> Bandeja de pechugas → cuatro bolsitas. Es el gesto que más comida te salva.</li>
+        <li><b>En el mercado puedes pedir la cantidad exacta.</b> Dos filetes de salmón, 200 g de merluza. En el súper eso no existe, y ahí empieza el problema.</li>
+        <li><b>Verdura congelada</b> para el día a día: mismo valor nutricional, dura meses.</li>
+        <li><b>Lo viejo delante</b> en la nevera, y el <b>pan de molde al congelador</b> nada más llegar: del congelador al tostador directo.</li>
+      </ul>
     </div>
-    <div class="tip">La frutería del barrio sale más barata para comprar poca cantidad — justo lo que te interesa para no tirar nada.</div>
-  </div>
+  </details>
+
+  <details class="ref">
+    <summary><svg class="ic-v"><use href="#i-carrito"/></svg> Qué cuesta cada cosa y dónde está mejor</summary>
+    <div class="ref-cuerpo">
+      <p style="font-size:var(--t-sm);color:var(--muted); margin-top:0;">Precios orientativos en Barcelona. Varían según tienda y oferta.</p>
+      <div class="tabla-scroll">
+      <table>
+        <tr><th>Producto</th><th>Dónde</th><th>Aprox.</th></tr>
+        <tr><td>Pechuga de pollo</td><td>Mercadona / BonÀrea</td><td>5-6 €/kg</td></tr>
+        <tr><td>Pavo (filete/contramuslo)</td><td>BonÀrea / Mercadona</td><td>4-6 €/kg</td></tr>
+        <tr><td>Pavo cocido loncheado 93-95% (Delizias, Casa Forner, El Pozo Bienstar)</td><td>Bonpreu</td><td>3-4 €</td></tr>
+        <tr><td>Salmón congelado</td><td>Lidl / Mercadona</td><td>7-9 €/kg</td></tr>
+        <tr><td>Salmón ahumado (Ocean Sea)</td><td>Lidl</td><td>5,79 €/200g</td></tr>
+        <tr><td>Calamar congelado</td><td>Lidl / Mercadona</td><td>6-8 €/kg</td></tr>
+        <tr><td>Pulpo cocido (bolsa)</td><td>Mercadona</td><td>4-6 €</td></tr>
+        <tr><td>Merluza/bacalao congelado</td><td>Mercadona</td><td>7-9 €/kg</td></tr>
+        <tr><td>Merluza o salmón fresco al peso</td><td>Mercat del Ninot</td><td>pides lo justo</td></tr>
+        <tr><td>Caballa o sardinas al natural (Albo)</td><td>Bonpreu / Mercadona</td><td>1,19-1,59 €</td></tr>
+        <tr><td>Solomillo de cerdo</td><td>BonÀrea / Mercadona</td><td>7-9 €/kg</td></tr>
+        <tr><td>Queso fresco 0% (Burgo de Arias)</td><td>Bonpreu / Mercadona</td><td>2-3 €</td></tr>
+        <tr><td>Huevos camperos (docena)</td><td>Bonpreu / Mercadona / Lidl</td><td>2,35-4,59 €</td></tr>
+        <tr><td>Legumbres de bote (marca blanca)</td><td>Bonpreu / Mercadona</td><td>0,65-1,30 €</td></tr>
+        <tr><td>Hummus clásico</td><td>Lidl</td><td>0,69-0,85 €</td></tr>
+        <tr><td>Atún al natural (pack 3)</td><td>Mercadona</td><td>2,5-3 €</td></tr>
+        <tr><td>Arroz integral (1kg)</td><td>Mercadona / Lidl</td><td>1,20-1,50 €</td></tr>
+        <tr><td>Quinoa en vasito (Brillante)</td><td>Bonpreu</td><td>~1,50 €</td></tr>
+        <tr><td>Pasta integral (500g)</td><td>Mercadona / Lidl</td><td>0,90-1,10 €</td></tr>
+        <tr><td>Avena (500g)</td><td>Mercadona / Lidl</td><td>~1 €</td></tr>
+        <tr><td>Pan 100% integral de blat (Bonpreu, caja azul)</td><td>Bonpreu</td><td>1-1,80 €</td></tr>
+        <tr><td>Leche Pascual semi</td><td>Bonpreu / Mercadona / Lidl</td><td>0,90-1,10 €/L</td></tr>
+        <tr><td>Yogur griego Oikos o Danone</td><td>Bonpreu / Mercadona / Lidl</td><td>1,30-1,80 €</td></tr>
+        <tr><td>Kéfir (Kaiku o I love Kéfir)</td><td>Mercadona / Bonpreu</td><td>1,50-2 €</td></tr>
+        <tr><td>Espinacas baby lavadas (Chef Select)</td><td>Lidl</td><td>1,09 €/100g</td></tr>
+        <tr><td>Champiñones</td><td>Lidl</td><td>1,49-1,55 €</td></tr>
+        <tr><td>Gazpacho fresco (Chef Select, García Millán)</td><td>Lidl</td><td>2,55-2,99 €</td></tr>
+        <tr><td>Fruta variada</td><td>Mercat del Ninot / Mercadona</td><td>1,20-2 €/kg</td></tr>
+        <tr><td>Frutos secos (500g)</td><td>Lidl</td><td>3-5 €</td></tr>
+        <tr><td>Verdura congelada (1kg)</td><td>Mercadona / Lidl</td><td>1,20-1,80 €</td></tr>
+        <tr><td>Aceite de oliva virgen extra (1L)</td><td>Mercadona / Lidl</td><td>7-10 €</td></tr>
+        <tr><td>Chocolate negro</td><td>Mercadona / Lidl</td><td>1,50-2 €</td></tr>
+      </table>
+      </div>
+    </div>
+  </details>
 </div>
 
 <!-- ==================== PROGRESO ==================== -->
@@ -1482,6 +1579,164 @@ function sinEmoji(txt){
   return String(txt || '').replace(/^[^\p{L}\p{N}]+/u, '').trim();
 }
 
+/* ==================== EL PLATO DIBUJADO ====================
+   La ficha abría con un cuadrado de color y un icono, que no dice nada.
+   Esto lo sustituye por el plato de verdad: un círculo repartido como manda
+   tu pauta (mitad verdura, cuarto proteína, cuarto carbohidrato) pero con
+   los ingredientes DE ESTE plato colocados en su sitio. Se toca cada parte.
+
+   La clasificación se saca de los ingredientes de la ficha, no de una lista
+   escrita a mano plato por plato: así, si mañana se añade una ficha nueva,
+   su plato se dibuja solo. */
+
+const PARTES_PLATO = {
+  verdura:{
+    label:'Verdura', colorVar:'--plato-verdura',
+    texto:'La mitad del plato. Es lo que más llena por menos, y lo único de lo que puedes repetir sin pensarlo.'
+  },
+  proteina:{
+    label:'Proteína', colorVar:'--plato-proteina',
+    texto:'Un cuarto del plato. Es lo que hace que llegues a la siguiente comida sin picar nada por el camino.'
+  },
+  carbo:{
+    label:'Carbohidrato', colorVar:'--plato-carbo',
+    texto:'El otro cuarto. No sobra ni es el enemigo: es lo que te quita el hambre de las seis de la tarde.'
+  },
+  legumbre:{
+    label:'Legumbre', colorVar:'--plato-legumbre',
+    texto:'Media plato ella sola, porque la legumbre hace de proteína y de carbohidrato a la vez. Por eso un plato de lentejas no necesita arroz al lado.'
+  }
+};
+
+/* "pimiento" sí, "pimienta" no: si no se distingue, "aceite, sal y pimienta"
+   acaba dibujado como si fuera media ración de verdura. */
+const RE_VERDURA  = /espinac|pimiento|champi|ceboll|tomate|brocoli|brócoli|calabac|berenjen|esparrag|espárrag|ensalada|lechuga|canonig|canònig|rucula|rúcula|zanahori|judia verde|judía verde|puerro|\bcol\b|coliflor|alcachof|pepino|verdura|menestra|setas|gazpacho|calabaza|acelga|guisantes|pisto|crema de verdura|hortaliza|germinad|remolacha|apio/i;
+const RE_LEGUMBRE = /garbanz|lentej|alubi|judias blancas|judías blancas|legumbre|hummus|soja texturizada/i;
+const RE_PROTEINA = /pollo|pavo|pechuga|muslo|contramuslo|ternera|cerdo|solomillo|\blomo\b|jamon|jamón|fiambre|salmon|salmón|merluza|bacalao|atun|atún|sardina|caballa|calamar|pulpo|melva|bonito|langostin|gamba|huevo|clara|queso|requeson|requesón|skyr|yogur|kefir|kéfir|tofu|seitan|seitán|taquitos|carne|hamburgues|pescado|marisco|anchoa|mejillon|mejillón|pavo cocido|fuet|chorizo|salchich/i;
+const RE_CARBO    = /arroz|pasta|macarron|espagueti|espagueti|fideo|patata|boniato|quinoa|cuscus|cuscús|\bpan\b|tostada|molde|avena|tortilla de trigo|tortilla mexicana|wrap|pita|picos|regañ|maiz|maíz|noodle|bulgur|mijo|pure de patata|puré de patata|galleta|cereales|granola|biscote/i;
+const RE_IGNORAR  = /aceite|\bsal\b|pimienta|pimenton|pimentón|oregano|orégano|\bajo\b|limon|limón|vinagre|especia|laurel|curry|canela|comino|perejil|cilantro|mostaza|salsa de soja|nuez moscada|azafran|azafrán|colorante|agua|caldo|hierbas|albahaca|tomillo|romero|guindilla|cayena|al gusto|semillas|sesamo|sésamo|edulcorante|vainilla|cacao|miel|levadura|harina/i;
+
+function parteDeIngrediente(txt){
+  const s = String(txt || '');
+  if(RE_IGNORAR.test(s) && !RE_VERDURA.test(s) && !RE_PROTEINA.test(s) && !RE_CARBO.test(s) && !RE_LEGUMBRE.test(s)) return null;
+  if(RE_LEGUMBRE.test(s)) return 'legumbre';
+  if(RE_VERDURA.test(s))  return 'verdura';
+  if(RE_PROTEINA.test(s)) return 'proteina';
+  if(RE_CARBO.test(s))    return 'carbo';
+  return null;
+}
+
+/* Reparte los ingredientes de la ficha en las partes del plato. */
+function composicionPlato(p){
+  const c = { verdura:[], proteina:[], carbo:[], legumbre:[] };
+  (p.ingredientes || []).forEach(i => {
+    const parte = parteDeIngrediente(i.item);
+    if(parte && c[parte].length < 4) c[parte].push(i.item);
+  });
+  return c;
+}
+
+/* Qué trozos se dibujan y de qué tamaño. La legumbre ocupa proteína y
+   carbohidrato a la vez, que es como funciona de verdad. */
+function repartoPlato(c){
+  const hayLeg = c.legumbre.length > 0;
+  const hayPro = c.proteina.length > 0;
+  const hayCar = c.carbo.length > 0;
+  const trozos = [{ parte:'verdura', frac:0.5 }];
+  if(hayLeg && !hayPro && !hayCar) trozos.push({ parte:'legumbre', frac:0.5 });
+  else if(hayLeg && (hayPro || hayCar)){
+    trozos.push({ parte:'legumbre', frac:0.25 });
+    trozos.push({ parte: hayPro ? 'proteina' : 'carbo', frac:0.25 });
+  } else if(hayPro && hayCar){
+    trozos.push({ parte:'proteina', frac:0.25 });
+    trozos.push({ parte:'carbo', frac:0.25 });
+  } else if(hayPro) trozos.push({ parte:'proteina', frac:0.5 });
+  else if(hayCar)   trozos.push({ parte:'carbo', frac:0.5 });
+  return trozos;
+}
+
+/* El dibujo. Un plato visto desde arriba: borde, hueco y las porciones. */
+function platoSVG(trozos){
+  const CX = 105, CY = 105, R = 88, RIM = 97;
+  let ang = -90;
+  const paths = trozos.map(t => {
+    const ini = ang, fin = ang + t.frac * 360;
+    ang = fin;
+    const col = 'var(' + PARTES_PLATO[t.parte].colorVar + ')';
+    let d;
+    if(t.frac >= 0.999){
+      d = 'M' + CX + ',' + (CY - R) + ' A' + R + ',' + R + ' 0 1 1 ' + (CX - 0.01) + ',' + (CY - R) + ' Z';
+    } else {
+      const rad = a => a * Math.PI / 180;
+      const x1 = CX + R * Math.cos(rad(ini)), y1 = CY + R * Math.sin(rad(ini));
+      const x2 = CX + R * Math.cos(rad(fin)), y2 = CY + R * Math.sin(rad(fin));
+      const grande = (fin - ini) > 180 ? 1 : 0;
+      d = 'M' + CX + ',' + CY + ' L' + x1.toFixed(1) + ',' + y1.toFixed(1) +
+          ' A' + R + ',' + R + ' 0 ' + grande + ' 1 ' + x2.toFixed(1) + ',' + y2.toFixed(1) + ' Z';
+    }
+    return '<path class="porcion" data-parte="' + t.parte + '" d="' + d + '" fill="' + col + '"' +
+           ' onclick="seleccionarParte(\'' + t.parte + '\')" role="button" tabindex="0"' +
+           ' aria-label="' + PARTES_PLATO[t.parte].label + '"/>';
+  }).join('');
+  return '<svg viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">' +
+    '<circle class="plato-hueco" cx="' + CX + '" cy="' + CY + '" r="' + RIM + '"/>' +
+    '<g>' + paths + '</g>' +
+    '<circle class="plato-borde" cx="' + CX + '" cy="' + CY + '" r="' + R + '"/>' +
+    '</svg>';
+}
+
+/* El bloque entero: plato + botones de cada parte + el cajón de explicación. */
+/* El método del plato es para comidas y cenas. Un desayuno, un yogur con fruta
+   o la pizza de la comida de equipo no se reparten en medio plato de verdura,
+   y dibujarles uno solo serviría para hacerles sentir que están mal. */
+const SIN_PLATO = ['desayuno','media','capricho','equipo','libre'];
+
+function platoVisualHTML(p){
+  if(SIN_PLATO.indexOf(p.icono) !== -1) return '';
+  const c = composicionPlato(p);
+  const trozos = repartoPlato(c);
+  if(trozos.length < 2) return '';
+  platoComposicion = c;
+  const chips = trozos.map(t =>
+    '<button class="plato-parte" data-parte="' + t.parte + '" onclick="seleccionarParte(\'' + t.parte + '\')"' +
+      ' style="color:var(' + PARTES_PLATO[t.parte].colorVar + ');">' +
+      '<span class="punto" style="background:var(' + PARTES_PLATO[t.parte].colorVar + ')"></span>' +
+      '<span style="color:var(--ink)">' + PARTES_PLATO[t.parte].label + '</span></button>'
+  ).join('');
+  const falta = !c.verdura.length
+    ? '<p style="font-size:var(--t-xs); color:var(--muted); text-align:center; margin:8px 0 0;">' +
+      'Este plato no trae verdura propia: la mitad verde la pones tú con lo que tengas (ensalada de bolsa, ' +
+      'espinacas al microondas, un tomate). Vale cualquiera.</p>'
+    : '';
+  return '<div class="plato-vis" id="platoVis">' + platoSVG(trozos) + '</div>' +
+    '<div class="plato-partes">' + chips + '</div>' +
+    '<div class="plato-detalle vacio" id="platoDetalle">Toca una parte del plato para ver qué va ahí.</div>' +
+    falta;
+}
+
+let platoComposicion = null;
+
+function seleccionarParte(parte){
+  const vis = document.getElementById('platoVis');
+  const det = document.getElementById('platoDetalle');
+  if(!vis || !det || !PARTES_PLATO[parte]) return;
+  const yaEstaba = vis.getAttribute('data-sel') === parte;
+  if(yaEstaba){
+    vis.removeAttribute('data-sel');
+    det.className = 'plato-detalle vacio';
+    det.innerHTML = 'Toca una parte del plato para ver qué va ahí.';
+    document.querySelectorAll('.plato-parte').forEach(b => b.classList.remove('on'));
+    return;
+  }
+  vis.setAttribute('data-sel', parte);
+  document.querySelectorAll('.plato-parte').forEach(b => b.classList.toggle('on', b.dataset.parte === parte));
+  const info = PARTES_PLATO[parte];
+  const items = (platoComposicion && platoComposicion[parte]) || [];
+  det.className = 'plato-detalle';
+  det.innerHTML = '<b style="color:var(' + info.colorVar + ')">' + info.label + '</b>' + esc(info.texto) +
+    (items.length ? '<div class="lista-parte">Aquí, en este plato: ' + esc(items.join(', ')) + '.</div>' : '');
+}
+
 /* ==================== FICHA DEL PLATO ==================== */
 let fichaSlugActual = null;
 
@@ -1489,6 +1744,7 @@ function abrirFicha(slug, momento){
   const p = PLATOS[slug];
   if(!p) return;
   fichaSlugActual = slug;
+  platoComposicion = null;
   const col = ICONO_COLOR[p.icono] || ICONO_COLOR.libre;
 
   const etiquetaMomento = { desayuno:'Desayuno', media:'Media mañana', comida:'Comida', merienda:'Merienda', cena:'Cena' }[momento] || 'Plato';
@@ -1510,7 +1766,8 @@ function abrirFicha(slug, momento){
   const enCompra = enListaRapida(slug);
 
   document.getElementById('fichaScroll').innerHTML =
-    '<div class="ficha-hero" style="background:linear-gradient(140deg,' + col[0] + ',' + col[1] + ')">' + ico(p.icono) + '</div>' +
+    (platoVisualHTML(p) ||
+      '<div class="ficha-hero" style="background:linear-gradient(140deg,' + col[0] + ',' + col[1] + ')">' + ico(p.icono) + '</div>') +
     '<h2 class="ficha-titulo" id="fichaTitulo">' + esc(p.nombre) + '</h2>' +
     '<p class="ficha-sub">' + esc(p.donde) + (p.tiempo ? ' · ' + p.tiempo + ' minutos' : '') + '</p>' +
     '<div class="ficha-chips">' + chips.join('') + '</div>' +
@@ -1702,19 +1959,16 @@ function closeSettings(){
   document.getElementById('settingsOverlay').classList.remove('show');
 }
 function resetAllSettings(){
-  if(!confirm('¿Restablecer color, teletrabajo, vacaciones, lista de la compra, favoritas y check-ins? No se puede deshacer.')) return;
+  if(!confirm('¿Restablecer color, tu semana, la pausa, la lista de la compra, favoritas y check-ins? No se puede deshacer.')) return;
   [...SYNC_KEYS].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
   setColor('');
   setTextSize('');
-  document.querySelectorAll('#wfhDays .style-opt').forEach(b=>b.classList.remove('active'));
-  renderWfhDateList();
-  document.querySelectorAll('#bowlDays .style-opt').forEach(b=>b.classList.remove('active'));
-  renderVacationList();
+  renderSemana();
+  renderPausa();
   renderCompra();
   renderRecetas();
   renderCheckin();
   renderHoy();
-  pushSync();
 }
 
 function setColor(color){
@@ -1723,7 +1977,6 @@ function setColor(color){
   document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
     s.classList.toggle('active', s.dataset.color === color);
   });
-  pushSync();
 }
 function setTextSize(size){
   document.documentElement.setAttribute('data-textsize', size);
@@ -1731,156 +1984,141 @@ function setTextSize(size){
   document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
     b.classList.toggle('active', b.dataset.size === size);
   });
-  pushSync();
 }
+/* ===== Mi semana =====
+   Antes esto eran dos rejillas de días sueltas (teletrabajo por un lado,
+   bowl por otro) más un selector de fechas. Se podía marcar el martes como
+   teletrabajo Y como bowl a la vez, que no significa nada. Ahora cada día
+   tiene UN estado y se cambia tocándolo. Por debajo se guarda en las mismas
+   dos claves de siempre, así que no se pierde nada de lo que ya tenías. */
+const DIAS_SEMANA = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
+const ESTADOS_DIA = {
+  oficina:{ label:'En la oficina', nota:'toca tupper',        ico:'tupper' },
+  casa:   { label:'Teletrabajo',   nota:'comes en casa',      ico:'casa' },
+  bowl:   { label:'Bowl',          nota:'del Ametller Origen', ico:'ensalada' }
+};
+const ORDEN_ESTADOS = ['oficina','casa','bowl'];
+
 function loadWfhDays(){
   try{ return JSON.parse(localStorage.getItem('planAlimentacionWfh')) || []; }catch(e){ return []; }
 }
-function toggleWfhDay(day){
-  let days = loadWfhDays();
-  days = days.includes(day) ? days.filter(d=>d!==day) : [...days, day];
-  try{ localStorage.setItem('planAlimentacionWfh', JSON.stringify(days)); }catch(e){}
-  renderWfhButtons();
-  renderHoy();
-  pushSync();
+function loadBowlDays(){
+  try{ return JSON.parse(localStorage.getItem('planAlimentacionBowlDays')) || []; }catch(e){ return []; }
 }
-function renderWfhButtons(){
-  const days = loadWfhDays();
-  document.querySelectorAll('#wfhDays .style-opt').forEach(b=>{
-    b.classList.toggle('active', days.includes(Number(b.dataset.day)));
-  });
+function estadoDia(idx){
+  if(loadWfhDays().includes(idx)) return 'casa';
+  if(loadBowlDays().includes(idx)) return 'bowl';
+  return 'oficina';
+}
+function ciclarDia(idx){
+  const actual = estadoDia(idx);
+  const siguiente = ORDEN_ESTADOS[(ORDEN_ESTADOS.indexOf(actual) + 1) % ORDEN_ESTADOS.length];
+  const wfh  = loadWfhDays().filter(d => d !== idx);
+  const bowl = loadBowlDays().filter(d => d !== idx);
+  if(siguiente === 'casa') wfh.push(idx);
+  if(siguiente === 'bowl') bowl.push(idx);
+  try{
+    localStorage.setItem('planAlimentacionWfh', JSON.stringify(wfh));
+    localStorage.setItem('planAlimentacionBowlDays', JSON.stringify(bowl));
+  }catch(e){}
+  renderSemana();
+  renderHoy();
+}
+function renderSemana(){
+  const cont = document.getElementById('semanaLista');
+  if(!cont) return;
+  cont.innerHTML = DIAS_SEMANA.map((nombre, idx) => {
+    const e = ESTADOS_DIA[estadoDia(idx)];
+    return '<div class="semana-dia">' +
+      '<span class="dia-nom">' + nombre + '</span>' +
+      '<button class="dia-estado" onclick="ciclarDia(' + idx + ')">' +
+        ico(e.ico) + '<span>' + e.label + ' <i>· ' + e.nota + '</i></span>' +
+      '</button></div>';
+  }).join('');
 }
 
+/* Días sueltos de teletrabajo: se marcan desde Hoy, que es cuando se saben. */
 function loadWfhDates(){
   try{ return JSON.parse(localStorage.getItem('planAlimentacionWfhDates')) || []; }catch(e){ return []; }
 }
-function addWfhDate(){
-  const input = document.getElementById('wfhDateInput');
-  const value = input.value;
-  if(!value) return;
+function toggleWfhHoy(){
+  const key = calDateKeyLocal(new Date());
   const dates = loadWfhDates();
-  if(!dates.includes(value)) dates.push(value);
-  try{ localStorage.setItem('planAlimentacionWfhDates', JSON.stringify(dates)); }catch(e){}
-  input.value = '';
-  renderWfhDateList();
+  const nuevas = dates.includes(key) ? dates.filter(d => d !== key) : [...dates, key];
+  try{ localStorage.setItem('planAlimentacionWfhDates', JSON.stringify(nuevas)); }catch(e){}
   renderHoy();
-  pushSync();
-}
-function removeWfhDate(dateStr){
-  const dates = loadWfhDates().filter(d=>d!==dateStr);
-  try{ localStorage.setItem('planAlimentacionWfhDates', JSON.stringify(dates)); }catch(e){}
-  renderWfhDateList();
-  renderHoy();
-  pushSync();
-}
-function renderWfhDateList(){
-  const container = document.getElementById('wfhDateList');
-  if(!container) return;
-  const dates = loadWfhDates().slice().sort();
-  if(dates.length === 0){ container.innerHTML = ''; return; }
-  container.innerHTML = dates.map(d=>
-    '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:6px 10px;">'
-    + '<span style="font-size:var(--t-sm);">🏠 '+d+'</span>'
-    + '<button onclick="removeWfhDate(\''+d+'\')" style="background:none; border:none; color:var(--warn); font-size:var(--t-md); cursor:pointer; width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;" aria-label="Quitar">🗑️</button>'
-    + '</div>'
-  ).join('');
+  toast(nuevas.includes(key) ? 'Hoy cuenta como teletrabajo' : 'Hoy vuelve a ser día de oficina');
 }
 function isWfhOn(date){
   const dayIdx = (date.getDay()+6)%7;
   if(loadWfhDays().includes(dayIdx)) return true;
   return loadWfhDates().includes(calDateKeyLocal(date));
 }
-
-function loadBowlDays(){
-  try{ return JSON.parse(localStorage.getItem('planAlimentacionBowlDays')) || []; }catch(e){ return []; }
-}
-function toggleBowlDay(day){
-  let days = loadBowlDays();
-  days = days.includes(day) ? days.filter(d=>d!==day) : [...days, day];
-  try{ localStorage.setItem('planAlimentacionBowlDays', JSON.stringify(days)); }catch(e){}
-  renderBowlButtons();
-  renderHoy();
-  pushSync();
-}
-function renderBowlButtons(){
-  const days = loadBowlDays();
-  document.querySelectorAll('#bowlDays .style-opt').forEach(b=>{
-    b.classList.toggle('active', days.includes(Number(b.dataset.day)));
-  });
-}
 function isBowlOn(date){
   return loadBowlDays().includes((date.getDay()+6)%7);
 }
 
-const VAC_TIPO_LABEL = { descansando:'🛋️ Descansando', viaje:'🧳 De viaje', otro:'📌 Otro' };
-let newVacTipo = 'descansando';
-
+/* ===== Pausar el plan =====
+   Antes era "Vacaciones", con periodos con fecha de inicio, fecha de fin y
+   un tipo (descansando / de viaje / otro) que solo cambiaba una frase. Tres
+   decisiones para algo que se usa dos veces al año. Ahora es una fecha: hasta
+   cuándo. Empieza hoy, porque nadie pausa el plan para dentro de un mes. */
 function loadVacations(){
   try{
     const raw = JSON.parse(localStorage.getItem('planAlimentacionVacaciones'));
     if(!raw) return [];
-    return Array.isArray(raw) ? raw : [raw]; // migra el formato antiguo (un solo periodo) a lista
+    return Array.isArray(raw) ? raw : [raw];
   }catch(e){ return []; }
 }
 function saveVacations(list){
   try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify(list)); }catch(e){}
 }
-function setNewVacTipo(tipo){
-  newVacTipo = tipo;
-  document.querySelectorAll('#vacTipo .style-opt').forEach(b=>{
-    b.classList.toggle('active', b.dataset.tipo === tipo);
-  });
-}
-function addVacationPeriod(){
-  const start = document.getElementById('vacStart').value;
-  const end = document.getElementById('vacEnd').value;
-  if(!start || !end) return;
-  const list = loadVacations();
-  list.push({ start, end: end < start ? start : end, tipo: newVacTipo });
-  saveVacations(list);
-  document.getElementById('vacStart').value = '';
-  document.getElementById('vacEnd').value = '';
-  renderVacationList();
+function pausarPlan(){
+  const hasta = document.getElementById('pausaHasta');
+  if(!hasta || !hasta.value) return;
+  const hoy = calDateKeyLocal(new Date());
+  const lista = loadVacations();
+  lista.push({ start: hoy, end: hasta.value < hoy ? hoy : hasta.value });
+  saveVacations(lista);
+  renderPausa();
   renderHoy();
-  pushSync();
 }
-function deleteVacationPeriod(index){
-  const list = loadVacations();
-  list.splice(index, 1);
-  saveVacations(list);
-  renderVacationList();
+function reanudarPlan(){
+  const hoy = calDateKeyLocal(new Date());
+  saveVacations(loadVacations().filter(v => !(hoy >= v.start && hoy <= v.end)));
+  renderPausa();
   renderHoy();
-  pushSync();
 }
-function renderVacationList(){
-  const container = document.getElementById('vacList');
-  if(!container) return;
-  const list = loadVacations();
-  if(list.length === 0){
-    container.innerHTML = '<p style="font-size:var(--t-sm); color:var(--muted); margin:0;">Sin periodos añadidos.</p>';
+function renderPausa(){
+  const cont = document.getElementById('pausaEstado');
+  if(!cont) return;
+  const activa = vacationPeriodOn(new Date());
+  if(activa){
+    cont.innerHTML =
+      '<p style="font-size:var(--t-sm); margin:0 0 10px;">El plan está <b>en pausa hasta el ' + fechaBonita(activa.end) + '</b>. ' +
+      'Hoy no te va a decir qué toca ni qué preparar. Cuando vuelvas está todo donde lo dejaste.</p>' +
+      '<button onclick="reanudarPlan()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 15px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">Reanudar el plan ahora</button>';
     return;
   }
-  container.innerHTML = list.map((v,i)=>{
-    const label = VAC_TIPO_LABEL[v.tipo] || VAC_TIPO_LABEL.descansando;
-    return '<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:8px 10px;">'
-      + '<span style="font-size:var(--t-sm);">'+label+' &nbsp;'+v.start+' → '+v.end+'</span>'
-      + '<button onclick="deleteVacationPeriod('+i+')" style="background:none; border:none; color:var(--warn); font-size:var(--t-md); cursor:pointer; width:44px; height:44px; flex-shrink:0; display:flex; align-items:center; justify-content:center;" aria-label="Borrar periodo">🗑️</button>'
-      + '</div>';
-  }).join('');
+  cont.innerHTML =
+    '<p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 10px;">Para vacaciones, un viaje o una semana rara. Mientras está pausado, Hoy no propone menú ni tupper — y no pasa absolutamente nada, no hay racha que romper.</p>' +
+    '<div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">' +
+      '<label style="font-size:var(--t-sm);">Hasta el <input type="date" id="pausaHasta" style="border:1px solid var(--border); border-radius:8px; padding:6px 8px; font-family:inherit; background:var(--bg); color:var(--ink);"></label>' +
+      '<button onclick="pausarPlan()" style="background:var(--accent); color:#fff; border:none; border-radius:8px; padding:9px 15px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">Pausar</button>' +
+    '</div>';
+}
+function fechaBonita(key){
+  const p = String(key).split('-');
+  if(p.length !== 3) return key;
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return Number(p[2]) + ' de ' + meses[Number(p[1]) - 1];
 }
 function vacationPeriodOn(date){
   const key = calDateKeyLocal(date || new Date());
   return loadVacations().find(v => key >= v.start && key <= v.end) || null;
 }
-function vacationPeriodToday(){ return vacationPeriodOn(new Date()); }
 function isVacationOn(date){ return !!vacationPeriodOn(date); }
-function isVacationToday(){
-  return !!vacationPeriodToday();
-}
-function vacationTipoToday(){
-  const v = vacationPeriodToday();
-  return v ? (v.tipo || 'descansando') : null;
-}
+function isVacationToday(){ return !!vacationPeriodOn(new Date()); }
 function calDateKeyLocal(date){
   const y = date.getFullYear(), m = String(date.getMonth()+1).padStart(2,'0'), d = String(date.getDate()).padStart(2,'0');
   return y+'-'+m+'-'+d;
@@ -1900,10 +2138,8 @@ function calDateKeyLocal(date){
     document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
       b.classList.toggle('active', b.dataset.size === textSize);
     });
-    renderWfhButtons();
-    renderWfhDateList();
-    renderBowlButtons();
-    renderVacationList();
+    renderSemana();
+    renderPausa();
   });
 })();
 
@@ -1916,16 +2152,13 @@ const SHOP_LISTS = {
   fresco4: ['Pollo','Pulpo cocido','Salmón','Merluza','Pavo','Calamar','Solomillo de cerdo','Pimiento','Champiñón','Espárragos','Tomate','Ensalada de bolsa','Patata','Fruta variada']
 };
 
-/* ===== Sincronización entre dispositivos (Supabase) ===== */
-const SUPABASE_URL = 'https://ibouktzmckphsvqabgig.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_8pdb7ItwgBzII8SMsdWjzA_kunVAiq5';
+/* ===== Qué se guarda y qué entra en la copia de seguridad ===== */
 const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones',
   'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins'
 ];
-let syncPushTimer = null;
 
 function collectSyncState(){
   const state = {};
@@ -1960,7 +2193,6 @@ function importBackup(file){
       const state = JSON.parse(reader.result);
       applySyncState(state);
       rerenderAfterSync();
-      pushSync();
       alert('Copia restaurada.');
     }catch(e){
       alert('El archivo no es una copia de seguridad válida.');
@@ -1968,63 +2200,6 @@ function importBackup(file){
   };
   reader.readAsText(file);
 }
-/* ===== Aviso push del tupper (Web Push + Supabase + Edge Function) ===== */
-const VAPID_PUBLIC_KEY = 'BKpRdX9mnjYijjtQ_fKgQzwq9GbuVjGXV4UG0AcCgaQKDNQMPnM_aLF1FEY5AWdpUVGdcOzcljoVEVvX98B7Eyc';
-function urlBase64ToUint8Array(base64String){
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-  const raw = atob(base64);
-  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
-}
-function updatePushButton(isOn){
-  const btn = document.getElementById('pushToggleBtn');
-  if(!btn) return;
-  btn.textContent = isOn ? '🔕 Desactivar aviso' : '🔔 Activar aviso';
-}
-async function togglePushSubscription(){
-  if(!('serviceWorker' in navigator) || !('PushManager' in window)){
-    alert('Este navegador no soporta notificaciones push. En iPhone, instala la app en la pantalla de inicio primero.');
-    return;
-  }
-  const reg = await navigator.serviceWorker.ready;
-  const existing = await reg.pushManager.getSubscription();
-  if(existing){
-    try{
-      await fetch(SUPABASE_URL + '/rest/v1/push_subscriptions?endpoint=eq.' + encodeURIComponent(existing.endpoint), {
-        method: 'DELETE',
-        headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
-      });
-    }catch(e){}
-    await existing.unsubscribe();
-    updatePushButton(false);
-    return;
-  }
-  const perm = await Notification.requestPermission();
-  if(perm !== 'granted'){ alert('No se ha dado permiso de notificaciones.'); return; }
-  const sub = await reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
-  const json = sub.toJSON();
-  await fetch(SUPABASE_URL + '/rest/v1/push_subscriptions', {
-    method: 'POST',
-    headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type':'application/json', 'Prefer':'resolution=merge-duplicates' },
-    body: JSON.stringify({ endpoint: json.endpoint, p256dh: json.keys.p256dh, auth: json.keys.auth })
-  });
-  updatePushButton(true);
-}
-if('serviceWorker' in navigator && 'PushManager' in window){
-  document.addEventListener('DOMContentLoaded', async ()=>{
-    try{
-      const reg = await navigator.serviceWorker.ready;
-      const existing = await reg.pushManager.getSubscription();
-      updatePushButton(!!existing);
-    }catch(e){}
-  });
-} else {
-  document.addEventListener('DOMContentLoaded', ()=>{
-    const btn = document.getElementById('pushToggleBtn');
-    if(btn){ btn.textContent = 'No disponible en este navegador'; btn.disabled = true; btn.style.opacity = '.5'; }
-  });
-}
-
 function rerenderAfterSync(){
   const color = localStorage.getItem('planAlimentacionColor') || '';
   document.documentElement.setAttribute('data-color', color);
@@ -2036,49 +2211,14 @@ function rerenderAfterSync(){
   document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
     b.classList.toggle('active', b.dataset.size === textSize);
   });
-  renderWfhButtons();
-  renderWfhDateList();
-  renderBowlButtons();
-  renderVacationList();
+  renderSemana();
+  renderPausa();
   renderCompra();
   renderRecetas();
   renderCheckin();
   renderHoy();
 }
 
-function pushSync(){
-  clearTimeout(syncPushTimer);
-  syncPushTimer = setTimeout(()=>{
-    const body = { id: 1, data: JSON.stringify(collectSyncState()) };
-    fetch(SUPABASE_URL + '/rest/v1/estado?on_conflict=id', {
-      method: 'POST',
-      cache: 'no-store',
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
-        'Content-Type': 'application/json',
-        'Prefer': 'resolution=merge-duplicates'
-      },
-      body: JSON.stringify(body)
-    }).catch(()=>{ /* sin conexión: se queda solo en local, no pasa nada */ });
-  }, 500);
-}
-
-async function pullSync(){
-  try{
-    const res = await fetch(SUPABASE_URL + '/rest/v1/estado?id=eq.1&select=data', {
-      cache: 'no-store',
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY, 'Cache-Control': 'no-cache' }
-    });
-    if(!res.ok) return;
-    const rows = await res.json();
-    if(!rows || !rows[0] || !rows[0].data) return;
-    const remoteState = JSON.parse(rows[0].data);
-    applySyncState(remoteState);
-    rerenderAfterSync();
-  }catch(e){ /* sin conexión o primera vez sin datos remotos: seguimos con lo local */ }
-}
-document.addEventListener('DOMContentLoaded', pullSync);
 
 /* Los títulos llevan emoji en el HTML; aquí se cambian por el icono vectorial
    equivalente para que la app entera hable el mismo idioma visual. Se declara
@@ -2087,6 +2227,7 @@ const H2_ICONO = {
   '☀️':'sol','🧭':'libro','🧯':'agobio','🧠':'bombilla','🍽️':'ensalada','⏱️':'reloj',
   '🍕':'equipo','🌅':'sol','📅':'calendario','🍳':'sarten','🔥':'fuego','🧰':'tupper',
   '🛒':'carrito','➕':'mas','😩':'alerta','⏳':'reloj','💶':'lista','✅':'check',
+  '🏠':'casa','📖':'libro',
   '⚖️':'grafico','🔢':'grafico','💙':'corazon','🫂':'corazon','🥗':'ensalada','📊':'grafico'
 };
 
@@ -2323,7 +2464,6 @@ function toggleFavPlato(slug, ev){
   favs = era ? favs.filter(f => f !== slug) : [...favs, slug];
   try{ localStorage.setItem(K_FAV, JSON.stringify(favs)); }catch(e){}
   renderRecetas();
-  pushSync();
   toast(era ? 'Quitada de favoritas' : 'Guardada en favoritas');
 }
 
@@ -2447,7 +2587,6 @@ function loadCompra(){
 }
 function saveCompra(lista, callado){
   try{ localStorage.setItem(K_COMPRA, JSON.stringify(lista)); }catch(e){}
-  if(!callado) pushSync();
 }
 let _idc = 0;
 function nuevoId(){ return Date.now().toString(36) + (_idc++).toString(36); }
@@ -2537,7 +2676,7 @@ function renderCompra(){
   }
 
   if(!lista.length){
-    cont.innerHTML = '<div class="card"><p style="margin:0;">Aquí se junta todo: los ingredientes de cualquier ficha de plato (botón «Añadir a la lista»), la despensa de rescate, las listas por semana y lo que escribas arriba a mano. Va ordenada por el recorrido del súper para que no tengas que dar vueltas.</p></div>';
+    cont.innerHTML = '<div class="card"><p style="margin:0;">Está vacía. Para llenarla: el botón «Añadir a la lista» de cualquier ficha de plato, los tres atajos de aquí abajo, o escribiendo arriba a mano.</p></div>';
     return;
   }
 
@@ -2561,25 +2700,94 @@ function renderCompra(){
   cont.innerHTML = html;
 }
 
+/* ===== Los súpers del barrio =====
+   Van ordenados por minutos andando. Los marcados como destacados son los
+   cinco que de verdad resuelven algo distinto; el resto están para que la
+   lista sea completa, no porque haga falta ir. */
+function renderSupers(){
+  const cont = document.getElementById('supersLista');
+  if(!cont || typeof SUPERS === 'undefined') return;
+
+  const total = document.getElementById('supersTotal');
+  if(total) total.textContent = SUPERS_TOTAL;
+
+  const regla = document.getElementById('supersRegla');
+  if(regla){
+    regla.innerHTML = '<b>Si no quieres pensarlo:</b> la compra normal en <b>Bonpreu</b> (2 min), ' +
+      'la carne en <b>BonÀrea</b> (enfrente de casa), y cuando se te haga tarde, <b>Condis</b> ' +
+      'de Tarradellas, que abre hasta las once todos los días. Con esos tres tienes el 90% resuelto.';
+  }
+
+  const destacados = SUPERS.filter(s => s.destacado);
+  const resto      = SUPERS.filter(s => !s.destacado);
+
+  cont.innerHTML =
+    '<p class="super-h">Los que te resuelven algo</p>' +
+    destacados.map(tarjetaSuper).join('') +
+    '<p class="super-h" style="margin-top:16px;">También los tienes cerca</p>' +
+    resto.map(tarjetaSuper).join('');
+
+  const rest = document.getElementById('supersResto');
+  if(rest){
+    rest.innerHTML = '<p style="font-size:var(--t-sm); margin:0;">Dentro de 700 metros hay además: ' +
+      'Anha (Tarradellas, 2 min), Plusfresc (París, 3 min), Toko (Rocafort 217, 4 min), ' +
+      'Coaliment (París 53-61, 4 min), Primaprix (Calàbria 259, 5 min), Sorli Discau (Provença 49, 5 min), ' +
+      'otro BonÀrea en Numància 59 y otro en Berlín 20, otro Condis en Londres 12, otro Bonpreu en ' +
+      'Taquígraf Serra 7, otro Aldi en Numància 88 (este abre domingos), otro Mercadona en Tarragona 177 ' +
+      'e Hiper Galicia en la plaza dels Països Catalans.</p>' +
+      '<p style="font-size:var(--t-xs); color:var(--muted); margin:8px 0 0;">Ninguno de estos te da nada que no tengas más cerca. Están aquí solo para que la lista esté completa y no te quede la duda.</p>';
+  }
+}
+
+function tarjetaSuper(s){
+  return '<div class="super' + (s.destacado ? ' destacado' : '') + '">' +
+    '<div class="super-min"><b>' + s.min + '</b><span>min</span></div>' +
+    '<div class="super-txt">' +
+      '<h4>' + esc(s.nombre) + '</h4>' +
+      '<p class="dir">' + esc(s.dir) + ' · ' + esc(s.horario) + '</p>' +
+      '<p>' + esc(s.para) + '</p>' +
+      '<p class="nota">' + esc(s.nota) + '</p>' +
+    '</div></div>';
+}
+
+/* ===== Llenar la lista de golpe =====
+   Antes había cinco botones: despensa y "fresco semana 1/2/3/4". Para usarlos
+   había que saber en qué semana del ciclo estás, que es justo lo que la app ya
+   sabe. Ahora son tres, y el de la semana ya viene resuelto. */
+function semanaDelCiclo(){
+  return ((getISOWeek(new Date()) - 1) % 4) + 1;
+}
+function addSemanaActual(){
+  addLista('fresco' + semanaDelCiclo());
+}
 function renderAtajos(){
   const cont = document.getElementById('atajosCompra');
   if(!cont) return;
+  const n = semanaDelCiclo();
   const bloques = [
-    { key:'despensa', label:'Despensa base', desc:'Lo que siempre debería haber en casa' },
-    { key:'fresco1',  label:'Fresco · semana 1', desc:SHOP_LISTS.fresco1.length + ' productos' },
-    { key:'fresco2',  label:'Fresco · semana 2', desc:SHOP_LISTS.fresco2.length + ' productos' },
-    { key:'fresco3',  label:'Fresco · semana 3', desc:SHOP_LISTS.fresco3.length + ' productos' },
-    { key:'fresco4',  label:'Fresco · semana 4', desc:SHOP_LISTS.fresco4.length + ' productos' }
+    {
+      accion:'addSemanaActual()', ico:'ensalada', grad:'ensalada',
+      titulo:'El fresco de esta semana',
+      desc:'Lo que piden los platos del menú de esta semana (la ' + n + ' del ciclo) — ' + SHOP_LISTS['fresco' + n].length + ' cosas.'
+    },
+    {
+      accion:'addLista(\'despensa\')', ico:'tupper', grad:'legumbre',
+      titulo:'La despensa base',
+      desc:'Lo que siempre debería haber en casa. Se compra una vez y dura semanas.'
+    },
+    {
+      accion:'addRescate()', ico:'rayo', grad:'capricho',
+      titulo:'La despensa de rescate',
+      desc:'Las diez cosas para los días de "no tengo nada". Unos 35 €.'
+    }
   ];
-  const semanaActual = ((getISOWeek(new Date()) - 1) % 4) + 1;
-  cont.innerHTML = bloques.map(b => {
-    const esActual = b.key === 'fresco' + semanaActual;
-    return '<button class="opt" onclick="addLista(\'' + b.key + '\')">' +
-      '<span class="opt-ico" style="background:' + degradado(b.key === 'despensa' ? 'tupper' : 'ensalada') + '">' + ico(b.key === 'despensa' ? 'tupper' : 'carrito') + '</span>' +
-      '<span class="opt-txt"><b>' + esc(b.label) + (esActual ? ' <span class="hoy-tag">es la de ahora</span>' : '') + '</b><span>' + esc(b.desc) + '</span></span>' +
+  cont.innerHTML = bloques.map(b =>
+    '<button class="opt" onclick="' + b.accion + '">' +
+      '<span class="opt-ico" style="background:' + degradado(b.grad) + '">' + ico(b.ico) + '</span>' +
+      '<span class="opt-txt"><b>' + esc(b.titulo) + '</b><span>' + esc(b.desc) + '</span></span>' +
       '<span class="opt-min">' + ico('mas') + '</span>' +
-    '</button>';
-  }).join('');
+    '</button>'
+  ).join('');
 }
 
 function renderDespensaRescate(){
@@ -2648,7 +2856,6 @@ function guardarCheckin(){
   try{ localStorage.setItem(K_CHECKIN, JSON.stringify(lista.slice(0, 40))); }catch(e){}
   checkinBorrador = {};
   renderCheckin();
-  pushSync();
   toast('Guardado. Nos vemos la semana que viene');
 }
 function borrarCheckin(i){
@@ -2656,7 +2863,6 @@ function borrarCheckin(i){
   lista.splice(i, 1);
   try{ localStorage.setItem(K_CHECKIN, JSON.stringify(lista)); }catch(e){}
   renderCheckin();
-  pushSync();
 }
 function renderCheckin(){
   const card = document.getElementById('checkinCard');
@@ -2866,6 +3072,7 @@ renderRecFiltros();
 renderRecetas();
 renderCompra();
 renderAtajos();
+renderSupers();
 renderDespensaRescate();
 renderCheckin();
 renderHoy();
@@ -2981,29 +3188,23 @@ function renderHoy(){
     '</span>' +
     (ahoraSlug ? '<span class="flecha">' + ico('flecha') + '</span>' : '');
 
-  const vacTipo = vacationTipoToday();
+  const enPausa = isVacationToday();
   let tipHtml = '';
   let contentHtml = '';
 
-  if(vacTipo === 'viaje'){
-    tipHtml = '<div class="tip">Estás de viaje — olvídate del menú de hoy, no tiene sentido con lo que tengas disponible. Disfruta, el plan te espera igual cuando vuelvas.</div>';
-    contentHtml = '<div class="card"><h3 style="margin-top:0;">Fuera de rutina</h3>'
-      + '<p>No hace falta pensar en esto mientras viajas. Si en algún momento quieres tenerlo en cuenta, sin obsesionarte:</p>'
-      + '<ul><li>Prioriza proteína cuando puedas (carne, pescado, huevo, legumbre)</li>'
-      + '<li>Agua antes que refrescos, sobre todo si hace calor</li>'
-      + '<li>Camina lo que te apetezca — ya cuenta</li>'
-      + '<li>Disfruta la comida del sitio, para eso viajas</li></ul></div>';
-  } else if(vacTipo === 'descansando'){
-    tipHtml = '<div class="tip">Vacaciones en casa — no hace falta seguir el menú al pie de la letra. Si te apetece, es buen momento para probar alguna receta nueva, sin prisa.</div>';
-    contentHtml = dayCardHtml(d, 'all', true);
-  } else if(vacTipo === 'otro'){
-    tipHtml = '<div class="tip">Estás de vacaciones — disfruta sin culpa, el plan te espera cuando vuelvas.</div>';
+  if(enPausa){
+    tipHtml = '<div class="tip">El plan está en pausa. Come lo que te apetezca y donde te apetezca — esto sigue aquí cuando vuelvas, igual que lo dejaste.</div>';
     contentHtml = dayCardHtml(d, 'all', true);
   } else {
     if(isWfhOn(now)){
-      tipHtml += '<div class="tip">Hoy teletrabajas: nada de tupper, cocina la comida fresca a mediodía tranquilamente en casa.</div>';
+      tipHtml += '<div class="tip">Hoy teletrabajas: nada de tupper, cocina la comida fresca a mediodía tranquilamente en casa.' +
+        (loadWfhDates().includes(calDateKeyLocal(now)) ? ' <button class="btn-mini" style="margin-top:8px;" onclick="toggleWfhHoy()">No, hoy sí voy a la oficina</button>' : '') + '</div>';
     } else if(isBowlOn(now) && !isTeamLunch){
       tipHtml += '<div class="tip">Hoy toca bowl del Ametller Origen — no hace falta tupper.</div>';
+    } else if(now.getDay() >= 1 && now.getDay() <= 5){
+      /* El día suelto de teletrabajo se sabe por la mañana, no tres semanas
+         antes: por eso se marca aquí y no en los ajustes. */
+      tipHtml += '<div class="tip">Si hoy acabas quedándote en casa, <button class="btn-mini" onclick="toggleWfhHoy()">márcalo aquí</button> y dejo de contar con el tupper.</div>';
     }
     if(isTeamLunch || d.pizza){
       tipHtml += '<div class="tip">Hoy es la comida de equipo del trabajo (pizza, hamburguesa o milanesas, según toque) — sin sustituirla por nada y sin compensarla después. Disfrútala.</div>';

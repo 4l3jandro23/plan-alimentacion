@@ -371,3 +371,112 @@ const FRASES_AGOBIO = [
   'Lo que rompe el plan no es la comida: es el "ya da igual" de después.',
   'Elegir algo en dos minutos y seguir con tu noche también es cuidarte.'
 ];
+
+
+/* ==========================================================================
+   5. LOS SÚPERS QUE TIENES AL LADO
+   Sacado de los datos reales de OpenStreetMap alrededor de Còrsega 52
+   (la Nova Esquerra de l'Eixample). Dentro de 700 m hay 28 supermercados;
+   aquí están todos los que sirven para algo, con lo que de verdad cambia:
+   a cuántos minutos andando están, hasta qué hora abren, y para qué es
+   bueno cada uno. Los minutos son a 5 km/h, redondeando hacia arriba.
+
+   La idea no es que los uses todos. Es que cuando pienses "no tengo nada
+   en casa" sepas que a un minuto y medio hay comida, y que la excusa de
+   "es que ir a comprar es un viaje" deje de existir.
+   ========================================================================== */
+const SUPERS = [
+  {
+    nombre:'BonÀrea', dir:'Còrsega 49', min:1, m:47, horario:'L-S 9:00-21:00',
+    tipo:'diario', destacado:true,
+    para:'Carne. Es lo que mejor hace: pollo, pavo, cerdo y hamburguesas en bandejas pequeñas, para una persona, sin que sobre media bandeja.',
+    nota:'Lo tienes literalmente cruzando la calle. Es el súper de "no he pensado nada para hoy": bajas, coges una bandeja y vuelves en cinco minutos. De verdura va justo.'
+  },
+  {
+    nombre:'Bonpreu', dir:'Av. de Josep Tarradellas', min:2, m:93, horario:'L-S 9:00-21:00',
+    tipo:'completa', destacado:true,
+    para:'Tu compra normal. Es de donde salen la mayoría de cosas de tu plan: el pan 100% integral de la caja azul, el pavo cocido del 93-95%, el queso fresco Burgo de Arias, la quinoa en vasito.',
+    nota:'A dos minutos. Si solo vas a pisar un súper esta semana, que sea este: tiene todo lo del plan y está más cerca que ningún otro grande.'
+  },
+  {
+    nombre:'Caprabo', dir:'Rocafort 235', min:3, m:218, horario:'L-S 9:00-21:00',
+    tipo:'diario',
+    para:'Rellenar cuatro cosas. Pequeño, se entra y se sale rápido.',
+    nota:'Útil si vuelves por Rocafort y te falta algo puntual. Para la compra grande no compensa.'
+  },
+  {
+    nombre:'Lidl', dir:'Carrer de Numància', min:4, m:257, horario:'L-S 9:00-21:00',
+    tipo:'completa', destacado:true,
+    para:'Lo barato de tu lista: hummus (0,69 €), gazpacho fresco, espinacas baby lavadas, champiñones, frutos secos, salmón ahumado Ocean Sea.',
+    nota:'Media docena de cosas de tu plan son bastante más baratas aquí que en cualquier otro. Merece la pena bajar cada dos semanas y cargar con eso.'
+  },
+  {
+    nombre:'Condis', dir:'Av. de Josep Tarradellas 11', min:4, m:272, horario:'todos los días 9:00-23:00',
+    tipo:'urgencia', destacado:true,
+    para:'La hora mala. Abre hasta las once de la noche los siete días.',
+    nota:'Este es el que evita el bocata. Si son las diez y media y no hay nada en casa, aquí hay huevos, ensalada de bolsa y pavo. Guárdate el dato, es el que más veces te va a servir.'
+  },
+  {
+    nombre:'Entença Supermercat 24 h', dir:'Entença 208-210', min:2, m:141, horario:'24 horas',
+    tipo:'urgencia',
+    para:'Cualquier hora, literalmente. Es de barrio y pequeño, pero está abierto siempre.',
+    nota:'Para la noche que llegas tardísimo. No es barato ni tiene gran cosa fresca, pero a las 2 de la mañana es la diferencia entre cenar algo y no cenar.'
+  },
+  {
+    nombre:'Mercadona', dir:'Carrer de Berlín', min:5, m:301, horario:'L-S 9:00-21:00',
+    tipo:'completa',
+    para:'La compra completa de una vez: pechuga de pollo, pulpo cocido en bolsa, congelados (salmón, merluza, calamar, verdura), atún, arroz, pasta.',
+    nota:'El más equilibrado de todos para llenar el carro entero de golpe. Cinco minutos andando.'
+  },
+  {
+    nombre:'Ametller Origen', dir:'Carrer de Berlín 39-41', min:6, m:423, horario:'L-S 10:00-21:00',
+    tipo:'especial', destacado:true,
+    para:'Tus bowls. Y la verdura y la fruta mejores del barrio, aunque cueste más.',
+    nota:'Es el de los días de bowl. Si te pilla de camino, la fruta de aquí dura bastante más que la de súper normal.'
+  },
+  {
+    nombre:'Consum', dir:'Av. de Roma 32-34', min:5, m:402, horario:'L-S 9:00-21:00 · domingo cerrado',
+    tipo:'completa',
+    para:'Alternativa a Mercadona si vas por Roma. Marca propia decente y precios parecidos.',
+    nota:'Ojo: cierra los domingos. Es el único de los cercanos que lo hace de forma fija.'
+  },
+  {
+    nombre:'Aldi', dir:'Carrer de Nicaragua 105-109', min:6, m:487, horario:'L-S 9:00-21:30',
+    tipo:'completa',
+    para:'Básicos baratos: huevos, leche, congelados, latas.',
+    nota:'Hay otro en Numància 88 que además abre domingos de 12:00 a 20:00.'
+  },
+  {
+    nombre:'Dia', dir:'Marquès de Sentmenat 44', min:7, m:497, horario:'L-S 9:00-21:00',
+    tipo:'diario',
+    para:'Lo básico y poco más.',
+    nota:'Solo si te queda de paso. Teniendo Bonpreu a dos minutos, no hay motivo para venir aquí a propósito.'
+  },
+  {
+    nombre:'Mercadona', dir:'Viladomat 275-285', min:6, m:477, horario:'L-S 9:00-21:00',
+    tipo:'completa',
+    para:'Lo mismo que el de Berlín.',
+    nota:'Está a la misma distancia. Ve al que te pille mejor según por dónde vuelvas.'
+  },
+  {
+    nombre:'Mercat del Ninot', dir:'Mallorca 133 · Casanova', min:12, m:1011, horario:'L-S mañanas · L-V también tardes',
+    tipo:'mercado', destacado:true,
+    para:'Pescadería y frutería de verdad. Puedes pedir 200 g de merluza o dos filetes de salmón, sin bandejas de familia.',
+    nota:'Este resuelve tu problema real de que se te caduca la comida: aquí compras la cantidad exacta de una persona, que es justo lo que un súper no te deja hacer. Para el finde va perfecto.'
+  },
+  {
+    nombre:'Mercat de Sants', dir:'Sant Jordi 6', min:16, m:1314, horario:'L y S mañanas · M-V hasta las 20:00',
+    tipo:'mercado',
+    para:'Lo mismo que el Ninot, un poco más lejos y algo más barato.',
+    nota:'Si un sábado te apetece pasear, es un buen destino. Entre semana abre hasta las ocho, que casi ningún mercado lo hace.'
+  }
+];
+
+/* Los demás que hay dentro de 700 m, para que conste que están y no volver a
+   preguntarse "¿habrá algo por aquí?": Anha (Tarradellas, 2 min), Plusfresc
+   (París, 3 min), Toko (Rocafort 217, 4 min), Coaliment (París 53-61, 4 min),
+   Primaprix (Calàbria 259, 5 min), Sorli Discau (Provença 49, 5 min), BonÀrea
+   (Numància 59 y Berlín 20), Condis (Londres 12), Bonpreu (Taquígraf Serra 7),
+   Aldi (Numància 88), Mercadona (Tarragona 177) y Hiper Galicia (pl. Països
+   Catalans). Ninguno aporta nada que no tengas más cerca. */
+const SUPERS_TOTAL = 28;
