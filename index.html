@@ -353,7 +353,7 @@
   .daycard.es-hoy{border-color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 26%, transparent), var(--sh-2);}
   .daycard-header{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap;}
   .dayname{font-weight:700; font-family:var(--font-display); color:var(--accent); font-size:var(--t-md); display:inline-flex; align-items:center; gap:7px;}
-  .kcal{font-weight:700; font-family:var(--font-mono); font-size:var(--t-xs); background:var(--accent-soft); color:var(--accent); padding:4px 10px; border-radius:99px; display:inline-flex; align-items:center; gap:5px;}
+  .kcal{font-weight:400; font-family:var(--font-mono); font-size:var(--t-2xs); background:transparent; color:var(--muted); padding:4px 0; border-radius:99px; display:inline-flex; align-items:center; gap:5px;}
   .kcal .ic-v{width:12px; height:12px;}
   .meal{font-size:var(--t-base); margin:3px 0;}
   .plate-progress{margin-top:12px; padding-top:12px; border-top:1px solid var(--border); display:flex; align-items:center; gap:14px;}
@@ -395,8 +395,8 @@
   }
   .hoy-ahora-ico .ic-v{width:23px; height:23px;}
   .hoy-ahora-txt{flex:1; min-width:0;}
-  .hoy-ahora-momento{font-size:var(--t-2xs); text-transform:uppercase; letter-spacing:.9px; font-weight:700; opacity:.82;}
-  .hoy-ahora-plato{font-size:var(--t-base); font-weight:600; line-height:1.35; margin-top:2px;}
+  .hoy-ahora-momento{display:block; font-size:var(--t-2xs); text-transform:uppercase; letter-spacing:.9px; font-weight:700; opacity:.82;}
+  .hoy-ahora-plato{display:block; font-size:var(--t-base); font-weight:600; line-height:1.35; margin-top:2px;}
   .hoy-ahora .flecha .ic-v{width:17px; height:17px; opacity:.75;}
 
   /* Botonera de rescate */
@@ -1923,16 +1923,15 @@ function esUltimoViernesLaboral(date){
   return u.getDate() === date.getDate();
 }
 
-function scrollBehavior(){
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
-}
-
 function showTab(name, btn){
+  /* Instantáneo y ANTES de cambiar de panel: con scroll suave y después del
+     cambio, el navegador re-ancla la posición al crecer la página y acabas
+     a mitad de la pestaña nueva en vez de arriba. */
+  window.scrollTo({top:0, behavior:'auto'});
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('#tabnav button').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  window.scrollTo({top:0, behavior:scrollBehavior()});
 }
 
 function pintaIconoTema(){
@@ -3012,7 +3011,9 @@ function dayCardHtml(d, filterMode, esHoy){
   const showCena = filterMode !== 'comida';
   const subComida = sustitucionPara(d.comida);
   const subCena = sustitucionPara(d.cena);
-  const nombreDia = esc(sinEmoji(d.day) || d.day.split(' ')[0]);
+  /* Los días del menú se llaman "Lunes 🐟": el emoji va al final y sinEmoji()
+     solo limpia el principio, así que salía duplicado con el icono vectorial. */
+  const nombreDia = esc(d.day.split(' ')[0]);
   let html = '<div class="daycard' + (esHoy ? ' es-hoy' : '') + '">';
   html += '<div class="daycard-header"><span class="dayname">' + ico(iconoDeTexto(d.comida)) + nombreDia + badges + '</span>'
         + '<span class="kcal">' + ico('fuego') + d.kcal + ' kcal</span></div>';
@@ -3204,7 +3205,8 @@ function renderHoy(){
     } else if(now.getDay() >= 1 && now.getDay() <= 5){
       /* El día suelto de teletrabajo se sabe por la mañana, no tres semanas
          antes: por eso se marca aquí y no en los ajustes. */
-      tipHtml += '<div class="tip">Si hoy acabas quedándote en casa, <button class="btn-mini" onclick="toggleWfhHoy()">márcalo aquí</button> y dejo de contar con el tupper.</div>';
+      tipHtml += '<div class="tip">¿Hoy acabas quedándote en casa? Márcalo y dejo de contar con el tupper.' +
+        '<div style="margin-top:9px;"><button class="btn-mini" onclick="toggleWfhHoy()">' + ico('casa') + ' Hoy trabajo en casa</button></div></div>';
     }
     if(isTeamLunch || d.pizza){
       tipHtml += '<div class="tip">Hoy es la comida de equipo del trabajo (pizza, hamburguesa o milanesas, según toque) — sin sustituirla por nada y sin compensarla después. Disfrútala.</div>';
