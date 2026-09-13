@@ -3287,7 +3287,7 @@ function rellenarSugerenciasCompra(){
     const limpio = String(txt || '').trim();
     const k = normalizeText(limpio);
     /* Fuera las que llevan cantidad delante ('1 tomate rallado'): eso es una nota, no un producto. */
-    if(!limpio || vistos[k] || /^d/.test(limpio)) return;
+    if(!limpio || vistos[k] || /^\d/.test(limpio)) return;
     vistos[k] = true;
     todos.push(limpio.charAt(0).toUpperCase() + limpio.slice(1));
   };

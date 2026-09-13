@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'plan-alimentacion-v35';
+const CACHE_VERSION = 'plan-alimentacion-v36';
 const APP_SHELL = [
   './',
   './index.html',
