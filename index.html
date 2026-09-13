@@ -717,6 +717,69 @@
   .bottomnav .ic-v{width:22px; height:22px; vertical-align:0;}
   .ic-lg{width:1.6em; height:1.6em;}
 
+  /* ==================== MODO COCINA ====================
+     Opaco a propósito: se lee de pie, de lejos y con vapor. */
+  .cocina{
+    position:fixed; inset:0; z-index:94; background:var(--bg2); color:var(--ink);
+    display:none; flex-direction:column;
+    padding:calc(12px + env(safe-area-inset-top)) 18px calc(14px + env(safe-area-inset-bottom));
+  }
+  .cocina.show{display:flex; animation:fade .2s ease;}
+  .cocina > *{width:100%; max-width:620px; margin-left:auto; margin-right:auto;}
+  .cocina-top{display:flex; align-items:center; gap:12px;}
+  .cocina-salir{background:none; border:none; color:var(--muted); font-family:inherit; font-size:var(--t-sm); font-weight:700; padding:8px 0; cursor:pointer; flex-shrink:0;}
+  .cocina-plato{font-size:var(--t-xs); color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .cocina-barra{height:5px; border-radius:99px; background:var(--barbg); overflow:hidden; margin:8px auto 10px;}
+  .cocina-barra i{display:block; height:100%; background:linear-gradient(90deg,var(--accent2),var(--accent)); border-radius:99px; transition:width .3s ease;}
+  .cocina-timer{display:none;}
+  .cocina-timer.on{
+    display:flex; align-items:center; gap:8px; padding:10px 10px 10px 16px; border-radius:var(--r-lg);
+    background:var(--accent-soft); color:var(--accent); margin-bottom:8px;
+  }
+  .cocina-timer .t-num{flex:1; font-family:var(--font-mono); font-size:var(--t-xl); font-weight:700;}
+  .cocina-timer button{border:none; border-radius:99px; padding:9px 13px; background:var(--card); color:var(--accent); font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;}
+  .cocina-timer.suena{background:var(--warn); color:#fff; animation:latido 1s ease-in-out infinite;}
+  .cocina-timer.suena button{color:var(--warn);}
+  @keyframes latido{50%{transform:scale(1.02);}}
+  .cocina-cuerpo{flex:1; overflow-y:auto; padding:10px 0 16px; -webkit-overflow-scrolling:touch;}
+  .cocina-eti{font-family:var(--font-mono); font-size:var(--t-xs); color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-bottom:10px;}
+  .cocina-h{font-family:var(--font-display); font-size:var(--t-xl); margin:0 0 8px; line-height:1.2;}
+  .cocina-txt{font-size:1.45rem; line-height:1.45; margin:0; font-weight:500;}
+  .cocina-ayuda{font-size:var(--t-sm); color:var(--muted); margin:0 0 14px;}
+  .cocina-tiempos{display:flex; flex-wrap:wrap; gap:8px; margin-top:20px;}
+  .cocina-tiempos button{
+    display:flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--card); color:var(--accent);
+    border-radius:99px; padding:12px 16px; font-family:inherit; font-size:var(--t-base); font-weight:700; cursor:pointer;
+  }
+  .cocina-tiempos .ic-v{width:17px; height:17px;}
+  .cocina-nota{margin-top:18px; padding:12px 14px; border-radius:var(--r-sm); background:var(--warn-soft); font-size:var(--t-sm); line-height:1.45;}
+  .cocina-ings{display:flex; flex-direction:column; gap:8px;}
+  .cocina-ing{
+    display:flex; align-items:center; gap:12px; text-align:left; width:100%; cursor:pointer;
+    background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); padding:12px 14px;
+    font-family:inherit; font-size:var(--t-base); color:var(--ink);
+  }
+  .cocina-ing i{display:block; font-style:normal; font-size:var(--t-xs); color:var(--muted);}
+  .cocina-ing.ok .marca{background:linear-gradient(135deg,var(--accent),var(--accent2)); border-color:transparent;}
+  .cocina-ing.ok .marca .ic-v{opacity:1;}
+  .cocina-ing.ok b{color:var(--muted); text-decoration:line-through;}
+  .cocina-fin{text-align:center; padding-top:30px; color:var(--accent);}
+  .cocina-fin .cocina-h, .cocina-fin .cocina-ayuda{color:var(--ink);}
+  .cocina-fin .cocina-nota{text-align:left; color:var(--ink);}
+  .cocina-nav{display:flex; gap:10px;}
+  .cocina-nav button{
+    flex:1; min-height:56px; border-radius:var(--r-lg); font-family:inherit; font-size:var(--t-md); font-weight:700; cursor:pointer;
+  }
+  .cocina-atras{flex:0 0 32% !important; background:var(--card); border:1px solid var(--border); color:var(--ink);}
+  .cocina-sig{border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; box-shadow:var(--sh-2);}
+  .cocina-abrir{
+    width:100%; display:flex; align-items:center; gap:12px; text-align:left; cursor:pointer; margin:0 0 14px;
+    border:1px solid var(--border); background:var(--accent-soft); color:var(--ink); border-radius:var(--r-lg); padding:12px 14px; font-family:inherit;
+  }
+  .cocina-abrir > .ic-v{width:24px; height:24px; color:var(--accent); flex-shrink:0;}
+  .cocina-abrir b{display:block; font-size:var(--t-base); color:var(--accent);}
+  .cocina-abrir i{display:block; font-style:normal; font-size:var(--t-xs); color:var(--muted);}
+
   /* ==================== FICHA DEL PLATO ==================== */
   .ficha-back{
     position:fixed; inset:0; z-index:90; background:rgba(14,18,16,.46);
@@ -1018,6 +1081,7 @@
 </defs></svg>
 
 <!-- Ficha de un plato: se rellena al abrirla -->
+<div class="cocina" id="cocina" role="dialog" aria-modal="true" aria-label="Cocinar paso a paso"></div>
 <div class="ficha-back" id="fichaBack" onclick="if(event.target===this)cerrarFicha()">
   <div class="ficha" role="dialog" aria-modal="true" aria-labelledby="fichaTitulo">
     <div class="ficha-top">
@@ -1834,6 +1898,10 @@ function abrirFicha(slug, momento){
 
     /* --- Cocinar --- */
     '<div class="ficha-pane on">' +
+      (p.pasos.length > 1
+        ? '<button class="cocina-abrir" onclick="abrirCocina()">' + ico('fuego') + '<span><b>Cocinar paso a paso</b>' +
+          '<i>Letra grande, un paso cada vez, temporizadores y la pantalla no se apaga</i></span></button>'
+        : '') +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas</div>' +
         '<ul class="ing-lista">' + ingredientes + '</ul></div>' +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('sarten') + 'Cómo se hace</div>' +
@@ -1888,6 +1956,154 @@ function fichaTab(btn, i){
   btn.classList.add('on');
   Array.prototype.forEach.call(cont.querySelectorAll('.ficha-pane'), (p, j) => p.classList.toggle('on', j === i));
   cont.scrollTop = cont.querySelector('.ficha-tabs').offsetTop - 12;
+}
+
+/* ==================== MODO COCINA ====================
+   Las fichas están escritas para alguien que no ha cocinado nunca, pero se
+   leían como un texto largo con las manos sucias y el móvil apagándose.
+   Aquí va un paso cada vez, en grande; si el paso dice "3-4 minutos" sale
+   un botón que pone ese temporizador y pita al acabar. */
+const CO = { abierta:false, slug:null, paso:-1, fin:0, total:0, tick:null, sonando:false, tengo:{} };
+let audioCocina = null;
+
+/* Tiempos que aparecen en el texto del paso: "3-4 minutos", "30-40 segundos",
+   "1 minuto". Se coge el número alto del rango. Las horas no (remojos). */
+function tiemposDePaso(txt){
+  const out = [];
+  const re = /(\d+)(?:\s*(?:-|–|a|o)\s*(\d+))?\s*(segundos?|min(?:utos?)?)\b/gi;
+  let m;
+  while((m = re.exec(txt)) && out.length < 2){
+    const n = parseInt(m[2] || m[1], 10);
+    const seg = /^seg/i.test(m[3]) ? n : n * 60;
+    if(seg >= 10 && seg <= 90 * 60 && !out.some(o => o.seg === seg)) out.push({ seg: seg, txt: m[0] });
+  }
+  return out;
+}
+function mmss(s){ s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); }
+
+function abrirCocina(){
+  if(!fichaSlugActual || !PLATOS[fichaSlugActual]) return;
+  CO.abierta = true; CO.slug = fichaSlugActual; CO.paso = -1; CO.tengo = {};
+  try{ if(!audioCocina) audioCocina = new (window.AudioContext || window.webkitAudioContext)(); audioCocina.resume(); }catch(e){}
+  document.getElementById('cocina').classList.add('show');
+  pantallaSuper(true);
+  pintarCocina();
+}
+function cerrarCocina(){
+  if(CO.fin && !confirm('Hay un temporizador en marcha. ¿Salir igualmente?')) return;
+  pararTemporizador();
+  CO.abierta = false;
+  document.getElementById('cocina').classList.remove('show');
+  pantallaSuper(enSuper);
+}
+function pasoCocina(delta){
+  const p = PLATOS[CO.slug];
+  CO.paso = Math.max(-1, Math.min(p.pasos.length, CO.paso + delta));
+  pintarCocina();
+  const c = document.querySelector('#cocina .cocina-cuerpo');
+  if(c) c.scrollTop = 0;
+}
+function tengoIngrediente(i){ CO.tengo[i] = !CO.tengo[i]; pintarCocina(); }
+
+function empezarTemporizador(seg){
+  pararTemporizador();
+  CO.total = seg; CO.fin = Date.now() + seg * 1000; CO.sonando = false;
+  CO.tick = setInterval(tickCocina, 250);
+  pintarTemporizador();
+}
+function pararTemporizador(){
+  clearInterval(CO.tick); CO.tick = null; CO.fin = 0; CO.sonando = false;
+  pintarTemporizador();
+}
+function sumarMinuto(){
+  if(!CO.fin) return;
+  CO.fin = (CO.sonando ? Date.now() : CO.fin) + 60000;
+  CO.total += 60; CO.sonando = false;
+  if(!CO.tick) CO.tick = setInterval(tickCocina, 250);
+  pintarTemporizador();
+}
+function tickCocina(){
+  if(!CO.fin) return;
+  if(Date.now() >= CO.fin && !CO.sonando){
+    CO.sonando = true;
+    pitarCocina();
+    try{ if(navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); }catch(e){}
+  }
+  if(CO.sonando && (Date.now() - CO.fin) % 4000 < 250) pitarCocina();
+  pintarTemporizador();
+}
+function pitarCocina(){
+  try{
+    const ctx = audioCocina; if(!ctx) return;
+    [0, 0.22, 0.44].forEach(t => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + 0.18);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.2);
+    });
+  }catch(e){}
+}
+function pintarTemporizador(){
+  const el = document.getElementById('cocinaTimer');
+  if(!el) return;
+  if(!CO.fin){ el.className = 'cocina-timer'; el.innerHTML = ''; return; }
+  const quedan = (CO.fin - Date.now()) / 1000;
+  el.className = 'cocina-timer on' + (CO.sonando ? ' suena' : '');
+  el.innerHTML =
+    '<span class="t-num">' + (CO.sonando ? '¡Tiempo!' : mmss(quedan)) + '</span>' +
+    '<button onclick="sumarMinuto()">+1 min</button>' +
+    '<button onclick="pararTemporizador()">' + (CO.sonando ? 'Vale' : 'Parar') + '</button>';
+}
+function pintarCocina(){
+  const el = document.getElementById('cocina');
+  const p = PLATOS[CO.slug];
+  if(!el || !p) return;
+  const n = p.pasos.length;
+  let cuerpo, siguiente;
+  if(CO.paso < 0){
+    const lista = p.ingredientes.map((it, i) =>
+      '<button class="cocina-ing' + (CO.tengo[i] ? ' ok' : '') + '" onclick="tengoIngrediente(' + i + ')">' +
+        '<span class="marca">' + ico('check') + '</span><span><b>' + esc(it.item) + '</b><i>' + esc(it.q) + '</i></span></button>'
+    ).join('');
+    cuerpo = '<div class="cocina-eti">Antes de encender nada</div>' +
+      '<h2 class="cocina-h">Saca todo y déjalo a mano</h2>' +
+      '<p class="cocina-ayuda">Tócalo cuando lo tengas encima de la encimera. Buscar el aceite con la sartén ya caliente es cuando se quema el ajo.</p>' +
+      '<div class="cocina-ings">' + lista + '</div>';
+    siguiente = 'Empezar';
+  } else if(CO.paso >= n){
+    cuerpo = '<div class="cocina-fin">' + ico('check', 'ic-lg') + '<h2 class="cocina-h">Hecho</h2>' +
+      '<p class="cocina-ayuda">' + esc(p.nombre) + '. Ya está, a comer.</p>' +
+      (p.conservar && p.conservar !== '—' ? '<div class="cocina-nota"><b>Si sobra:</b> ' + esc(p.conservar) + '</div>' : '') +
+      '</div>';
+    siguiente = 'Cerrar';
+  } else {
+    const txt = p.pasos[CO.paso];
+    const tiempos = tiemposDePaso(txt);
+    cuerpo = '<div class="cocina-eti">Paso ' + (CO.paso + 1) + ' de ' + n + '</div>' +
+      '<p class="cocina-txt">' + esc(txt) + '</p>' +
+      (tiempos.length ? '<div class="cocina-tiempos">' + tiempos.map(t =>
+        '<button onclick="empezarTemporizador(' + t.seg + ')">' + ico('reloj') + 'Temporizador ' + mmss(t.seg) + '</button>').join('') + '</div>' : '') +
+      (CO.paso === n - 1 && p.ojo && p.ojo !== 'Nada.' && p.ojo !== 'Nada especial.' && p.ojo !== '—'
+        ? '<div class="cocina-nota"><b>Ojo:</b> ' + esc(p.ojo) + '</div>' : '');
+    siguiente = CO.paso === n - 1 ? 'Terminado' : 'Siguiente';
+  }
+  const avance = CO.paso < 0 ? 0 : Math.round(Math.min(CO.paso + 1, n) / n * 100);
+  el.innerHTML =
+    '<div class="cocina-top">' +
+      '<button class="cocina-salir" onclick="cerrarCocina()">‹ Salir</button>' +
+      '<span class="cocina-plato">' + esc(p.nombre) + '</span>' +
+    '</div>' +
+    '<div class="cocina-barra"><i style="width:' + avance + '%"></i></div>' +
+    '<div id="cocinaTimer" class="cocina-timer"></div>' +
+    '<div class="cocina-cuerpo">' + cuerpo + '</div>' +
+    '<div class="cocina-nav">' +
+      (CO.paso >= 0 ? '<button class="cocina-atras" onclick="pasoCocina(-1)">Atrás</button>' : '') +
+      '<button class="cocina-sig" onclick="' + (CO.paso >= n ? 'cerrarCocina()' : 'pasoCocina(1)') + '">' + siguiente + '</button>' +
+    '</div>';
+  pintarTemporizador();
 }
 
 /* Abre la ficha desde el texto del menú, si ese plato tiene una. */
@@ -3555,6 +3771,7 @@ insertSectionDividers();
 /* Cerrar con Escape lo que esté abierto, por orden de encima hacia abajo. */
 document.addEventListener('keydown', e => {
   if(e.key !== 'Escape') return;
+  if(CO.abierta) return cerrarCocina();
   if(document.getElementById('fichaBack').classList.contains('show')) return cerrarFicha();
   if(document.getElementById('sheetBack').classList.contains('show')) return cerrarSheet();
   if(document.getElementById('settingsOverlay').classList.contains('show')) return closeSettings();
@@ -3574,7 +3791,7 @@ document.addEventListener('visibilitychange', () => {
 });
 window.addEventListener('online', () => sincronizar('red'));
 /* iOS suelta el "pantalla encendida" al bloquear: al volver, se pide otra vez. */
-document.addEventListener('visibilitychange', () => { if(!document.hidden && enSuper) pantallaSuper(true); });
+document.addEventListener('visibilitychange', () => { if(!document.hidden && (enSuper || CO.abierta)) pantallaSuper(true); });
 document.addEventListener('DOMContentLoaded', () => { renderSyncEstado(); sincronizar('abrir'); });
 setInterval(renderHoy, 10 * 60 * 1000);
 
