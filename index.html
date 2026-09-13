@@ -419,6 +419,13 @@
   .hoy-ahora-momento{display:block; font-size:var(--t-2xs); text-transform:uppercase; letter-spacing:.9px; font-weight:700; opacity:.82;}
   .hoy-ahora-plato{display:block; font-size:var(--t-base); font-weight:600; line-height:1.35; margin-top:2px;}
   .hoy-ahora .flecha .ic-v{width:17px; height:17px; opacity:.75;}
+  .hoy-cocinar{
+    position:relative; margin-top:9px; display:inline-flex; align-items:center; gap:7px;
+    padding:9px 14px; border-radius:99px; border:1px solid rgba(255,255,255,.28);
+    background:rgba(255,255,255,.14); color:#fff; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;
+  }
+  .hoy-cocinar:active{transform:scale(.97);}
+  .hoy-cocinar .ic-v{width:15px; height:15px;}
 
   /* Botonera de rescate */
   .sos-row{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px;}
@@ -1212,6 +1219,7 @@
     <p class="hoy-fecha" id="hoyDate"></p>
     <p class="hoy-ciclo" id="hoyWeekLabel"></p>
     <button class="hoy-ahora" id="hoyAhora" onclick="abrirAhora()"></button>
+    <button class="hoy-cocinar" id="hoyCocinar" onclick="cocinarAhora()" style="display:none"></button>
   </div>
 
   <!-- Rescate: los tres botones que hacen falta cuando el plan se cae.
@@ -3062,6 +3070,11 @@ function momentoAhora(){
   return MOMENTOS.find(m => h < m.hasta) || MOMENTOS[MOMENTOS.length - 1];
 }
 let ahoraSlug = null;
+function cocinarAhora(){
+  if(!ahoraSlug || !PLATOS[ahoraSlug]) return;
+  abrirFicha(ahoraSlug, momentoAhora().id);
+  abrirCocina();
+}
 function abrirAhora(){
   if(ahoraSlug) abrirFicha(ahoraSlug, momentoAhora().id);
   else toast('Este no tiene ficha — mira el menú de abajo');
@@ -3917,6 +3930,15 @@ function renderHoy(){
       '<span class="hoy-ahora-plato">' + esc(sinEmoji(textoAhora)) + '</span>' +
     '</span>' +
     (ahoraSlug ? '<span class="flecha">' + ico('flecha') + '</span>' : '');
+  /* A la hora de cocinar, directo al paso a paso: sin abrir la ficha, bajar
+     y buscar el botón. Solo si el plato de ahora se cocina de verdad. */
+  const btnCocinar = document.getElementById('hoyCocinar');
+  if(btnCocinar){
+    const pc = ahoraSlug && PLATOS[ahoraSlug];
+    const vale = !!(pc && pc.tiempo > 0 && Array.isArray(pc.pasos) && pc.pasos.length > 1);
+    btnCocinar.style.display = vale ? '' : 'none';
+    if(vale) btnCocinar.innerHTML = ico('fuego') + 'Cocinar paso a paso · ' + pc.tiempo + ' min';
+  }
 
   const enPausa = isVacationToday();
   let tipHtml = '';
