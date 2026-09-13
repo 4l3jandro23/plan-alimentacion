@@ -1368,7 +1368,7 @@
 
   <div class="buscador">
     <svg class="ic-v"><use href="#i-buscar"/></svg>
-    <input type="search" id="recipeSearch" placeholder="Buscar: pollo, huevo, airfryer…" oninput="renderRecetas()" aria-label="Buscar receta">
+    <input type="search" id="recipeSearch" placeholder="Lo que tienes: pollo arroz, huevo…" oninput="renderRecetas()" aria-label="Buscar receta">
   </div>
 
   <div class="filtros" id="recFiltros"></div>
@@ -1465,7 +1465,8 @@
   <div class="compra-cab" id="compraCab"></div>
 
   <div class="add-row">
-    <input id="addItem" placeholder="Añadir algo a mano…" aria-label="Añadir producto"
+    <datalist id="sugCompra"></datalist>
+    <input id="addItem" list="sugCompra" autocomplete="off" placeholder="Añadir algo a mano…" aria-label="Añadir producto"
            onkeydown="if(event.key==='Enter'){event.preventDefault();addManual();}">
     <button onclick="addManual()" aria-label="Añadir"><svg class="ic-v"><use href="#i-mas"/></svg></button>
   </div>
@@ -3111,6 +3112,7 @@ function platosCocinables(){
   return Object.keys(PLATOS).filter(k => PLATOS[k].tiempo > 0);
 }
 
+const PALABRAS_VACIAS = ['con','y','de','del','la','el','los','las','en','a','al','un','una','o'];
 function renderRecetas(){
   const grid = document.getElementById('recGrid');
   if(!grid) return;
@@ -3121,7 +3123,10 @@ function renderRecetas(){
     const p = PLATOS[k];
     if(q){
       const texto = normalizeText(p.nombre + ' ' + p.donde + ' ' + p.ingredientes.map(i => i.item).join(' ') + ' ' + (p.trucos || []).join(' '));
-      if(!texto.includes(q)) return false;
+      /* Cada palabra tiene que estar, en cualquier orden: sirve para buscar
+         con lo que hay en la nevera ("pollo arroz", "huevo espinacas"). */
+      const palabras = q.split(/[\s,]+/).filter(t => t && PALABRAS_VACIAS.indexOf(t) === -1);
+      if(!palabras.every(t => texto.includes(t))) return false;
     }
     switch(recFiltro){
       case 'fav':      return favs.includes(k);
@@ -3269,6 +3274,27 @@ function borrarItem(id, ev){
   saveCompra(antes.filter(i => i.id !== id));
   renderCompra();
   if(it) toast('Quitado: ' + it.txt, () => restaurarCompra(antes));
+}
+/* Sugerencias al escribir: todos los ingredientes de las fichas y de la
+   despensa de rescate. Escribir "gar" y tocar "garbanzos cocidos" en vez de
+   teclearlo entero con una mano. */
+function rellenarSugerenciasCompra(){
+  const dl = document.getElementById('sugCompra');
+  if(!dl || typeof PLATOS === 'undefined') return;
+  const vistos = {};
+  const todos = [];
+  const meter = txt => {
+    const limpio = String(txt || '').trim();
+    const k = normalizeText(limpio);
+    /* Fuera las que llevan cantidad delante ('1 tomate rallado'): eso es una nota, no un producto. */
+    if(!limpio || vistos[k] || /^d/.test(limpio)) return;
+    vistos[k] = true;
+    todos.push(limpio.charAt(0).toUpperCase() + limpio.slice(1));
+  };
+  Object.keys(PLATOS).forEach(s => (PLATOS[s].ingredientes || []).forEach(i => meter(i.item)));
+  if(typeof DESPENSA_RESCATE !== 'undefined') DESPENSA_RESCATE.forEach(r => meter(r.item));
+  todos.sort((a, b) => a.localeCompare(b, 'es'));
+  dl.innerHTML = todos.map(t => '<option value="' + esc(t) + '"></option>').join('');
 }
 function addManual(){
   const input = document.getElementById('addItem');
@@ -3763,6 +3789,7 @@ renderCompra();
 renderAtajos();
 renderSupers();
 renderDespensaRescate();
+rellenarSugerenciasCompra();
 renderCheckin();
 renderHoy();
 badgeifyHeadings();
