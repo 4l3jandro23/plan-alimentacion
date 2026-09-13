@@ -206,6 +206,27 @@
   }
   .settings-panel h3{margin:0 0 4px; font-size:var(--t-lg); font-family:var(--font-display); font-weight:600; color:var(--ink);}
   .settings-row{margin:16px 0;}
+  .sync-caja{margin:2px 0 16px;}
+  .sync-resumen{margin-left:auto; margin-right:10px; font-size:var(--t-2xs); font-weight:600; color:var(--muted);}
+  .sync-estado{font-size:var(--t-xs); color:var(--muted); line-height:1.5;}
+  .sync-estado b{color:var(--ink);}
+  .sync-estado.mal b{color:var(--warn);}
+  .sync-estado p{margin:8px 0;}
+  .sync-pasos{margin:8px 0; padding-left:20px; color:var(--ink); line-height:1.55;}
+  .sync-pasos li{margin-bottom:5px;}
+  .sync-pasos a{color:var(--accent); word-break:break-word;}
+  .sync-token{
+    width:100%; box-sizing:border-box; margin:4px 0 8px; padding:12px; border:1px solid var(--border);
+    border-radius:10px; background:var(--card); color:var(--ink); font-family:var(--font-mono); font-size:16px;
+  }
+  .sync-token:focus{outline:none; border-color:var(--accent);}
+  .sync-btn{
+    width:100%; margin-top:8px; padding:11px 14px; border-radius:10px; border:1px solid var(--border);
+    background:var(--accent-soft); color:var(--accent); font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;
+  }
+  .sync-btn.principal{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .sync-botones{display:flex; gap:8px;}
+  .sync-botones .sync-btn{flex:1;}
   .settings-row > div:first-child{font-size:var(--t-xs); font-weight:700; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:.5px;}
   .swatches{display:flex; gap:10px; flex-wrap:wrap;}
   .swatch{
@@ -1017,7 +1038,7 @@
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
   <div class="settings-panel">
     <h3>⚙️ Ajustes</h3>
-    <p style="font-size:var(--t-sm); color:var(--muted); margin:2px 0 0;">Se guarda en este móvil. Para llevártelo a otro sitio, usa la copia de seguridad de aquí abajo.</p>
+    <p style="font-size:var(--t-sm); color:var(--muted); margin:2px 0 0;">Se guarda en este dispositivo. Para tener lo mismo en el móvil y en el ordenador, conéctalos en «Móvil y ordenador».</p>
 
     <details class="settings-group" open>
       <summary>🎨 Apariencia</summary>
@@ -1042,6 +1063,11 @@
         </div>
       </div>
 
+    </details>
+
+    <details class="settings-group" id="syncGrupo">
+      <summary>🔄 Móvil y ordenador <span class="sync-resumen" id="syncResumen"></span></summary>
+      <div class="sync-caja"><div class="sync-estado" id="syncEstado"></div></div>
     </details>
 
     <details class="settings-group">
@@ -1940,7 +1966,7 @@ function pintaIconoTema(){
 }
 function toggleTheme(){
   const isDark = document.documentElement.classList.toggle('dark');
-  try{ localStorage.setItem('planAlimentacionTheme', isDark ? 'dark' : 'light'); }catch(e){}
+  try{ setLS('planAlimentacionTheme', isDark ? 'dark' : 'light'); }catch(e){}
   pintaIconoTema();
 }
 (function initTheme(){
@@ -1952,6 +1978,7 @@ function toggleTheme(){
 
 /* ===== Ajustes: color, estilo, teletrabajo, vacaciones ===== */
 function openSettings(){
+  renderSyncEstado();
   document.getElementById('settingsOverlay').classList.add('show');
 }
 function closeSettings(){
@@ -1959,7 +1986,7 @@ function closeSettings(){
 }
 function resetAllSettings(){
   if(!confirm('¿Restablecer color, tu semana, la pausa, la lista de la compra, favoritas y check-ins? No se puede deshacer.')) return;
-  [...SYNC_KEYS].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+  [...SYNC_KEYS].forEach(k => quitarLS(k));
   setColor('');
   setTextSize('');
   renderSemana();
@@ -1972,14 +1999,14 @@ function resetAllSettings(){
 
 function setColor(color){
   document.documentElement.setAttribute('data-color', color);
-  try{ localStorage.setItem('planAlimentacionColor', color); }catch(e){}
+  try{ setLS('planAlimentacionColor', color); }catch(e){}
   document.querySelectorAll('#colorSwatches .swatch').forEach(s=>{
     s.classList.toggle('active', s.dataset.color === color);
   });
 }
 function setTextSize(size){
   document.documentElement.setAttribute('data-textsize', size);
-  try{ localStorage.setItem('planAlimentacionTextSize', size); }catch(e){}
+  try{ setLS('planAlimentacionTextSize', size); }catch(e){}
   document.querySelectorAll('#textSizeOpts .style-opt').forEach(b=>{
     b.classList.toggle('active', b.dataset.size === size);
   });
@@ -2017,8 +2044,8 @@ function ciclarDia(idx){
   if(siguiente === 'casa') wfh.push(idx);
   if(siguiente === 'bowl') bowl.push(idx);
   try{
-    localStorage.setItem('planAlimentacionWfh', JSON.stringify(wfh));
-    localStorage.setItem('planAlimentacionBowlDays', JSON.stringify(bowl));
+    setLS('planAlimentacionWfh', JSON.stringify(wfh));
+    setLS('planAlimentacionBowlDays', JSON.stringify(bowl));
   }catch(e){}
   renderSemana();
   renderHoy();
@@ -2044,7 +2071,7 @@ function toggleWfhHoy(){
   const key = calDateKeyLocal(new Date());
   const dates = loadWfhDates();
   const nuevas = dates.includes(key) ? dates.filter(d => d !== key) : [...dates, key];
-  try{ localStorage.setItem('planAlimentacionWfhDates', JSON.stringify(nuevas)); }catch(e){}
+  try{ setLS('planAlimentacionWfhDates', JSON.stringify(nuevas)); }catch(e){}
   renderHoy();
   toast(nuevas.includes(key) ? 'Hoy cuenta como teletrabajo' : 'Hoy vuelve a ser día de oficina');
 }
@@ -2070,7 +2097,7 @@ function loadVacations(){
   }catch(e){ return []; }
 }
 function saveVacations(list){
-  try{ localStorage.setItem('planAlimentacionVacaciones', JSON.stringify(list)); }catch(e){}
+  try{ setLS('planAlimentacionVacaciones', JSON.stringify(list)); }catch(e){}
 }
 function pausarPlan(){
   const hasta = document.getElementById('pausaHasta');
@@ -2159,6 +2186,358 @@ const SYNC_KEYS = [
   'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins'
 ];
 
+/* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
+   La lista de la compra hecha en el ordenador no llegaba al móvil, que es
+   donde se usa en el súper. El Supabase de antes está muerto; esto funciona
+   igual que en la app de ejercicio: un gist secreto de tu cuenta de GitHub,
+   con un token que SOLO tiene permiso sobre gists. El mismo token sirve para
+   las dos apps.
+
+   El tamaño de letra y el tema no viajan: cada pantalla tiene los suyos. */
+const SYNC_CFG = {
+  todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
+          'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionCompra',
+          'planAlimentacionFavPlatos', 'planAlimentacionCheckins'],
+  lista: {
+    planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
+    planAlimentacionCheckins: { campo:'fecha', orden:'desc' }
+  }
+};
+const KS = {
+  marcas:'planAlimentacionMarcas', ghToken:'planAlimentacionGhToken', gistId:'planAlimentacionGistId',
+  syncOk:'planAlimentacionSyncOk', syncError:'planAlimentacionSyncError',
+  tokenEjercicio:'planEjercicioGhToken'
+};
+const GIST_ARCHIVO = 'plan-alimentacion-sync.json';
+let sincronizando = false, timerSubida = null, ultimaSincro = 0, sincEnCurso = null, subidaPendiente = false;
+
+function setRaw(key, value){ try{ localStorage.setItem(key, value); }catch(e){} }
+function getMarcas(){
+  try{ const m = JSON.parse(localStorage.getItem(KS.marcas)); return (m && typeof m === 'object') ? m : {}; }catch(e){ return {}; }
+}
+/* Todas las escrituras de la app pasan por aquí: es donde se apunta qué ha
+   cambiado y cuándo, para que la sincronización sepa qué gana. */
+function setLS(key, value){
+  const vigilada = !sincronizando && SYNC_CFG.todas.indexOf(key) !== -1;
+  let antes = null;
+  if(vigilada){ try{ antes = localStorage.getItem(key); }catch(e){} }
+  setRaw(key, value);
+  if(vigilada && antes !== value){
+    setRaw(KS.marcas, JSON.stringify(sellarCambio(getMarcas(), key, antes, value, SYNC_CFG, Date.now())));
+    programarSubida();
+  }
+}
+function quitarLS(key){
+  let antes = null;
+  try{ antes = localStorage.getItem(key); localStorage.removeItem(key); }catch(e){}
+  if(!sincronizando && antes !== null && SYNC_CFG.todas.indexOf(key) !== -1){
+    setRaw(KS.marcas, JSON.stringify(sellarCambio(getMarcas(), key, antes, null, SYNC_CFG, Date.now())));
+    programarSubida();
+  }
+}
+
+/* ---------- Fusión entre dispositivos (funciones puras, sin DOM) ----------
+   Misma idea que en la app de ejercicio. `local` y `remoto` tienen la forma
+   { datos: {clave: textoJSON}, marcas: {...} }, y las marcas dicen CUÁNDO se
+   tocó cada cosa:
+     - listas (compra, check-ins): una hora por elemento, identificado por un
+       campo (el id del producto, la fecha del check-in).
+     - claves sueltas (color, tu semana, favoritas…): una hora por clave.
+   Un elemento con marca que ya no está es un BORRADO: si tachas y quitas algo
+   de la compra en el móvil, no vuelve a aparecer al abrir el ordenador. */
+function jsonEstable(v){
+  if(Array.isArray(v)) return '[' + v.map(jsonEstable).join(',') + ']';
+  if(v && typeof v === 'object'){
+    return '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + jsonEstable(v[k])).join(',') + '}';
+  }
+  return JSON.stringify(v === undefined ? null : v);
+}
+function parsearSeguro(raw, def){
+  if(raw == null) return def;
+  try{ const v = JSON.parse(raw); return v == null ? def : v; }catch(e){ return def; }
+}
+/* Lista → mapa por su campo identificador. Si hay dos con el mismo (dos
+   check-ins el mismo día), se queda el primero, que es el más reciente. */
+function listaAMapa(raw, campo){
+  const arr = parsearSeguro(raw, []);
+  const mapa = {};
+  (Array.isArray(arr) ? arr : []).forEach(it => {
+    if(!it || typeof it !== 'object' || it[campo] == null) return;
+    const k = String(it[campo]);
+    if(!Object.prototype.hasOwnProperty.call(mapa, k)) mapa[k] = it;
+  });
+  return mapa;
+}
+function mapaALista(mapa, orden){
+  const claves = Object.keys(mapa).sort();
+  if(orden === 'desc') claves.reverse();
+  return claves.map(k => mapa[k]);
+}
+function fusionarEstado(local, remoto, cfg){
+  const L = local || {}, R = remoto || {};
+  const ld = L.datos || {}, rd = R.datos || {}, lm = L.marcas || {}, rm = R.marcas || {};
+  const out = { datos:{}, marcas:{} };
+  cfg.todas.forEach(key => {
+    const lr = ld[key], rr = rd[key];
+    const lista = cfg.lista[key];
+    if(lista){
+      const lms = (lm[key] && typeof lm[key] === 'object') ? lm[key] : {};
+      const rms = (rm[key] && typeof rm[key] === 'object') ? rm[key] : {};
+      if(lr == null && rr == null && !Object.keys(lms).length && !Object.keys(rms).length) return;
+      const lo = listaAMapa(lr, lista.campo), ro = listaAMapa(rr, lista.campo);
+      const res = {}, marcas = {};
+      new Set([].concat(Object.keys(lo), Object.keys(ro), Object.keys(lms), Object.keys(rms))).forEach(k => {
+        const lt = lms[k] || 0, rt = rms[k] || 0;
+        const enL = Object.prototype.hasOwnProperty.call(lo, k);
+        const enR = Object.prototype.hasOwnProperty.call(ro, k);
+        if(!lt && !rt){
+          /* De antes de que hubiera marcas: se juntan, y si chocan gana este dispositivo. */
+          if(enL) res[k] = lo[k]; else if(enR) res[k] = ro[k];
+        } else {
+          const ganaRemoto = rt > lt;
+          if(ganaRemoto ? enR : enL) res[k] = ganaRemoto ? ro[k] : lo[k];
+          marcas[k] = Math.max(lt, rt);
+        }
+      });
+      out.datos[key] = jsonEstable(mapaALista(res, lista.orden));
+      if(Object.keys(marcas).length) out.marcas[key] = marcas;
+      return;
+    }
+    const lt = typeof lm[key] === 'number' ? lm[key] : 0;
+    const rt = typeof rm[key] === 'number' ? rm[key] : 0;
+    /* Gana el lado tocado más tarde, tenga valor o no: si lo más reciente fue
+       borrarlo, se queda borrado. Sin marcas en ninguno, se junta. */
+    const v = rt > lt ? rr : lt > rt ? lr : (lr != null ? lr : rr);
+    if(v != null) out.datos[key] = v;
+    if(Math.max(lt, rt)) out.marcas[key] = Math.max(lt, rt);
+  });
+  return out;
+}
+/* Sella lo que acaba de cambiar en una escritura: solo los elementos distintos. */
+function sellarCambio(marcas, key, antesRaw, nuevoRaw, cfg, ahora){
+  if(cfg.todas.indexOf(key) === -1) return marcas;
+  const lista = cfg.lista[key];
+  if(lista){
+    const a = listaAMapa(antesRaw, lista.campo), b = listaAMapa(nuevoRaw, lista.campo);
+    const sub = (marcas[key] && typeof marcas[key] === 'object') ? marcas[key] : {};
+    new Set(Object.keys(a).concat(Object.keys(b))).forEach(k => {
+      if(jsonEstable(a[k]) !== jsonEstable(b[k])) sub[k] = ahora;
+    });
+    marcas[key] = sub;
+  } else if(antesRaw !== nuevoRaw){
+    marcas[key] = ahora;
+  }
+  return marcas;
+}
+
+function estadoLocal(){
+  const datos = {};
+  SYNC_CFG.todas.forEach(k => {
+    try{ const v = localStorage.getItem(k); if(v !== null) datos[k] = v; }catch(e){}
+  });
+  return { datos: datos, marcas: getMarcas() };
+}
+/* Escribe lo fusionado sin volver a sellarlo (si no, cada sincronización
+   marcaría todo como "tocado ahora" y ganaría siempre el último en abrir). */
+function aplicarEstado(est){
+  let cambia = false;
+  sincronizando = true;
+  try{
+    SYNC_CFG.todas.forEach(k => {
+      let actual = null;
+      try{ actual = localStorage.getItem(k); }catch(e){}
+      const nuevo = Object.prototype.hasOwnProperty.call(est.datos, k) ? est.datos[k] : null;
+      if(actual === nuevo) return;
+      if(nuevo === null){ try{ localStorage.removeItem(k); }catch(e){} }
+      else setRaw(k, nuevo);
+      cambia = true;
+    });
+    setRaw(KS.marcas, JSON.stringify(est.marcas || {}));
+  }finally{
+    sincronizando = false;
+  }
+  return cambia;
+}
+function docSync(est){
+  return JSON.stringify({ app:'plan-alimentacion', v:1, actualizado:new Date().toISOString(),
+                          datos: est.datos, marcas: est.marcas }, null, 1);
+}
+async function gh(ruta, opciones){
+  const op = opciones || {};
+  const token = (localStorage.getItem(KS.ghToken) || '').trim();
+  const res = await fetch('https://api.github.com' + ruta, {
+    method: op.method || 'GET',
+    cache: 'no-store',
+    keepalive: !!op.keepalive,
+    headers: Object.assign({ 'Accept':'application/vnd.github+json', 'Authorization':'Bearer ' + token },
+                           op.body ? { 'Content-Type':'application/json' } : {}),
+    body: op.body
+  });
+  if(!res.ok){ const e = new Error('GitHub ' + res.status); e.status = res.status; throw e; }
+  return res.status === 204 ? null : res.json();
+}
+/* El primer dispositivo que se conecta crea el gist; los demás lo encuentran
+   buscando el nombre del archivo entre tus gists. */
+async function buscarGist(){
+  let id = null;
+  try{ id = localStorage.getItem(KS.gistId); }catch(e){}
+  if(id) return id;
+  for(let pagina = 1; pagina <= 5 && !id; pagina++){
+    const lista = await gh('/gists?per_page=100&page=' + pagina);
+    const g = (lista || []).find(x => x.files && x.files[GIST_ARCHIVO]);
+    if(g) id = g.id;
+    if(!lista || lista.length < 100) break;
+  }
+  if(!id){
+    const g = await gh('/gists', { method:'POST', body: JSON.stringify({
+      description:'Plan de Alimentación · sincronización entre el móvil y el ordenador',
+      public:false,
+      files:{ [GIST_ARCHIVO]: { content: docSync(estadoLocal()) } }
+    }) });
+    id = g.id;
+  }
+  setRaw(KS.gistId, id);
+  return id;
+}
+async function leerRemoto(id){
+  const g = await gh('/gists/' + id);
+  const f = g && g.files && g.files[GIST_ARCHIVO];
+  if(!f) return { datos:{}, marcas:{} };
+  let txt = f.content;
+  if(f.truncated && f.raw_url) txt = await (await fetch(f.raw_url, { cache:'no-store' })).text();
+  const d = parsearSeguro(txt, {});
+  return { datos: d.datos || {}, marcas: d.marcas || {} };
+}
+async function sincronizar(motivo){
+  try{ if(!localStorage.getItem(KS.ghToken)) return; }catch(e){ return; }
+  if(sincEnCurso){ subidaPendiente = true; return sincEnCurso; }
+  ultimaSincro = Date.now();
+  sincEnCurso = (async () => {
+    try{
+      const id = await buscarGist();
+      const remoto = await leerRemoto(id);
+      /* Lo local se lee DESPUÉS de la red: si has tocado algo mientras
+         llegaba la respuesta, entra en la fusión. */
+      const fusion = fusionarEstado(estadoLocal(), remoto, SYNC_CFG);
+      const cambiaLocal = aplicarEstado(fusion);
+      if(jsonEstable({ d: remoto.datos, m: remoto.marcas }) !== jsonEstable({ d: fusion.datos, m: fusion.marcas })){
+        await gh('/gists/' + id, { method:'PATCH', keepalive: motivo === 'salir',
+          body: JSON.stringify({ files:{ [GIST_ARCHIVO]: { content: docSync(fusion) } } }) });
+      }
+      setRaw(KS.syncOk, String(Date.now()));
+      setRaw(KS.syncError, '');
+      if(cambiaLocal) rerenderAfterSync();
+    }catch(e){
+      if(e.status === 401 || e.status === 403) setRaw(KS.syncError, 'token');
+      else if(e.status === 404){ try{ localStorage.removeItem(KS.gistId); }catch(_){} setRaw(KS.syncError, 'gist'); }
+      else setRaw(KS.syncError, navigator.onLine ? 'red' : 'offline');
+    }finally{
+      sincEnCurso = null;
+      renderSyncEstado();
+      if(subidaPendiente){ subidaPendiente = false; programarSubida(); }
+    }
+  })();
+  return sincEnCurso;
+}
+/* Se sube un par de segundos después del último toque: tachar diez cosas
+   seguidas en el súper es una petición, no diez. */
+function programarSubida(){
+  try{ if(!localStorage.getItem(KS.ghToken)) return; }catch(e){ return; }
+  clearTimeout(timerSubida);
+  timerSubida = setTimeout(() => { timerSubida = null; sincronizar('cambio'); }, 2500);
+}
+async function conectarSync(tokenDado){
+  const inp = document.getElementById('inpToken');
+  const t = (tokenDado || (inp ? inp.value : '') || '').trim();
+  if(!t){ toast('Pega primero el token'); return; }
+  setRaw(KS.ghToken, t);
+  try{ localStorage.removeItem(KS.gistId); }catch(e){}
+  setRaw(KS.syncError, '');
+  renderSyncEstado('conectando');
+  await sincronizar('conectar');
+  const err = localStorage.getItem(KS.syncError);
+  if(err === 'token'){
+    try{ localStorage.removeItem(KS.ghToken); }catch(e){}
+    renderSyncEstado();
+    toast('Ese token no funciona');
+  } else if(err){
+    toast('No se ha podido conectar. Mira la conexión');
+  } else {
+    toast('Conectado. A partir de ahora se sincroniza solo');
+  }
+}
+/* En el ordenador las dos apps comparten dirección, así que si ya conectaste
+   la de ejercicio, su token está aquí mismo y no hace falta volver a pegarlo.
+   (En el iPhone cada app de la pantalla de inicio guarda lo suyo aparte.) */
+function tokenDeEjercicio(){ try{ return localStorage.getItem(KS.tokenEjercicio) || ''; }catch(e){ return ''; } }
+function desconectarSync(){
+  if(!confirm('¿Dejar de sincronizar este dispositivo? Tus datos se quedan aquí igual.')) return;
+  [KS.ghToken, KS.gistId, KS.syncOk, KS.syncError].forEach(k => { try{ localStorage.removeItem(k); }catch(e){} });
+  renderSyncEstado();
+}
+async function sincronizarAhora(){
+  await sincronizar('manual');
+  toast(localStorage.getItem(KS.syncError) ? 'No se ha podido sincronizar' : 'Sincronizado');
+}
+function haceCuanto(ts){
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if(s < 60) return 'ahora mismo';
+  if(s < 3600) return 'hace ' + Math.floor(s / 60) + ' min';
+  if(s < 86400) return 'hace ' + Math.floor(s / 3600) + ' h';
+  return 'hace ' + Math.floor(s / 86400) + ' días';
+}
+function renderSyncEstado(estado){
+  const el = document.getElementById('syncEstado');
+  if(!el) return;
+  let token = null, err = '', ok = NaN;
+  try{
+    token = localStorage.getItem(KS.ghToken);
+    err = localStorage.getItem(KS.syncError) || '';
+    ok = parseInt(localStorage.getItem(KS.syncOk), 10);
+  }catch(e){}
+  const resumen = document.getElementById('syncResumen');
+  if(resumen) resumen.textContent = token && !err ? 'Conectado' : token ? 'Con problemas' : 'Sin conectar';
+
+  if(estado === 'conectando'){
+    el.className = 'sync-estado';
+    el.innerHTML = 'Conectando con GitHub…';
+    return;
+  }
+  if(!token || err === 'token'){
+    const deEjercicio = tokenDeEjercicio();
+    el.className = 'sync-estado' + (err === 'token' ? ' mal' : '');
+    el.innerHTML =
+      (err === 'token'
+        ? '<b>El token ya no funciona.</b> Puede que haya caducado o que lo hayas borrado en GitHub. Crea otro y pégalo aquí.'
+        : 'Ahora mismo la lista de la compra, tu semana y los check-ins <b>no pasan del ordenador al móvil</b>, ni al revés.') +
+      (deEjercicio && err !== 'token'
+        ? '<button class="sync-btn principal" onclick="conectarSync(tokenDeEjercicio())">Usar la conexión de la app de ejercicio</button>' +
+          '<p>Ya la tienes conectada en este dispositivo: es el mismo token.</p>'
+        : '') +
+      '<p>' + (deEjercicio && err !== 'token' ? 'O, si prefieres uno nuevo:' : 'Si ya creaste el token para la app de ejercicio, <b>pega ese mismo</b>. Si no:') + '</p>' +
+      '<ol class="sync-pasos">' +
+        '<li>En el ordenador, entra en <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com/settings/personal-access-tokens/new</a>.</li>' +
+        '<li>Nombre: <b>Planes</b>. Caducidad: la más larga que te deje.</li>' +
+        '<li>En <b>Permissions → Account permissions</b>, busca <b>Gists</b> y ponlo en <b>Read and write</b>. Nada más.</li>' +
+        '<li>Genera el token, cópialo y pégalo aquí. Luego el mismo en el móvil.</li>' +
+      '</ol>' +
+      '<input type="password" id="inpToken" class="sync-token" placeholder="github_pat_…" autocomplete="off" autocapitalize="off" spellcheck="false">' +
+      '<button class="sync-btn" onclick="conectarSync()">Conectar este dispositivo</button>' +
+      '<p>Ese token solo puede leer y escribir gists: no toca tus repositorios ni nada más de la cuenta. Los datos van a un gist secreto que no sale en tu perfil.</p>';
+    return;
+  }
+  el.className = 'sync-estado' + (err ? ' mal' : '');
+  el.innerHTML =
+    (err === 'offline' ? '<b>Sin conexión.</b> Se sincroniza solo en cuanto vuelva la red.'
+      : err === 'red'  ? '<b>La última sincronización ha fallado.</b> Lo vuelve a intentar solo.'
+      : err === 'gist' ? '<b>No encuentro el archivo de sincronización.</b> Se vuelve a crear en la próxima.'
+      : 'Móvil y ordenador <b>sincronizados</b>' + (isNaN(ok) ? '' : ' · ' + haceCuanto(ok)) + '.') +
+    '<div class="sync-botones">' +
+      '<button class="sync-btn" onclick="sincronizarAhora()">Sincronizar ahora</button>' +
+      '<button class="sync-btn" onclick="desconectarSync()">Desconectar</button>' +
+    '</div>';
+}
+
 function collectSyncState(){
   const state = {};
   SYNC_KEYS.forEach(k=>{
@@ -2171,7 +2550,7 @@ function applySyncState(state){
   if(!state) return;
   SYNC_KEYS.forEach(k=>{
     if(Object.prototype.hasOwnProperty.call(state, k)){
-      try{ localStorage.setItem(k, state[k]); }catch(e){}
+      try{ setLS(k, state[k]); }catch(e){}
     }
   });
 }
@@ -2461,7 +2840,7 @@ function toggleFavPlato(slug, ev){
   let favs = loadFavPlatos();
   const era = favs.includes(slug);
   favs = era ? favs.filter(f => f !== slug) : [...favs, slug];
-  try{ localStorage.setItem(K_FAV, JSON.stringify(favs)); }catch(e){}
+  try{ setLS(K_FAV, JSON.stringify(favs)); }catch(e){}
   renderRecetas();
   toast(era ? 'Quitada de favoritas' : 'Guardada en favoritas');
 }
@@ -2585,7 +2964,7 @@ function loadCompra(){
   return [];
 }
 function saveCompra(lista, callado){
-  try{ localStorage.setItem(K_COMPRA, JSON.stringify(lista)); }catch(e){}
+  try{ setLS(K_COMPRA, JSON.stringify(lista)); }catch(e){}
 }
 let _idc = 0;
 function nuevoId(){ return Date.now().toString(36) + (_idc++).toString(36); }
@@ -2852,7 +3231,7 @@ function guardarCheckin(){
   }
   const lista = loadCheckins();
   lista.unshift({ fecha: calDateKeyLocal(new Date()), r: Object.assign({}, checkinBorrador) });
-  try{ localStorage.setItem(K_CHECKIN, JSON.stringify(lista.slice(0, 40))); }catch(e){}
+  try{ setLS(K_CHECKIN, JSON.stringify(lista.slice(0, 40))); }catch(e){}
   checkinBorrador = {};
   renderCheckin();
   toast('Guardado. Nos vemos la semana que viene');
@@ -2860,7 +3239,7 @@ function guardarCheckin(){
 function borrarCheckin(i){
   const lista = loadCheckins();
   lista.splice(i, 1);
-  try{ localStorage.setItem(K_CHECKIN, JSON.stringify(lista)); }catch(e){}
+  try{ setLS(K_CHECKIN, JSON.stringify(lista)); }catch(e){}
   renderCheckin();
 }
 function renderCheckin(){
@@ -3091,6 +3470,17 @@ document.addEventListener('keydown', e => {
 /* La comida "de ahora" cambia con la hora: si la app se queda abierta o
    vuelve del fondo, se repinta para no enseñar la comida de hace tres horas. */
 document.addEventListener('visibilitychange', () => { if(!document.hidden) renderHoy(); });
+/* Al irse a segundo plano se sube lo pendiente ya (iOS puede cerrar la app
+   antes de que venzan los 2,5 s); al volver, se trae lo del otro dispositivo. */
+document.addEventListener('visibilitychange', () => {
+  if(document.hidden){
+    if(timerSubida){ clearTimeout(timerSubida); timerSubida = null; sincronizar('salir'); }
+  } else if(Date.now() - ultimaSincro > 15000){
+    sincronizar('volver');
+  }
+});
+window.addEventListener('online', () => sincronizar('red'));
+document.addEventListener('DOMContentLoaded', () => { renderSyncEstado(); sincronizar('abrir'); });
 setInterval(renderHoy, 10 * 60 * 1000);
 
 // El círculo del método del plato también como separador entre secciones,
@@ -3234,7 +3624,11 @@ window.addEventListener('online', ()=>hideBanner('offlineBanner'));
 window.addEventListener('offline', ()=>showBanner('offlineBanner'));
 document.addEventListener('DOMContentLoaded', ()=>{ if(!navigator.onLine) showBanner('offlineBanner'); });
 
+/* La página solo se recarga si has tocado "Actualizar". Antes cada versión
+   nueva se activaba sola y recargaba la app aunque estuvieras usándola. */
+let actualizacionPedida = false;
 function applyUpdate(){
+  actualizacionPedida = true;
   if(swRegistration && swRegistration.waiting){
     swRegistration.waiting.postMessage({type:'SKIP_WAITING'});
   }
@@ -3257,7 +3651,7 @@ if('serviceWorker' in navigator){
 
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', ()=>{
-    if(refreshing) return;
+    if(refreshing || !actualizacionPedida) return;
     refreshing = true;
     window.location.reload();
   });
