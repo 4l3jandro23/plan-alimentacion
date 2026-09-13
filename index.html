@@ -608,6 +608,22 @@
     display:grid; place-items:center; opacity:.5;
   }
   .linea-x .ic-v{width:15px; height:15px;}
+  .compra-cab{flex-wrap:wrap;}
+  .cab-nums{display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%;}
+  .super-btn{
+    width:100%; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px;
+    border:none; border-radius:var(--r-sm); padding:11px 14px; cursor:pointer;
+    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff;
+    font-family:inherit; font-size:var(--t-sm); font-weight:700;
+  }
+  .super-btn .ic-v{width:17px; height:17px;}
+  .super-btn.fin{background:var(--accent-soft); color:var(--accent);}
+  .super-barra{width:100%; height:6px; border-radius:99px; background:var(--barbg); margin-top:12px; overflow:hidden;}
+  .super-barra i{display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--accent2),var(--accent)); transition:width .3s ease;}
+  .en-super .linea{padding:16px 15px; font-size:var(--t-md);}
+  .en-super .marca{width:28px; height:28px;}
+  .en-super .linea-x{display:none;}
+  .en-super .add-row{display:none;}
   .shoplist{list-style:none; padding:0; margin:0;}
   .shop-item{display:flex; align-items:center; gap:9px; padding:6px 0; cursor:pointer; font-size:var(--t-base);}
   .shop-item input{width:19px; height:19px; accent-color:var(--accent); flex-shrink:0; cursor:pointer;}
@@ -681,6 +697,13 @@
     max-width:calc(100vw - 32px); text-align:center;
   }
   .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast.con-accion{display:flex; align-items:center; gap:12px; padding:8px 8px 8px 18px; width:max-content;}
+  .toast-txt{min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .toast.con-accion.show{pointer-events:auto;}
+  .toast-accion{
+    border:none; border-radius:99px; background:var(--accent); color:#fff; padding:7px 13px;
+    font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer; flex-shrink:0;
+  }
 
   /* ==================== ICONOS VECTORIALES ====================
      Dibujados a mano como símbolos SVG dentro del propio HTML: sin librería,
@@ -1385,7 +1408,7 @@
 
   <div id="compraLista"></div>
 
-  <div style="display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 4px;">
+  <div id="compraBotones" style="display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 4px;">
     <button class="btn-mini solid" onclick="compartirCompra()"><svg class="ic-v"><use href="#i-compartir"/></svg> Compartir</button>
     <button class="btn-mini" onclick="limpiarMarcados()"><svg class="ic-v"><use href="#i-check"/></svg> Quitar lo cogido</button>
     <button class="btn-mini" onclick="vaciarCompra()"><svg class="ic-v"><use href="#i-basura"/></svg> Vaciar</button>
@@ -2611,13 +2634,28 @@ const H2_ICONO = {
 
 /* ==================== AVISO FLOTANTE ==================== */
 let toastTimer = null;
-function toast(msg){
+/* toast('Texto') o toast('Texto', deshacer): con una función, sale un botón
+   "Deshacer" y el aviso dura más, para que dé tiempo a tocarlo. */
+function toast(msg, deshacer){
   const el = document.getElementById('toast');
   if(!el) return;
   el.textContent = msg;
+  el.classList.toggle('con-accion', typeof deshacer === 'function');
+  if(typeof deshacer === 'function'){
+    el.textContent = '';
+    const t = document.createElement('span');
+    t.className = 'toast-txt';
+    t.textContent = msg;
+    el.appendChild(t);
+    const b = document.createElement('button');
+    b.className = 'toast-accion';
+    b.textContent = 'Deshacer';
+    b.onclick = () => { el.classList.remove('show'); deshacer(); };
+    el.appendChild(b);
+  }
   el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), typeof deshacer === 'function' ? 5000 : 2600);
 }
 
 function normalizeText(s){
@@ -3001,10 +3039,20 @@ function toggleItem(id){
   saveCompra(lista);
   renderCompra();
 }
+/* Con el móvil en una mano y la cesta en la otra, la X se toca sin querer.
+   Todo lo que quita cosas de la lista se puede deshacer durante 5 segundos. */
+function restaurarCompra(copia, msg){
+  saveCompra(copia);
+  renderCompra();
+  toast(msg || 'Recuperado');
+}
 function borrarItem(id, ev){
   if(ev){ ev.preventDefault(); ev.stopPropagation(); }
-  saveCompra(loadCompra().filter(i => i.id !== id));
+  const antes = loadCompra();
+  const it = antes.find(i => i.id === id);
+  saveCompra(antes.filter(i => i.id !== id));
   renderCompra();
+  if(it) toast('Quitado: ' + it.txt, () => restaurarCompra(antes));
 }
 function addManual(){
   const input = document.getElementById('addItem');
@@ -3020,13 +3068,52 @@ function limpiarMarcados(){
   if(quedan.length === lista.length){ toast('No hay nada marcado'); return; }
   saveCompra(quedan);
   renderCompra();
-  toast('Quitado lo que ya tenías');
+  toast('Quitado lo cogido', () => restaurarCompra(lista));
 }
 function vaciarCompra(){
-  if(!loadCompra().length){ toast('La lista ya está vacía'); return; }
-  if(!confirm('¿Vaciar la lista entera?')) return;
+  const lista = loadCompra();
+  if(!lista.length){ toast('La lista ya está vacía'); return; }
   saveCompra([]);
   renderCompra();
+  toast('Lista vaciada', () => restaurarCompra(lista));
+}
+
+/* ==================== MODO SÚPER ====================
+   En el pasillo sobra todo lo que hay debajo de la lista (atajos, súpers,
+   despensa, tablas), la pantalla se apagaba a los 30 segundos y la X de
+   borrar estaba justo al lado del dedo. Con esto: solo la lista, filas más
+   grandes, sin X, lo cogido baja al final y la pantalla no se apaga. */
+let enSuper = false, lockSuper = null;
+async function pantallaSuper(encender){
+  try{
+    if(encender){
+      if(lockSuper || !('wakeLock' in navigator) || document.visibilityState !== 'visible') return;
+      lockSuper = await navigator.wakeLock.request('screen');
+      lockSuper.addEventListener('release', () => { lockSuper = null; });
+    } else if(lockSuper){
+      const l = lockSuper; lockSuper = null; await l.release();
+    }
+  }catch(e){ lockSuper = null; }
+}
+function modoSuper(encender){
+  enSuper = !!encender;
+  document.body.classList.toggle('en-super', enSuper);
+  let despues = false;
+  [...document.getElementById('tab-compra').children].forEach(el => {
+    if(despues) el.style.display = enSuper ? 'none' : '';
+    if(el.id === 'compraBotones') despues = true;
+  });
+  pantallaSuper(enSuper);
+  renderCompra();
+  if(enSuper){
+    const cab = document.getElementById('compraCab');
+    if(cab) window.scrollTo(0, Math.max(0, cab.getBoundingClientRect().top + window.scrollY - 80));
+  }
+}
+function terminarSuper(){
+  const cogidos = loadCompra().filter(i => i.done).length;
+  modoSuper(false);
+  if(cogidos) limpiarMarcados();
 }
 function addRescate(){
   const n = addItems(DESPENSA_RESCATE.map(r => ({ txt:r.item, nota:r.por })), 'r');
@@ -3047,10 +3134,16 @@ function renderCompra(){
   const hechos = lista.length - pend;
 
   if(cab){
+    const pct = lista.length ? Math.round(hechos / lista.length * 100) : 0;
     cab.innerHTML = lista.length
-      ? '<div><b>' + pend + '</b><span>por coger' + (hechos ? ' · ' + hechos + ' ya en el carro' : '') + '</span></div>' +
-        '<div style="text-align:right;"><b style="color:var(--muted); font-size:var(--t-md);">' + lista.length + '</b><span>en total</span></div>'
-      : '<div><b>0</b><span>La lista está vacía</span></div>';
+      ? '<div class="cab-nums"><div><b>' + pend + '</b><span>por coger' + (hechos ? ' · ' + hechos + ' ya en el carro' : '') + '</span></div>' +
+        '<div style="text-align:right;"><b style="color:var(--muted); font-size:var(--t-md);">' + lista.length + '</b><span>en total</span></div></div>' +
+        (enSuper
+          ? '<div class="super-barra"><i style="width:' + pct + '%"></i></div>' +
+            '<button class="super-btn fin" onclick="terminarSuper()">' + (pend ? 'Salir del modo súper' : 'Todo cogido · terminar') + '</button>'
+          : (pend ? '<button class="super-btn" onclick="modoSuper(true)">' + ico('carrito') + 'Estoy en el súper</button>' : ''))
+      : '<div class="cab-nums"><div><b>0</b><span>La lista está vacía</span></div></div>' +
+        (enSuper ? '<button class="super-btn fin" onclick="modoSuper(false)">Salir del modo súper</button>' : '');
   }
 
   if(!lista.length){
@@ -3480,6 +3573,8 @@ document.addEventListener('visibilitychange', () => {
   }
 });
 window.addEventListener('online', () => sincronizar('red'));
+/* iOS suelta el "pantalla encendida" al bloquear: al volver, se pide otra vez. */
+document.addEventListener('visibilitychange', () => { if(!document.hidden && enSuper) pantallaSuper(true); });
 document.addEventListener('DOMContentLoaded', () => { renderSyncEstado(); sincronizar('abrir'); });
 setInterval(renderHoy, 10 * 60 * 1000);
 
