@@ -1178,6 +1178,18 @@
   .aviso-botones{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
   .cocina-voz{margin-left:auto; flex-shrink:0; border:1px solid var(--border); background:transparent; color:inherit; border-radius:999px; padding:6px 12px; min-height:36px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;}
   .cocina-voz.on{background:var(--accent); border-color:var(--accent); color:#fff;}
+  #hoyTip .cambiar-fila{margin:0 0 12px;}
+  /* Medido: pregunta (159 px) + botón (149 px) no cabían por dos píxeles en un
+     móvil de 375 y el botón bajaba de línea (94 px de alto). Ahora el botón no
+     se encoge y es la pregunta la que se parte dentro de la misma fila. */
+  .tip.tip-mini{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:nowrap; padding-top:10px; padding-bottom:10px;}
+  .tip.tip-mini > span{flex:1 1 auto; min-width:0; line-height:1.3;}
+  .tip.tip-mini > button{flex-shrink:0; white-space:nowrap;}
+  .novedades-antes{margin:0 0 12px;}
+  .novedades-antes > summary{font-size:var(--t-sm); color:var(--muted); cursor:pointer; padding:4px 0;}
+  .cal-fila{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 14px; font-size:var(--t-sm);}
+  .cal-fila input[type=time]{font-family:inherit; font-size:16px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:transparent; color:inherit;}
+  .cal-lista{margin:0 0 14px; padding-left:18px; font-size:var(--t-sm); line-height:1.5;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1260,7 +1272,9 @@
     <details class="settings-group">
       <summary>🔔 Que te avise el iPhone</summary>
       <div class="settings-row">
-        <p style="font-size:var(--t-sm); margin:0 0 10px;">Lo útil es acordarte de dejar el tupper hecho <b>la noche antes</b>, no por la mañana con prisa. Se hace en un minuto con la app de Recordatorios y funciona aunque no abras esto:</p>
+        <p style="font-size:var(--t-sm); margin:0 0 10px;">Lo útil es acordarte de dejar el tupper hecho <b>la noche antes</b>, no por la mañana con prisa.</p>
+        <button onclick="closeSettings(); abrirCalendarioTupper()" style="width:100%; background:var(--accent); color:#fff; border:none; border-radius:10px; padding:12px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer; margin:0 0 12px;">Ponerlo en el calendario del iPhone</button>
+        <p style="font-size:var(--t-sm); margin:0 0 10px;">O, si lo prefieres, con la app de Recordatorios:</p>
         <ol style="font-size:var(--t-sm); margin:0 0 10px; padding-left:20px; line-height:1.55;">
           <li>Abre <b>Recordatorios</b> y crea uno: «Dejar el tupper hecho».</li>
           <li>Dale a la <b>i</b> → <b>Fecha</b> y <b>Hora</b>: las 21:30.</li>
@@ -4265,7 +4279,7 @@ function cambiarHoyHTML(d, isTeamLunch, fecha){
   if(!isTeamLunch && !d.pizza && slugDePlato(d.comida)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'comida\')">' + ico('dado') + ' Cambiar la comida</button>');
   if(!d.libre && slugDePlato(d.cena)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'cena\')">' + ico('dado') + ' Cambiar la cena</button>');
   if(b.length) b.push('<button class="btn-mini" onclick="abrirNevera()">' + ico('nevera') + ' Mirar qué tengo</button>');
-  return b.length ? '<div class="cambiar-fila"><span>¿Hoy no te apetece lo que toca?</span>' + b.join('') + '</div>' : '';
+  return b.length ? '<div class="cambiar-fila"><span>¿No te apetece lo que toca?</span>' + b.join('') + '</div>' : '';
 }
 
 /* ==================== LOS TUPPERS DE LA SEMANA ====================
@@ -4449,6 +4463,88 @@ function addHabitual(i){
   toast(n === 1 ? 'Añadido a la lista' : 'Añadidos ' + n + ' a la lista');
 }
 
+/* ==================== RECORDATORIOS EN EL CALENDARIO ====================
+   La app no manda avisos; el calendario del iPhone sí. Un archivo .ics con un
+   evento semanal la noche antes de cada día de oficina (sale de "Mi semana":
+   teletrabajo y bowl del Ametller no llevan tupper) y, si se quiere, la compra
+   del sábado. Hora flotante, que el calendario toma como la de aquí. */
+function icsFecha(d){
+  const p = n => String(n).padStart(2, '0');
+  return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + 'T' + p(d.getHours()) + p(d.getMinutes()) + '00';
+}
+function icsTexto(t){ return String(t).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
+function crearIcs(eventos, prodid){
+  const DIA = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const l = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//' + prodid + '//ES', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH'];
+  eventos.forEach((ev, i) => {
+    const hm = ev.hora.split(':').map(Number);
+    const ini = new Date();
+    ini.setHours(hm[0], hm[1], 0, 0);
+    let suma = (ev.dow - ini.getDay() + 7) % 7;
+    if(suma === 0 && ini < new Date()) suma = 7;
+    ini.setDate(ini.getDate() + suma);
+    const fin = new Date(ini.getTime() + ev.minutos * 60000);
+    l.push('BEGIN:VEVENT', 'UID:plan-alimentacion-' + ev.dow + '-' + Date.now() + '-' + i + '@4l3jandro23.github.io',
+      'DTSTAMP:' + stamp, 'DTSTART:' + icsFecha(ini), 'DTEND:' + icsFecha(fin), 'RRULE:FREQ=WEEKLY;BYDAY=' + DIA[ev.dow],
+      'SUMMARY:' + icsTexto(ev.titulo), 'DESCRIPTION:' + icsTexto(ev.desc), 'URL:' + ev.url,
+      'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + icsTexto(ev.titulo), 'TRIGGER:-PT' + ev.aviso + 'M', 'END:VALARM', 'END:VEVENT');
+  });
+  l.push('END:VCALENDAR');
+  return l.join('\r\n');
+}
+function descargarIcs(texto, nombre){
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([texto], { type: 'text/calendar;charset=utf-8' }));
+  a.download = nombre;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+}
+/* Días de la semana (0 = lunes) que llevan tupper; el aviso va la noche antes:
+   el del lunes el domingo, que en getDay() es 0, y así sucesivamente. */
+function nochesDeTupper(){
+  return [0, 1, 2, 3, 4].filter(i => ['oficina', 'quinoa'].indexOf(estadoDia(i)) !== -1)
+    .map(i => ({ dowAviso: i, diaTupper: ['lunes', 'martes', 'miércoles', 'jueves', 'viernes'][i] }));
+}
+function eventosTupper(hora, compra){
+  const url = 'https://4l3jandro23.github.io/plan-alimentacion/';
+  const ev = nochesDeTupper().map(n => ({
+    dow: n.dowAviso, hora: hora, minutos: 15, aviso: 0,
+    titulo: 'Dejar hecho el tupper de mañana', desc: 'Abre la app: Hoy te dice qué te llevas el ' + n.diaTupper + '.', url: url
+  }));
+  if(compra) ev.push({ dow: 6, hora: '11:00', minutos: 60, aviso: 0, titulo: 'Compra de la semana', desc: 'En la app, Compra: los tuppers de la semana y lo de siempre.', url: url });
+  return ev;
+}
+function abrirCalendarioTupper(){
+  if(!window.calHoraTupper) window.calHoraTupper = '21:30';
+  abrirSheet({ ico:'calendario', label:'Calendario' }, 'El tupper, en tu calendario',
+    'Un aviso cada semana la noche antes de cada día de oficina. El iPhone te avisa aunque no abras la app.',
+    '<div id="calTupper"></div>');
+  pintarCalendarioTupper();
+}
+function pintarCalendarioTupper(){
+  const el = document.getElementById('calTupper');
+  if(!el) return;
+  const noches = nochesDeTupper();
+  const nombresAviso = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves'];
+  el.innerHTML = (noches.length
+      ? '<ul class="cal-lista">' + noches.map(n => '<li>El <b>' + nombresAviso[n.dowAviso] + '</b> por la noche, para el ' + n.diaTupper + '</li>').join('') + '</ul>'
+      : '<p class="nevera-vacio" style="margin-bottom:14px;">Con tu semana ahora mismo no llevas tupper ningún día. Se cambia en Ajustes → Mi semana.</p>') +
+    '<label class="cal-fila"><span>A qué hora</span><input type="time" value="' + window.calHoraTupper + '" onchange="window.calHoraTupper = this.value || \'21:30\'"></label>' +
+    '<label class="cal-fila"><span>Y la compra del sábado a las 11:00</span><input type="checkbox" id="calCompra" style="width:22px; height:22px;"></label>' +
+    '<button class="btn-mini solid" style="width:100%; justify-content:center; min-height:44px;" onclick="crearCalendarioTupper()">' + ico('calendario') + ' Crear el archivo del calendario</button>' +
+    '<p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Se descarga un archivo: ábrelo y el iPhone te ofrece «Añadir todo». Sale de «Mi semana»: si la cambias, borra estos eventos y créalos otra vez.</p>';
+}
+function crearCalendarioTupper(){
+  const compra = !!(document.getElementById('calCompra') || {}).checked;
+  const ev = eventosTupper(window.calHoraTupper || '21:30', compra);
+  if(!ev.length){ toast('No hay nada que poner en el calendario'); return; }
+  descargarIcs(crearIcs(ev, 'Plan de Alimentacion'), 'tupper.ics');
+  toast('Ábrelo para añadirlo al calendario');
+}
+
 /* ==================== TUS DATOS, A SALVO ====================
    Lista de la compra, favoritas, tu semana y lo que no te gusta viven en el
    almacenamiento del navegador, que iOS puede vaciar si va justo de espacio.
@@ -4499,7 +4595,13 @@ function posponerAvisoCopia(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-14'; }
+function novedadesId(){ return '2026-09-14b'; }
+function novedadesNuevas(){
+  return [
+    '<b>Recordatorio del tupper en el calendario del iPhone:</b> la noche antes de cada día de oficina, y si quieres la compra del sábado. Ajustes → Que te avise el iPhone.',
+    '<b>Hoy más ordenado:</b> «Cambiar la comida» sale arriba, junto a lo de ahora.'
+  ];
+}
 function novedades(){
   return [
     '<b>Cambiar la comida o la cena</b> de hoy si no te apetece, desde aquí mismo. También el tupper de mañana.',
@@ -4516,7 +4618,8 @@ function novedadesHTML(){
   try{ vistas = localStorage.getItem('planAlimentacionNovedades') || ''; }catch(e){}
   if(vistas === novedadesId()) return '';
   if(!hayDatosPropios()){ setRaw('planAlimentacionNovedades', novedadesId()); return ''; }
-  return '<div class="card aviso-hoy"><h3>Qué hay de nuevo</h3><ul>' + novedades().map(n => '<li>' + n + '</li>').join('') + '</ul>' +
+  return '<div class="card aviso-hoy"><h3>Qué hay de nuevo</h3><ul>' + novedadesNuevas().map(n => '<li>' + n + '</li>').join('') + '</ul>' +
+    '<details class="novedades-antes"><summary>Y lo de estos días</summary><ul>' + novedades().map(n => '<li>' + n + '</li>').join('') + '</ul></details>' +
     '<button class="btn-mini solid" onclick="cerrarNovedades()">Entendido</button></div>';
 }
 function cerrarNovedades(){
@@ -4623,6 +4726,8 @@ function renderHoy(){
     tipHtml = '<div class="tip">El plan está en pausa. Come lo que te apetezca y donde te apetezca — esto sigue aquí cuando vuelvas, igual que lo dejaste.</div>';
     contentHtml = dayCardHtml(d, 'all', true);
   } else {
+    /* Cambiar va arriba: medido, quedaba a 1.500 px, debajo del día entero. */
+    tipHtml += cambiarHoyHTML(d, isTeamLunch, now);
     if(isWfhOn(now)){
       tipHtml += '<div class="tip">Hoy teletrabajas: nada de tupper, cocina la comida fresca a mediodía tranquilamente en casa.' +
         (loadWfhDates().includes(calDateKeyLocal(now)) ? ' <button class="btn-mini" style="margin-top:8px;" onclick="toggleWfhHoy()">No, hoy sí voy a la oficina</button>' : '') + '</div>';
@@ -4631,17 +4736,16 @@ function renderHoy(){
     } else if(now.getDay() >= 1 && now.getDay() <= 5){
       /* El día suelto de teletrabajo se sabe por la mañana, no tres semanas
          antes: por eso se marca aquí y no en los ajustes. */
-      tipHtml += '<div class="tip">¿Hoy acabas quedándote en casa? Márcalo y dejo de contar con el tupper.' +
-        '<div style="margin-top:9px;"><button class="btn-mini" onclick="toggleWfhHoy()">' + ico('casa') + ' Hoy trabajo en casa</button></div></div>';
+      tipHtml += '<div class="tip tip-mini"><span>¿Hoy te quedas en casa?</span><button class="btn-mini" onclick="toggleWfhHoy()">' + ico('casa') + ' Trabajo en casa</button></div>';
     }
     if(isTeamLunch || d.pizza){
       tipHtml += '<div class="tip">Hoy es la comida de equipo del trabajo (pizza, hamburguesa o milanesas, según toque) — sin sustituirla por nada y sin compensarla después. Disfrútala.</div>';
     } else if(d.libre){
       tipHtml += '<div class="tip">Esta noche es cena libre — disfruta sin contar nada y retoma el plan mañana sin culpa.</div>';
-    } else {
-      tipHtml += '<div class="tip">Método del plato en la comida (½ verdura + ¼ proteína + ¼ carbohidrato) y una cena más ligera.</div>';
     }
-    contentHtml = dayCardHtml(d, 'all', true) + cambiarHoyHTML(d, isTeamLunch, now) + tupperesSemanaHTML();
+    /* Aquí iba "Método del plato en la comida…" todos los días igual: ya está
+       en Inicio y en cada ficha, y en Hoy solo empujaba lo de hoy hacia abajo. */
+    contentHtml = dayCardHtml(d, 'all', true) + tupperesSemanaHTML();
   }
 
   tipHtml += renderTomorrowCard();
