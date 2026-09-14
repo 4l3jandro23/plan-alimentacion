@@ -1170,6 +1170,14 @@
   .habituales-h .ic-v{width:14px; height:14px;}
   .habituales-chips{display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
   .habituales-chips .ic-v{width:12px; height:12px; vertical-align:-1px;}
+  .aviso-hoy{margin:0 0 14px;}
+  .aviso-hoy h3{margin:0 0 8px; font-size:var(--t-md);}
+  .aviso-hoy ul{margin:6px 0 12px; padding-left:18px; font-size:var(--t-sm); line-height:1.5;}
+  .aviso-hoy li{margin:3px 0;}
+  .aviso-hoy p{font-size:var(--t-sm); margin:0 0 10px;}
+  .aviso-botones{display:flex; gap:8px; flex-wrap:wrap; align-items:center;}
+  .cocina-voz{margin-left:auto; flex-shrink:0; border:1px solid var(--border); background:transparent; color:inherit; border-radius:999px; padding:6px 12px; min-height:36px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;}
+  .cocina-voz.on{background:var(--accent); border-color:var(--accent); color:#fff;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1216,6 +1224,7 @@
           <button onclick="document.getElementById('backupFileInput').click()" style="background:var(--accent-soft); color:var(--accent); border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;">⬆️ Importar</button>
           <input type="file" id="backupFileInput" accept="application/json" style="display:none;" onchange="importBackup(this.files[0])">
         </div>
+        <p id="copiaEstado" style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;"></p>
       </div>
     </details>
 
@@ -1296,6 +1305,7 @@
     </button>
   </div>
 
+  <div id="hoyAvisos"></div>
   <div id="hoyTip"></div>
   <div id="hoyContent"></div>
 </div>
@@ -2116,7 +2126,7 @@ function mmss(s){ s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':'
 
 function abrirCocina(){
   if(!fichaSlugActual || !PLATOS[fichaSlugActual]) return;
-  CO.abierta = true; CO.slug = fichaSlugActual; CO.paso = -1; CO.tengo = {};
+  CO.abierta = true; CO.slug = fichaSlugActual; CO.paso = -1; CO.tengo = {}; CO.pasoLeido = null;
   try{ if(!audioCocina) audioCocina = new (window.AudioContext || window.webkitAudioContext)(); audioCocina.resume(); }catch(e){}
   document.getElementById('cocina').classList.add('show');
   pantallaSuper(true);
@@ -2125,6 +2135,7 @@ function abrirCocina(){
 function cerrarCocina(){
   if(CO.fin && !confirm('Hay un temporizador en marcha. ¿Salir igualmente?')) return;
   pararTemporizador();
+  try{ if('speechSynthesis' in window) window.speechSynthesis.cancel(); }catch(e){}
   CO.abierta = false;
   document.getElementById('cocina').classList.remove('show');
   pantallaSuper(enSuper);
@@ -2160,6 +2171,7 @@ function tickCocina(){
   if(Date.now() >= CO.fin && !CO.sonando){
     CO.sonando = true;
     pitarCocina();
+    decirCocina('¡Tiempo!');
     try{ if(navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 300]); }catch(e){}
   }
   if(CO.sonando && (Date.now() - CO.fin) % 4000 < 250) pitarCocina();
@@ -2228,6 +2240,7 @@ function pintarCocina(){
     '<div class="cocina-top">' +
       '<button class="cocina-salir" onclick="cerrarCocina()">‹ Salir</button>' +
       '<span class="cocina-plato">' + esc(p.nombre) + '</span>' +
+      ('speechSynthesis' in window ? '<button class="cocina-voz' + (vozCocina() ? ' on' : '') + '" aria-pressed="' + vozCocina() + '" onclick="alternarVozCocina()">' + (vozCocina() ? 'Leyendo' : 'Leer en voz alta') + '</button>' : '') +
     '</div>' +
     '<div class="cocina-barra"><i style="width:' + avance + '%"></i></div>' +
     '<div id="cocinaTimer" class="cocina-timer"></div>' +
@@ -2237,6 +2250,7 @@ function pintarCocina(){
       '<button class="cocina-sig" onclick="' + (CO.paso >= n ? 'cerrarCocina()' : 'pasoCocina(1)') + '">' + siguiente + '</button>' +
     '</div>';
   pintarTemporizador();
+  leerPasoCocina(p, n);
 }
 
 /* Abre la ficha desde el texto del menú, si ese plato tiene una. */
@@ -2443,6 +2457,7 @@ function quitarNoMeGusta(i){
 function openSettings(){
   renderSyncEstado();
   renderNoMeGusta();
+  renderCopiaEstado();
   document.getElementById('settingsOverlay').classList.add('show');
 }
 function closeSettings(){
@@ -3048,6 +3063,9 @@ function exportBackup(){
   a.download = 'plan-alimentacion-backup-' + calDateKeyLocal(new Date()) + '.json';
   a.click();
   URL.revokeObjectURL(url);
+  setRaw('planAlimentacionUltimaCopia', String(Date.now()));
+  renderCopiaEstado();
+  renderHoy();
 }
 function importBackup(file){
   if(!file) return;
@@ -4062,6 +4080,7 @@ renderDespensaRescate();
 rellenarSugerenciasCompra();
 renderCheckin();
 renderHoy();
+pedirAlmacenamientoPersistente();
 badgeifyHeadings();
 insertSectionDividers();
 
@@ -4430,6 +4449,117 @@ function addHabitual(i){
   toast(n === 1 ? 'Añadido a la lista' : 'Añadidos ' + n + ' a la lista');
 }
 
+/* ==================== TUS DATOS, A SALVO ====================
+   Lista de la compra, favoritas, tu semana y lo que no te gusta viven en el
+   almacenamiento del navegador, que iOS puede vaciar si va justo de espacio.
+   Se pide que sea persistente (sin preguntar nada) y, si no hay copia ni
+   sincronización, Hoy lo recuerda como mucho una vez al mes. */
+function pedirAlmacenamientoPersistente(){
+  try{
+    if(navigator.storage && navigator.storage.persist){
+      navigator.storage.persisted().then(ya => { if(!ya) navigator.storage.persist(); }).catch(() => {});
+    }
+  }catch(e){}
+}
+function diasDesdeCopia(){
+  let t = NaN;
+  try{ t = parseInt(localStorage.getItem('planAlimentacionUltimaCopia'), 10); }catch(e){}
+  return isNaN(t) ? null : Math.floor((Date.now() - t) / 86400000);
+}
+function haySyncAli(){ try{ return !!localStorage.getItem('planAlimentacionGhToken'); }catch(e){ return false; } }
+function hayDatosPropios(){
+  const claves = ['planAlimentacionCompra', 'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionWfh', 'planAlimentacionNoMeGusta', 'planAlimentacionHabituales'];
+  let n = 0;
+  try{ claves.forEach(k => { const v = localStorage.getItem(k); if(v && v !== '[]' && v !== '{}') n++; }); }catch(e){}
+  return n >= 2;
+}
+function renderCopiaEstado(){
+  const el = document.getElementById('copiaEstado');
+  if(!el) return;
+  const d = diasDesdeCopia();
+  el.textContent = (d === null ? 'Aún no has exportado ninguna copia.' : d === 0 ? 'Última copia: hoy.' : 'Última copia: hace ' + d + (d === 1 ? ' día.' : ' días.')) +
+    (haySyncAli() ? ' Además se sincroniza con GitHub.' : '');
+}
+function avisoCopiaHTML(){
+  if(haySyncAli() || !hayDatosPropios()) return '';
+  const d = diasDesdeCopia();
+  if(d !== null && d < 30) return '';
+  let hasta = 0;
+  try{ hasta = parseInt(localStorage.getItem('planAlimentacionAvisoCopia'), 10) || 0; }catch(e){}
+  if(Date.now() < hasta) return '';
+  return '<div class="tip aviso-hoy"><p><b>Tu lista, favoritas y ajustes solo están en este móvil.</b> Si algún día se borran los datos de Safari, se irían con ellos. Exportar una copia son diez segundos.</p>' +
+    '<div class="aviso-botones"><button class="btn-mini solid" onclick="exportBackup()">' + ico('check') + ' Exportar copia</button>' +
+    '<button class="btn-mini" onclick="posponerAvisoCopia()">Ahora no</button></div></div>';
+}
+function posponerAvisoCopia(){
+  setRaw('planAlimentacionAvisoCopia', String(Date.now() + 30 * 86400000));
+  renderAvisosHoy();
+}
+
+/* ==================== QUÉ HAY DE NUEVO ====================
+   Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
+   abre la app por primera vez no la ve. */
+function novedadesId(){ return '2026-09-14'; }
+function novedades(){
+  return [
+    '<b>Cambiar la comida o la cena</b> de hoy si no te apetece, desde aquí mismo. También el tupper de mañana.',
+    '<b>Qué hago con lo que tengo:</b> marcas lo que hay en la nevera y te dice qué plato sale. En Recetas y aquí en Hoy.',
+    '<b>Los tuppers de la semana:</b> el fin de semana te enseña qué te llevas cada día y lo manda a la compra.',
+    '<b>×2 con tupper</b> en las fichas: dobla las cantidades de un toque.',
+    '<b>Cosas que no me gustan</b> en Ajustes: marca los platos que lo llevan y dice con qué cambiarlo.',
+    '<b>Lo que sueles comprar</b> aparece en Compra para meterlo de un toque.',
+    '<b>Modo cocina:</b> ahora puede leerte los pasos en voz alta.'
+  ];
+}
+function novedadesHTML(){
+  let vistas = '';
+  try{ vistas = localStorage.getItem('planAlimentacionNovedades') || ''; }catch(e){}
+  if(vistas === novedadesId()) return '';
+  if(!hayDatosPropios()){ setRaw('planAlimentacionNovedades', novedadesId()); return ''; }
+  return '<div class="card aviso-hoy"><h3>Qué hay de nuevo</h3><ul>' + novedades().map(n => '<li>' + n + '</li>').join('') + '</ul>' +
+    '<button class="btn-mini solid" onclick="cerrarNovedades()">Entendido</button></div>';
+}
+function cerrarNovedades(){
+  setRaw('planAlimentacionNovedades', novedadesId());
+  renderAvisosHoy();
+}
+function renderAvisosHoy(){
+  const el = document.getElementById('hoyAvisos');
+  if(el) el.innerHTML = novedadesHTML() + avisoCopiaHTML();
+}
+
+/* ==================== COCINA EN VOZ ALTA ====================
+   Con las manos llenas de aceite no se toca el móvil. Si se activa, cada paso
+   se lee al llegar a él y el temporizador dice "¡Tiempo!". Se recuerda en este
+   dispositivo. */
+function vozCocina(){ try{ return localStorage.getItem('planAlimentacionVozCocina') === 'si'; }catch(e){ return false; } }
+function decirCocina(txt){
+  if(!txt || !vozCocina() || !('speechSynthesis' in window)) return;
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'es-ES';
+    const voces = window.speechSynthesis.getVoices() || [];
+    const v = voces.find(x => /^es[-_]ES/i.test(x.lang)) || voces.find(x => /^es/i.test(x.lang));
+    if(v) u.voice = v;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+function leerPasoCocina(p, n){
+  if(!vozCocina() || CO.pasoLeido === CO.paso) return;
+  CO.pasoLeido = CO.paso;
+  if(CO.paso < 0) decirCocina('Antes de encender nada, saca los ingredientes y déjalos a mano.');
+  else if(CO.paso >= n) decirCocina('Hecho. ' + p.nombre + '.');
+  else decirCocina('Paso ' + (CO.paso + 1) + '. ' + p.pasos[CO.paso]);
+}
+function alternarVozCocina(){
+  const activar = !vozCocina();
+  setRaw('planAlimentacionVozCocina', activar ? 'si' : 'no');
+  if(activar) CO.pasoLeido = null;
+  else { try{ window.speechSynthesis.cancel(); }catch(e){} }
+  pintarCocina();
+}
+
 function renderTomorrowCard(){
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -4518,6 +4648,7 @@ function renderHoy(){
 
   document.getElementById('hoyTip').innerHTML = tipHtml;
   document.getElementById('hoyContent').innerHTML = contentHtml;
+  renderAvisosHoy();
 }
 
 /* ===== PWA: registro de Service Worker + banners de offline / actualización ===== */
