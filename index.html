@@ -1554,7 +1554,7 @@
         <tr><td>Yogur / kéfir</td><td>1-2 semanas</td><td>—</td></tr>
         <tr><td>Queso fresco 0%</td><td>5-7 días abierto</td><td>—</td></tr>
         <tr><td>Espinacas baby / ensalada bolsa</td><td>3-5 días</td><td>no (cruda)</td></tr>
-        <tr><td>Calabacín</td><td>5-7 días</td><td>—</td></tr>
+        <tr><td>Judías verdes</td><td>3-5 días</td><td>sí (o cómpralas congeladas)</td></tr>
         <tr><td>Pimiento / tomate</td><td>5-7 días</td><td>—</td></tr>
         <tr><td>Brócoli / espárragos</td><td>3-4 días</td><td>8-10 meses</td></tr>
         <tr><td>Patata</td><td>2-3 semanas (fuera de nevera)</td><td>—</td></tr>
@@ -1617,7 +1617,7 @@
         <tr><td>Yogur griego Oikos o Danone</td><td>Bonpreu / Mercadona / Lidl</td><td>1,30-1,80 €</td></tr>
         <tr><td>Kéfir (Kaiku o I love Kéfir)</td><td>Mercadona / Bonpreu</td><td>1,50-2 €</td></tr>
         <tr><td>Espinacas baby lavadas (Chef Select)</td><td>Lidl</td><td>1,09 €/100g</td></tr>
-        <tr><td>Calabacín</td><td>Mercadona / Bonpreu</td><td>1,50-2,50 €/kg</td></tr>
+        <tr><td>Judías verdes congeladas</td><td>Mercadona / Bonpreu</td><td>1,50-2 €/bolsa</td></tr>
         <tr><td>Gazpacho fresco (Chef Select, García Millán)</td><td>Lidl</td><td>2,55-2,99 €</td></tr>
         <tr><td>Fruta variada</td><td>Mercat del Ninot / Mercadona</td><td>1,20-2 €/kg</td></tr>
         <tr><td>Frutos secos (500g)</td><td>Lidl</td><td>3-5 €</td></tr>
@@ -2464,10 +2464,10 @@ function calDateKeyLocal(date){
 /* ===== Plantillas de compra: bloques que se vuelcan en la lista única ===== */
 const SHOP_LISTS = {
   despensa: ['Aceite de oliva virgen extra','Legumbres de bote (garbanzos, lentejas, alubias)','Atún en lata al natural','Arroz integral','Quinoa integral Brillante (bowl del jueves)','Pasta integral','Avena','Pan de molde integral','Frutos secos','Ajo en polvo, pimentón, orégano','Huevos','Verdura congelada','Chocolate negro','Café','Leche semidesnatada'],
-  fresco1: ['Salmón congelado (2 raciones)','Merluza','Pechuga de pollo','Muslos de pollo','Pavo','Calamar','Pulpo cocido','Solomillo de cerdo','Espárragos','Espinacas','Pimientos','Calabacín','Ensalada de bolsa','Tomate','Patata','Fruta variada (para 2-3 días)','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
-  fresco2: ['Pechuga de pollo','Salmón','Pulpo cocido','Bacalao','Ternera','Calamar','Muslos de pollo','Pavo','Pimiento','Calabacín','Zanahoria','Espárragos trigueros','Espinaca','Brócoli','Tomate','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
-  fresco3: ['Salmón','Calamar','Pavo','Merluza','Ternera','Sardinas','Pimiento','Calabacín','Espárragos trigueros','Brócoli','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
-  fresco4: ['Pollo','Pulpo cocido','Salmón','Merluza','Pavo','Calamar','Solomillo de cerdo','Pimiento','Calabacín','Espárragos','Tomate','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)']
+  fresco1: ['Salmón congelado (2 raciones)','Merluza','Pechuga de pollo','Muslos de pollo','Pavo','Calamar','Pulpo cocido','Solomillo de cerdo','Espárragos','Espinacas','Pimientos','Cebolla','Ensalada de bolsa','Tomate','Patata','Fruta variada (para 2-3 días)','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
+  fresco2: ['Pechuga de pollo','Salmón','Pulpo cocido','Bacalao','Ternera','Calamar','Muslos de pollo','Pavo','Pimiento','Judías verdes (congeladas valen)','Zanahoria','Espárragos trigueros','Espinaca','Brócoli','Tomate','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
+  fresco3: ['Salmón','Calamar','Pavo','Merluza','Ternera','Sardinas','Pimiento','Cebolla','Espárragos trigueros','Brócoli','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
+  fresco4: ['Pollo','Pulpo cocido','Salmón','Merluza','Pavo','Calamar','Solomillo de cerdo','Pimiento','Judías verdes (congeladas valen)','Espárragos','Tomate','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)']
 };
 
 /* ===== Qué se guarda y qué entra en la copia de seguridad ===== */
@@ -3665,13 +3665,13 @@ const weeksData = [
   {day:"Lunes 🐟", desayuno:"🍞 Tostada integral con jamón + manzana", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al horno con espárragos y patata", merienda:"🍫 Yogur + plátano + onza de chocolate", cena:"🐟 Merluza al horno con ajo y limón", kcal:1890,p:118,c:175,f:72},
   {day:"Martes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con arroz integral y pimientos", merienda:"🍎 Yogur + manzana", cena:"🥚 Tortilla francesa con espinacas y tomate aliñado", kcal:1770,p:110,c:158,f:69},
   {day:"Miércoles 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos salteados con espinacas y taquitos de pavo", merienda:"🍎 Yogur + fruta", cena:"🦑 Calamar a la plancha con ensalada verde", kcal:1780,p:104,c:187,f:56},
-  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con pimiento y calabacín asados", kcal:1830,p:116,c:166,f:67},
+  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con pimiento y cebolla asados", kcal:1830,p:116,c:166,f:67},
   {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
   {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Arroz con pollo, pimiento y cebolla (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada verde ligera", kcal:1900,p:126,c:161,f:74}
 ]},
 { n:2, avg:1740, days:[
-  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y brócoli", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con pimiento y calabacín al horno", kcal:1830,p:120,c:161,f:69},
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y brócoli", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con pimiento y cebolla al horno", kcal:1830,p:120,c:161,f:69},
   {day:"Martes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con limón y ensalada de patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🥚 Huevo escalfado con tomate y espinacas", kcal:1870,p:106,c:172,f:78},
   {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Lentejas estofadas con pimiento y zanahoria", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
   {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
@@ -3683,16 +3683,16 @@ const weeksData = [
   {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón al horno con brócoli", kcal:1830,p:106,c:186,f:63},
   {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón a la plancha con arroz integral y brócoli", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con pimiento", kcal:1890,p:118,c:166,f:75},
   {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con espárragos trigueros", kcal:1750,p:102,c:165,f:66},
-  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con calabacín salteado y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
+  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con judías verdes salteadas y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
   {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
   {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
   {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
 ]},
 { n:4, avg:1744, days:[
-  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y calabacín salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y cebolla salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
   {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
   {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
-  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, calabacín y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
+  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, zanahoria y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
   {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}

@@ -109,21 +109,21 @@ const PLATOS = {
 },
 
 'alubias-pimiento-champinon-jamon': {
-  nombre:'Alubias con pimiento, calabacín y jamón',
+  nombre:'Alubias con pimiento, zanahoria y jamón',
   icono:'legumbre', tiempo:15, donde:'Sartén', tupper:'Muy bueno',
   porQue:'Misma jugada que los garbanzos: fibra que ayuda con el colesterol y saciedad de la buena. El jamón está para dar sabor, no como fuente de proteína — con poca cantidad ya cambia el plato entero.',
   ingredientes:[
     {q:'1 bote', item:'alubias blancas cocidas'},
     {q:'1/2', item:'pimiento rojo'},
-    {q:'1/2', item:'calabacín', nota:'En dados pequeños, con piel'},
+    {q:'1', item:'zanahoria', nota:'Pelada y en dados pequeños'},
     {q:'60 g', item:'taquitos de jamón serrano'},
     {q:'1 diente', item:'ajo'},
     {q:'1 chorro', item:'aceite de oliva'}
   ],
   compra:'Los taquitos de jamón vienen en tarrina en la nevera. Con una tarrina pequeña tienes para dos o tres platos.',
   pasos:[
-    'Aceite en la sartén a fuego medio. Echa el ajo picado y el pimiento en dados.',
-    'A los 5 minutos, echa el calabacín. Otros 4-5 minutos, hasta que se dore un poco.',
+    'Aceite en la sartén a fuego medio. Echa el ajo picado, el pimiento y la zanahoria en dados.',
+    'Déjalo 8-10 minutos removiendo de vez en cuando, hasta que la zanahoria esté tierna.',
     'Echa los taquitos de jamón y remueve 1 minuto. No más: se ponen duros.',
     'Echa las alubias escurridas y enjuagadas. Remueve con cuidado 3-4 minutos.',
     'Prueba antes de echar sal — el jamón ya sala bastante.'
@@ -374,13 +374,13 @@ const PLATOS = {
 },
 
 'caballa-papillote': {
-  nombre:'Caballa al papillote con pimiento y calabacín',
+  nombre:'Caballa al papillote con pimiento y cebolla',
   icono:'pescado', tiempo:25, donde:'Horno', tupper:'Bueno',
   porQue:'La caballa es de los pescados azules con más omega-3 que existen, y de los más baratos del mostrador. Para tu colesterol es tan buena como el salmón y cuesta la mitad. Deberías comerla más.',
   ingredientes:[
     {q:'2', item:'filetes de caballa'},
     {q:'1/2', item:'pimiento rojo'},
-    {q:'1/2', item:'calabacín'},
+    {q:'1/2', item:'cebolla', nota:'En tiras finas'},
     {q:'1/2', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva y sal'},
     {q:'Necesario', item:'papel de horno'}
@@ -389,7 +389,7 @@ const PLATOS = {
   pasos:[
     'Horno a 190°C.',
     'Corta un trozo grande de papel de horno, del tamaño de un folio y medio.',
-    'Pon en el centro el pimiento y el calabacín en láminas finas, con aceite y sal.',
+    'Pon en el centro el pimiento y la cebolla en tiras finas, con aceite y sal.',
     'Encima, los filetes de caballa con sal, limón y un chorrito de aceite.',
     'Cierra el papel como un paquete: junta los dos lados largos y dóblalos varias veces, luego dobla los extremos hacia abajo. Tiene que quedar cerrado para que el vapor no escape.',
     '15-18 minutos. Abre con cuidado, sale vapor muy caliente.'
@@ -618,27 +618,27 @@ Object.assign(PLATOS, {
 },
 
 'pavo-champinones-arroz': {
-  nombre:'Pavo con calabacín salteado y arroz',
+  nombre:'Pavo con judías verdes salteadas y arroz',
   icono:'ave', tiempo:22, donde:'Sartén', tupper:'Perfecto',
-  porQue:'El pavo es aún más magro que el pollo: es de las carnes con menos grasa que existen, lo cual con tu colesterol viene muy bien. Y el calabacín aporta volumen y sabor sin sumar prácticamente nada.',
+  porQue:'El pavo es aún más magro que el pollo: es de las carnes con menos grasa que existen, lo cual con tu colesterol viene muy bien. Y las judías verdes ponen volumen, fibra y un punto crujiente sin sumar casi nada.',
   ingredientes:[
     {q:'150 g', item:'filetes de pavo'},
     {q:'70 g en crudo', item:'arroz'},
-    {q:'1', item:'calabacín', nota:'Mediano, en medias lunas'},
+    {q:'200 g', item:'judías verdes', nota:'Congeladas valen igual y ya vienen cortadas'},
     {q:'1 diente', item:'ajo'},
     {q:'1 chorro', item:'aceite de oliva, sal y perejil'}
   ],
-  compra:'Los filetes de pavo están al lado de los de pollo. El calabacín, suelto en verdura: elige uno firme y sin golpes.',
+  compra:'Los filetes de pavo están al lado de los de pollo. Las judías verdes, en bolsa en congelados: ya vienen limpias y cortadas.',
   pasos:[
     'Arroz a cocer.',
-    'Sartén con aceite a fuego fuerte. El calabacín en medias lunas, sin sal todavía.',
-    'Muy importante: no lo toques los primeros 3 minutos. Tiene que dorarse; si lo remueves todo el rato, se cuece y queda blando.',
-    'Cuando esté dorado, sal, ajo picado, 30 segundos, y saca a un plato.',
+    'Judías verdes: congeladas, 5 minutos al microondas en un plato tapado con un poco de agua; frescas, 8 minutos hervidas.',
+    'Escúrrelas bien. Sartén con aceite a fuego fuerte, judías y ajo picado, 3-4 minutos hasta que cojan color.',
+    'Sal y saca a un plato.',
     'En la misma sartén, el pavo salpimentado, 2-3 minutos por lado. Es fino y se hace enseguida.',
     'Junta todo y perejil por encima.'
   ],
-  trucos:['El calabacín se sala al final: la sal le hace soltar agua y en vez de dorarse se queda blando.'],
-  diaMalo:'Vasito de arroz + pavo al airfryer + calabacín en rodajas al airfryer, 10 minutos.',
+  trucos:['Escurre bien las judías antes de la sartén: si van mojadas, en vez de dorarse se cuecen.'],
+  diaMalo:'Vasito de arroz + pavo al airfryer + judías verdes congeladas al microondas, 10 minutos.',
   conservar:'3 días.',
   ojo:'El pavo se seca antes que el pollo porque tiene menos grasa. Cuidado con pasarlo.',
   kcal:560, p:48, c:60, f:14
@@ -667,18 +667,18 @@ Object.assign(PLATOS, {
 },
 
 'pavo-airfryer-pimiento-champinon': {
-  nombre:'Pavo al airfryer con pimiento y calabacín asados',
+  nombre:'Pavo al airfryer con pimiento y cebolla asados',
   icono:'ave', tiempo:18, donde:'Airfryer', tupper:'Bueno',
   porQue:'Todo en el airfryer: enciendes, esperas y ya está. Es la cena de los días que no quieres estar de pie en la cocina.',
   ingredientes:[
     {q:'150 g', item:'filetes de pavo'},
     {q:'1', item:'pimiento rojo'},
-    {q:'1', item:'calabacín'},
+    {q:'1', item:'cebolla', nota:'Mediana'},
     {q:'1 chorro', item:'aceite de oliva, sal, ajo en polvo y pimentón'}
   ],
   compra:'Nada especial.',
   pasos:[
-    'Corta el pimiento en tiras y el calabacín en rodajas gruesas, de un dedo.',
+    'Corta el pimiento en tiras y la cebolla en gajos gruesos, de un dedo.',
     'Mézclalos en un bol con aceite, sal y ajo en polvo.',
     'A la cesta del airfryer, 10 minutos a 190°C.',
     'Sacude la cesta y pon el pavo salpimentado encima.',
@@ -1291,7 +1291,7 @@ const MENU_A_PLATO = {
   'Garbanzos salteados con espinacas y taquitos de pavo':'garbanzos-espinacas-pavo',
   'Lentejas estofadas con pimiento y zanahoria':'lentejas-estofadas',
   'Ensalada de lentejas con pimiento, tomate y atún':'ensalada-lentejas-atun',
-  'Alubias con pimiento, calabacín y jamón':'alubias-pimiento-champinon-jamon',
+  'Alubias con pimiento, zanahoria y jamón':'alubias-pimiento-champinon-jamon',
   'Garbanzos con espinacas (comida familiar)':'garbanzos-espinacas',
   'Salmón al airfryer con espárragos':'salmon-airfryer-esparragos',
   'Salmón al horno con espárragos y patata':'salmon-horno-esparragos-patata',
@@ -1305,9 +1305,9 @@ const MENU_A_PLATO = {
   'Calamares y pulpo a la gallega con patata':'calamares-pulpo-gallega',
   'Calamar encebollado con patata':'calamar-encebollado-patata',
   'Pollo a la plancha con arroz integral y pimientos':'pollo-plancha-arroz-pimientos',
-  'Pollo a la plancha con pimiento y calabacín salteados, y arroz':'pollo-plancha-arroz-pimientos',
+  'Pollo a la plancha con pimiento y cebolla salteados, y arroz':'pollo-plancha-arroz-pimientos',
   'Pechuga a la plancha con quinoa y brócoli':'pechuga-quinoa-brocoli',
-  'Pavo con calabacín salteado y arroz':'pavo-champinones-arroz',
+  'Pavo con judías verdes salteadas y arroz':'pavo-champinones-arroz',
   'Arroz con pollo, pimiento y cebolla (comida en familia)':'arroz-pollo-familia',
   'Muslitos de pollo al horno con patata (comida familiar)':'muslitos-horno-patata',
   'Muslitos al horno con patata (comida familiar)':'muslitos-horno-patata',
@@ -1320,14 +1320,14 @@ const MENU_A_PLATO = {
   'Merluza al horno con ajo y perejil':'merluza-horno-ajo',
   'Merluza a la plancha con limón':'merluza-plancha-limon',
   'Bacalao crujiente al horno con ajo':'bacalao-horno-ajo',
-  'Caballa al papillote con pimiento y calabacín al horno':'caballa-papillote',
+  'Caballa al papillote con pimiento y cebolla al horno':'caballa-papillote',
   'Sardinas al horno con ensalada':'sardinas-horno-ensalada',
   'Salmón al horno con brócoli':'salmon-horno-brocoli',
   'Salmón ahumado con ensalada verde ligera':'salmon-ahumado-ensalada',
   'Salmón ahumado con ensalada':'salmon-ahumado-ensalada',
   'Calamar a la plancha con ensalada verde':'calamar-plancha-ensalada',
   'Calamar a la plancha con pimientos':'calamar-plancha-ensalada',
-  'Pavo al airfryer con pimiento y calabacín asados':'pavo-airfryer-pimiento-champinon',
+  'Pavo al airfryer con pimiento y cebolla asados':'pavo-airfryer-pimiento-champinon',
   'Pavo a la plancha con ensalada':'pavo-plancha-ensalada',
   'Brochetas de pavo con pimiento':'brochetas-pavo-pimiento',
   'Pollo al curry ligero con pimiento':'pollo-curry-pimiento',

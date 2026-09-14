@@ -407,7 +407,7 @@ const SUPERS = [
   {
     nombre:'Lidl', dir:'Carrer de Numància', min:4, m:257, horario:'L-S 9:00-21:00',
     tipo:'completa', destacado:true,
-    para:'Lo barato de tu lista: hummus (0,69 €), gazpacho fresco, espinacas baby lavadas, calabacín, frutos secos, salmón ahumado Ocean Sea.',
+    para:'Lo barato de tu lista: hummus (0,69 €), gazpacho fresco, espinacas baby lavadas, frutos secos, salmón ahumado Ocean Sea.',
     nota:'Media docena de cosas de tu plan son bastante más baratas aquí que en cualquier otro. Merece la pena bajar cada dos semanas y cargar con eso.'
   },
   {
