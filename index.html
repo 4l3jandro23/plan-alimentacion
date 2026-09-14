@@ -1137,6 +1137,15 @@
   </div>
 </header>
 
+<style>
+  .nmg-tag{display:inline-block; margin-left:6px; padding:1px 8px; border-radius:999px; font-size:var(--t-2xs, .72rem); font-weight:700; color:var(--warn); border:1px solid currentColor; vertical-align:middle; white-space:nowrap;}
+  .ing-lista li.nmg b{text-decoration:line-through; opacity:.6;}
+  .nmg-add{display:flex; gap:8px;}
+  .nmg-add input{flex:1; min-width:0; font-family:inherit; font-size:16px; padding:9px 12px; border:1px solid var(--border); border-radius:8px; background:transparent; color:inherit;}
+  .nmg-add button{background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;}
+  .nmg-lista{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
+</style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
   <div class="settings-panel">
     <h3>⚙️ Ajustes</h3>
@@ -1190,6 +1199,19 @@
         <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 10px;">Toca cada día para cambiarlo. Con esto la pestaña Hoy ya sabe si te toca preparar tupper o no, y deja de decírtelo los días que no hace falta.</p>
         <div id="semanaLista"></div>
         <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Sábado y domingo van siempre libres, no hay nada que configurar. Y si un día suelto acabas trabajando en casa, se cambia desde <b>Hoy</b> sin tocar esto.</p>
+      </div>
+    </details>
+
+    <details class="settings-group">
+      <summary>🚫 Cosas que no me gustan</summary>
+      <div class="settings-row">
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 10px;">Escribe un alimento y dale a Añadir. Los platos del menú que lo lleven te lo marcan, la ficha te dice con qué cambiarlo, y los atajos de la compra dejan de meterlo en la lista.</p>
+        <div class="nmg-add">
+          <input id="nmgInput" type="text" maxlength="40" placeholder="Ej.: berenjena" enterkeyhint="done" autocomplete="off" onkeydown="if(event.key==='Enter')anadirNoMeGusta()">
+          <button onclick="anadirNoMeGusta()">Añadir</button>
+        </div>
+        <div id="nmgLista" class="nmg-lista"></div>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Toca uno para quitarlo. Es para gustos, no para alergias: si algún día es una alergia, eso se habla con el médico.</p>
       </div>
     </details>
 
@@ -1900,7 +1922,7 @@ function abrirFicha(slug, momento){
   if(p.tupper && p.tupper !== '—') chips.push('<span class="chip">' + ico('tupper') + esc(p.tupper.split('—')[0].trim()) + '</span>');
 
   const ingredientes = p.ingredientes.map(i =>
-    '<li><span class="ing-q">' + esc(i.q) + '</span><span class="ing-txt"><b>' + esc(i.item) + '</b>' +
+    '<li' + (noMeGustaEn(i.item).length ? ' class="nmg"' : '') + '><span class="ing-q">' + esc(i.q) + '</span><span class="ing-txt"><b>' + esc(i.item) + '</b>' +
     (i.nota ? '<i>' + esc(i.nota) + '</i>' : '') + '</span></li>'
   ).join('');
 
@@ -1908,6 +1930,7 @@ function abrirFicha(slug, momento){
   const trucos = (p.trucos || []).map(t => '<div class="ficha-nota tip">' + esc(t) + '</div>').join('');
 
   const enCompra = enListaRapida(slug);
+  const nmgFicha = noMeGustaPlato(slug);
 
   document.getElementById('fichaScroll').innerHTML =
     (platoVisualHTML(p) ||
@@ -1933,6 +1956,8 @@ function abrirFicha(slug, momento){
         ? '<button class="cocina-abrir" onclick="abrirCocina()">' + ico('fuego') + '<span><b>Cocinar paso a paso</b>' +
           '<i>Letra grande, un paso cada vez, temporizadores y la pantalla no se apaga</i></span></button>'
         : '') +
+      (nmgFicha.length ? '<div class="ficha-nota ojo"><b>Lleva ' + esc(nmgFicha.join(' y ')) + ' (está en tu lista de «no me gusta»)</b>' +
+        esc(nmgFicha.map(sustitutoNMG).join(' ')) + '</div>' : '') +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas</div>' +
         '<ul class="ing-lista">' + ingredientes + '</ul></div>' +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('sarten') + 'Cómo se hace</div>' +
@@ -2247,8 +2272,100 @@ function toggleTheme(){
 })();
 
 /* ===== Ajustes: color, estilo, teletrabajo, vacaciones ===== */
+/* ==================== COSAS QUE NO ME GUSTAN ====================
+   Primero fueron los champiñones y luego el calabacín. En vez de esperar a
+   que salga el siguiente, lo apunta él: el menú lo marca, la ficha dice con
+   qué cambiarlo y los atajos de la compra no lo meten. Viene con esos dos
+   puestos para que se vea para qué sirve. */
+const NMG_KEY = 'planAlimentacionNoMeGusta';
+const NMG_DEFECTO = ['champiñones', 'calabacín'];
+function loadNoMeGusta(){
+  try{
+    const raw = localStorage.getItem(NMG_KEY);
+    if(raw === null) return NMG_DEFECTO.slice();
+    const l = JSON.parse(raw);
+    return Array.isArray(l) ? l.filter(x => typeof x === 'string' && x.trim()) : [];
+  }catch(e){ return NMG_DEFECTO.slice(); }
+}
+function normNMG(t){ return String(t || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim(); }
+/* "champiñones" tiene que encontrar "champiñón", y "tomates" "tomate". */
+function raizNMG(t){
+  const n = normNMG(t);
+  if(n.length > 5 && /es$/.test(n)) return n.slice(0, -2);
+  if(n.length > 4 && /s$/.test(n)) return n.slice(0, -1);
+  return n;
+}
+function nmgCoincide(texto, palabra){
+  const r = raizNMG(palabra);
+  if(r.length < 3) return false;
+  const seguro = r.replace(/[.*+?^$(){}|[\]\\]/g, '\\$&');
+  return new RegExp('(^|[^a-z])' + seguro).test(normNMG(texto));
+}
+function noMeGustaEn(texto){ return loadNoMeGusta().filter(x => nmgCoincide(texto, x)); }
+function textoDePlato(slug, texto){
+  const p = slug && typeof PLATOS !== 'undefined' ? PLATOS[slug] : null;
+  return p ? [p.nombre].concat(p.ingredientes.map(i => i.item)).join(' · ') : (texto || '');
+}
+function noMeGustaPlato(slug, texto){ return noMeGustaEn(textoDePlato(slug, texto)); }
+function sustitutoNMG(palabra){
+  const n = normNMG(palabra);
+  if(RE_VERDURA.test(n) || RE_VERDURA.test(palabra)){
+    const alt = ['pimiento', 'zanahoria', 'judías verdes', 'espinacas', 'brócoli']
+      .filter(a => !noMeGustaEn(a).length && !nmgCoincide(a, palabra)).slice(0, 3);
+    return 'En lugar de ' + palabra + ', otra verdura que sí te guste' + (alt.length ? ': ' + alt.join(', ') + '.' : '.');
+  }
+  if(/salmon|merluza|atun|bacalao|calamar|pulpo|sardina|caballa|gamba|pescado|marisco|dorada|lubina/.test(n)) return 'En lugar de ' + palabra + ', otro pescado que sí te guste, o pollo.';
+  if(/ternera|cerdo|cordero|pollo|pavo|jamon|carne/.test(n)) return 'En lugar de ' + palabra + ', pollo o pavo: se hacen igual.';
+  if(/lenteja|garbanzo|alubia|legumbre/.test(n)) return 'En lugar de ' + palabra + ', otra legumbre de bote: se hace igual.';
+  if(/huevo/.test(n)) return 'En lugar de ' + palabra + ', atún o pavo en lonchas.';
+  return 'Sin ' + palabra + ': quítalo o pon algo parecido que sí te guste, el plato funciona igual.';
+}
+function platosConNoMeGusta(palabra){
+  const vistos = {};
+  let n = 0;
+  weeksData.forEach(w => w.days.forEach(d => ['desayuno','media','comida','merienda','cena'].forEach(k => {
+    const t = d[k];
+    if(!t || vistos[t]) return;
+    vistos[t] = true;
+    if(nmgCoincide(textoDePlato(slugDePlato(t), t), palabra)) n++;
+  })));
+  return n;
+}
+function renderNoMeGusta(){
+  const cont = document.getElementById('nmgLista');
+  if(!cont) return;
+  const l = loadNoMeGusta();
+  cont.innerHTML = l.length
+    ? l.map((x, i) => '<button class="nmg-chip" onclick="quitarNoMeGusta(' + i + ')" aria-label="Quitar ' + esc(x) + '">' + esc(x) + ' <span aria-hidden="true">×</span></button>').join('')
+    : '<span style="font-size:var(--t-xs); color:var(--muted);">Nada apuntado.</span>';
+}
+function guardarNoMeGusta(l){
+  setLS(NMG_KEY, JSON.stringify(l));
+  renderNoMeGusta();
+  renderWeeks();
+  renderHoy();
+}
+function anadirNoMeGusta(){
+  const inp = document.getElementById('nmgInput');
+  const v = String(inp.value || '').trim().slice(0, 40);
+  if(!v) return;
+  const l = loadNoMeGusta();
+  inp.value = '';
+  if(l.some(x => raizNMG(x) === raizNMG(v))){ toast('Ya lo tenías apuntado'); return; }
+  l.push(v);
+  guardarNoMeGusta(l);
+  const n = platosConNoMeGusta(v);
+  toast(n ? 'Apuntado: lo llevan ' + n + (n === 1 ? ' plato' : ' platos') + ' del menú' : 'Apuntado. Ahora mismo no está en el menú');
+}
+function quitarNoMeGusta(i){
+  const l = loadNoMeGusta();
+  l.splice(i, 1);
+  guardarNoMeGusta(l);
+}
+
 function openSettings(){
   renderSyncEstado();
+  renderNoMeGusta();
   document.getElementById('settingsOverlay').classList.add('show');
 }
 function closeSettings(){
@@ -2475,7 +2592,7 @@ const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
-  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins'
+  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta'
 ];
 
 /* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
@@ -2489,7 +2606,7 @@ const SYNC_KEYS = [
 const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
-          'planAlimentacionFavPlatos', 'planAlimentacionCheckins'],
+          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
     planAlimentacionCheckins: { campo:'fecha', orden:'desc' }
@@ -3292,6 +3409,8 @@ function addItems(items, src){
   items.forEach(it => {
     const txt = typeof it === 'string' ? it : it.txt;
     if(!txt) return;
+    /* Los atajos y las fichas no meten lo que no le gusta; si lo escribe él a mano, sí. */
+    if(src && src !== 'm' && noMeGustaEn(txt).length) return;
     if(yaHay.has(normalizeText(txt))) return;
     yaHay.add(normalizeText(txt));
     lista.push({ id:nuevoId(), txt:txt, nota:(it.nota || ''), done:false, src:src || 'm' });
@@ -3764,7 +3883,9 @@ function etiquetaComidaEquipo(){
 
 function mealHtml(etiqueta, texto, momento, extra){
   const slug = (typeof slugDePlato === "function") ? slugDePlato(texto) : null;
-  const cuerpo = "<b>" + etiqueta + ":</b> " + ico(iconoDeTexto(texto)) + " " + esc(sinEmoji(texto)) + (extra || "");
+  const nmg = noMeGustaPlato(slug, texto);
+  const cuerpo = "<b>" + etiqueta + ":</b> " + ico(iconoDeTexto(texto)) + " " + esc(sinEmoji(texto)) + (extra || "") +
+    (nmg.length ? ' <span class="nmg-tag">lleva ' + esc(nmg.join(', ')) + '</span>' : '');
   if(!slug) return '<div class="meal">' + cuerpo + '</div>';
   return '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slug + '&quot;,&quot;' + momento + '&quot;)">' +
          cuerpo + '<span class="flecha">' + ico("flecha") + '</span></div>';
