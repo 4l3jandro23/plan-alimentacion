@@ -1160,6 +1160,16 @@
   .tip-cambiar{display:inline-flex; align-items:center; margin:10px 0 0; background:none; border:1px solid currentColor; color:var(--accent); border-radius:999px; padding:6px 14px; min-height:36px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;}
   .tupper-semana .meal{margin:2px 0;}
   .tupper-nota{font-size:var(--t-xs); color:var(--muted); margin:10px 0 12px; line-height:1.45;}
+  .nevera-chips{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 16px;}
+  .nevera-chip{border:1px solid var(--border); background:var(--card); color:var(--ink); border-radius:999px; padding:7px 13px; min-height:38px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
+  .nevera-chip.on{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .nevera-h{font-size:var(--t-2xs); font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;}
+  .nevera-vacio{font-size:var(--t-sm); color:var(--muted); margin:0;}
+  .habituales{margin:16px 0 4px;}
+  .habituales-h{display:flex; align-items:center; gap:6px; font-size:var(--t-2xs); font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px; margin-bottom:8px;}
+  .habituales-h .ic-v{width:14px; height:14px;}
+  .habituales-chips{display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+  .habituales-chips .ic-v{width:12px; height:12px; vertical-align:-1px;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1429,6 +1439,7 @@
 
   <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
     <button class="btn-mini solid" onclick="sorprendeme()"><svg class="ic-v"><use href="#i-dado"/></svg> Sorpréndeme</button>
+    <button class="btn-mini" onclick="abrirNevera()"><svg class="ic-v"><use href="#i-nevera"/></svg> Qué hago con lo que tengo</button>
     <button class="btn-mini" onclick="abrirRescate()"><svg class="ic-v"><use href="#i-rayo"/></svg> Sin cocinar</button>
   </div>
 
@@ -1532,6 +1543,7 @@
     <button class="btn-mini" onclick="limpiarMarcados()"><svg class="ic-v"><use href="#i-check"/></svg> Quitar lo cogido</button>
     <button class="btn-mini" onclick="vaciarCompra()"><svg class="ic-v"><use href="#i-basura"/></svg> Vaciar</button>
   </div>
+  <div id="habitualesCompra"></div>
 
   <h2>➕ Llenar la lista sin pensar</h2>
   <p class="lead">Tres botones. No hace falta ir plato por plato: esto mete un bloque entero de una vez y luego ya quitas lo que te sobre.</p>
@@ -2657,7 +2669,7 @@ const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
-  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios'
+  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios','planAlimentacionHabituales'
 ];
 
 /* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
@@ -2671,7 +2683,7 @@ const SYNC_KEYS = [
 const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
-          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios'],
+          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
     planAlimentacionCheckins: { campo:'fecha', orden:'desc' }
@@ -3498,6 +3510,7 @@ function toggleItem(id){
   const it = lista.find(i => i.id === id);
   if(!it) return;
   it.done = !it.done;
+  contarHabitual(it);
   saveCompra(lista);
   renderCompra();
 }
@@ -3609,6 +3622,7 @@ function addLista(key){
 }
 
 function renderCompra(){
+  renderHabituales();
   const cont = document.getElementById('compraLista');
   if(!cont) return;
   const lista = loadCompra();
@@ -4231,6 +4245,7 @@ function cambiarHoyHTML(d, isTeamLunch, fecha){
   const b = [];
   if(!isTeamLunch && !d.pizza && slugDePlato(d.comida)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'comida\')">' + ico('dado') + ' Cambiar la comida</button>');
   if(!d.libre && slugDePlato(d.cena)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'cena\')">' + ico('dado') + ' Cambiar la cena</button>');
+  if(b.length) b.push('<button class="btn-mini" onclick="abrirNevera()">' + ico('nevera') + ' Mirar qué tengo</button>');
   return b.length ? '<div class="cambiar-fila"><span>¿Hoy no te apetece lo que toca?</span>' + b.join('') + '</div>' : '';
 }
 
@@ -4294,6 +4309,125 @@ function addTupperesSemana(){
     n += addItems(PLATOS[t.slug].ingredientes.map(i => ({ txt: i.item, nota: i.q + ' · tupper del ' + nombreDiaAli(t.dia) })), 'p:' + t.slug);
   });
   toast(n ? 'Añadidos ' + n + ' ingredientes de ' + lista.length + (lista.length === 1 ? ' tupper' : ' tuppers') : 'Ya lo tenías todo en la lista');
+}
+
+/* ==================== QUÉ HAGO CON LO QUE TENGO ====================
+   La nevera abierta a las nueve de la noche: se marca lo que hay y salen los
+   platos del plan ordenados por lo poco que falta. Lo básico (aceite, sal,
+   ajo, especias, limón) se da por hecho. Sin nada de lo que no le gusta.
+   Todo funciones: nada se ejecuta al arrancar. */
+function neveraIngredientes(){
+  return [
+    ['pollo', /pollo|pechuga|muslo|contramuslo/], ['pavo', /pavo/], ['huevos', /huevo/], ['atún', /atun/], ['salmón', /salmon/],
+    ['merluza o bacalao', /merluza|bacalao|pescado blanco|lubina|dorada/], ['sardinas o caballa', /sardina|caballa/],
+    ['calamar o pulpo', /calamar|pulpo|sepia/], ['ternera o cerdo', /ternera|cerdo|solomillo|bistec|lomo/], ['jamón', /jamon/],
+    ['garbanzos', /garbanzo/], ['lentejas', /lenteja/], ['alubias', /alubia/], ['arroz', /arroz/], ['pasta', /pasta|espagueti|macarron/],
+    ['quinoa', /quinoa/], ['patata', /patata/], ['pan', /\bpan\b|tostada|molde/], ['tomate', /tomate/], ['pimiento', /pimiento/],
+    ['cebolla', /cebolla/], ['espinacas', /espinaca/], ['brócoli', /brocoli/], ['judías verdes', /judias? verde/], ['zanahoria', /zanahoria/],
+    ['lechuga o ensalada', /ensalada|lechuga|canonig|rucula/], ['aguacate', /aguacate/], ['queso', /queso/], ['yogur o kéfir', /yogur|kefir/]
+  ];
+}
+function esBasico(i){
+  /* "Opcional" puede venir en la cantidad o en la nota ("1/2 cebolla · Opcional"). */
+  return /al gusto|opcional|necesario/i.test((i.q || '') + ' ' + (i.nota || '')) ||
+    /aceite|\bsal\b|pimienta|\bajo\b|pimenton|oregano|comino|curry|especia|limon|vinagre|perejil|\bagua\b|papel|canela|laurel|romero|tomillo|mostaza|miel/.test(normalizeText(i.item));
+}
+function platosConLoQueTengo(sel){
+  const mios = neveraIngredientes().filter(x => sel.indexOf(x[0]) !== -1);
+  return platosCocinables().filter(k => !noMeGustaPlato(k).length).map(k => {
+    const p = PLATOS[k], tengo = [], falta = [];
+    p.ingredientes.forEach(i => {
+      if(esBasico(i)) return;
+      const m = mios.find(x => x[1].test(normalizeText(i.item)));
+      if(m){ if(tengo.indexOf(m[0]) === -1) tengo.push(m[0]); }
+      else falta.push(i.item);
+    });
+    return { k: k, p: p, tengo: tengo, falta: falta };
+  }).filter(x => x.tengo.length)
+    .sort((a, b) => a.falta.length - b.falta.length || b.tengo.length - a.tengo.length || a.p.tiempo - b.p.tiempo)
+    .slice(0, 8);
+}
+function abrirNevera(){
+  if(!Array.isArray(window.neveraSel)) window.neveraSel = [];
+  abrirSheet({ ico:'nevera', label:'Lo que tengo' }, '¿Qué tienes en casa?',
+    'Toca lo que tengas. Lo básico (aceite, sal, ajo, especias, limón) doy por hecho que está.',
+    '<div class="nevera-chips" id="neveraChips"></div><div id="neveraRes"></div>');
+  pintarNevera();
+}
+function alternarNevera(i){
+  const x = neveraIngredientes()[i];
+  if(!x) return;
+  const s = window.neveraSel;
+  const j = s.indexOf(x[0]);
+  if(j === -1) s.push(x[0]); else s.splice(j, 1);
+  pintarNevera();
+}
+function pintarNevera(){
+  const s = window.neveraSel || [];
+  const chips = document.getElementById('neveraChips'), res = document.getElementById('neveraRes');
+  if(!chips || !res) return;
+  chips.innerHTML = neveraIngredientes().map((x, i) => {
+    const on = s.indexOf(x[0]) !== -1;
+    return '<button class="nevera-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" onclick="alternarNevera(' + i + ')">' + esc(x[0]) + '</button>';
+  }).join('');
+  if(!s.length){ res.innerHTML = '<p class="nevera-vacio">Empieza por la proteína que tengas: pollo, huevos, atún…</p>'; return; }
+  const platos = platosConLoQueTengo(s);
+  if(!platos.length){ res.innerHTML = '<p class="nevera-vacio">Con eso solo no sale ningún plato del plan. Marca algo más, o tira de «No puedo con esto» en Hoy.</p>'; return; }
+  const listos = platos.filter(x => !x.falta.length).length;
+  res.innerHTML = '<div class="nevera-h">' + (listos ? (listos === 1 ? 'Puedes hacer ya uno' : 'Puedes hacer ya ' + listos) : 'Lo que más se acerca') + '</div>' +
+    platos.map(x =>
+      '<button class="opt" onclick="cerrarSheet(); abrirFicha(\'' + x.k + '\',\'cena\')">' +
+        '<span class="opt-ico" style="background:' + degradado(x.p.icono) + '">' + ico(x.p.icono) + '</span>' +
+        '<span class="opt-txt"><b>' + esc(x.p.nombre) + '</b><span>' +
+          (x.falta.length ? 'Te falta: ' + esc(x.falta.slice(0, 3).join(', ')) + (x.falta.length > 3 ? '…' : '') : 'Tienes todo') + '</span></span>' +
+        '<span class="opt-min">' + x.p.tiempo + '′</span>' +
+      '</button>').join('');
+}
+
+/* ==================== LO DE SIEMPRE ====================
+   Cada vez que marcas algo como cogido en la compra se apunta. Lo que has
+   comprado dos veces o más sale arriba de los atajos para meterlo de un toque:
+   en el súper, con una mano, escribir "kéfir" por quinta vez sobra. */
+function loadHabituales(){
+  try{
+    const x = JSON.parse(localStorage.getItem('planAlimentacionHabituales'));
+    return (x && typeof x === 'object' && !Array.isArray(x)) ? x : {};
+  }catch(e){ return {}; }
+}
+function contarHabitual(it){
+  const hab = loadHabituales();
+  const k = normalizeText(it.txt);
+  const x = hab[k] || { txt: it.txt, n: 0 };
+  x.n = Math.max(0, (x.n || 0) + (it.done ? 1 : -1));
+  x.txt = it.txt;
+  if(x.n > 0) hab[k] = x; else delete hab[k];
+  setLS('planAlimentacionHabituales', JSON.stringify(hab));
+}
+function habitualesSugeridos(){
+  const enLista = new Set(loadCompra().map(i => normalizeText(i.txt)));
+  const hab = loadHabituales();
+  return Object.keys(hab)
+    .filter(k => hab[k].n >= 2 && !enLista.has(k) && !noMeGustaEn(hab[k].txt).length)
+    .sort((a, b) => hab[b].n - hab[a].n)
+    .slice(0, 12)
+    .map(k => hab[k]);
+}
+function renderHabituales(){
+  const el = document.getElementById('habitualesCompra');
+  if(!el) return;
+  const s = habitualesSugeridos();
+  if(!s.length){ el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="habituales"><div class="habituales-h">' + ico('estrella') + 'Lo que sueles comprar</div>' +
+    '<div class="habituales-chips">' +
+      s.map((x, i) => '<button class="nmg-chip" onclick="addHabitual(' + i + ')">' + ico('mas') + ' ' + esc(x.txt) + '</button>').join('') +
+      (s.length > 1 ? '<button class="btn-mini solid" onclick="addHabitual(-1)">Añadir los ' + s.length + '</button>' : '') +
+    '</div></div>';
+}
+function addHabitual(i){
+  const s = habitualesSugeridos();
+  const elegidos = i === -1 ? s : (s[i] ? [s[i]] : []);
+  const n = addItems(elegidos.map(x => x.txt), 'h');
+  toast(n === 1 ? 'Añadido a la lista' : 'Añadidos ' + n + ' a la lista');
 }
 
 function renderTomorrowCard(){
