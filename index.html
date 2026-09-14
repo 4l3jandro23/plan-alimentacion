@@ -1190,6 +1190,12 @@
   .cal-fila{display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 14px; font-size:var(--t-sm);}
   .cal-fila input[type=time]{font-family:inherit; font-size:16px; padding:8px 10px; border:1px solid var(--border); border-radius:8px; background:transparent; color:inherit;}
   .cal-lista{margin:0 0 14px; padding-left:18px; font-size:var(--t-sm); line-height:1.5;}
+  .cocinado-fila{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:0 0 16px;}
+  .cocinado-btn{border:1px solid var(--accent); background:transparent; color:var(--accent); border-radius:999px; padding:8px 14px; min-height:40px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;}
+  .cocinado-btn.hecho{background:var(--accent); color:#fff; cursor:default;}
+  .cocinado-btn .ic-v{width:15px; height:15px;}
+  .cocinado-info{font-size:var(--t-xs); color:var(--muted);}
+  .cocinados-lista{margin:10px 0 0; padding-left:18px; font-size:var(--t-sm); line-height:1.55;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1707,6 +1713,9 @@
 <!-- ==================== PROGRESO ==================== -->
 <div id="tab-progreso" class="tabpanel">
 
+  <h2>🍳 Lo que has cocinado</h2>
+  <div class="card" id="cocinadosCard"></div>
+
   <h2>✅ Check-in de la semana</h2>
   <p class="lead">Treinta segundos, una vez por semana. No hay puntuación, ni rachas, ni nada que se rompa si te saltas una semana — solo sirve para que dentro de dos meses puedas mirar atrás y ver algo real.</p>
   <div class="card" id="checkinCard"></div>
@@ -2057,6 +2066,7 @@ function abrirFicha(slug, momento){
         ? '<button class="cocina-abrir" onclick="abrirCocina()">' + ico('fuego') + '<span><b>Cocinar paso a paso</b>' +
           '<i>Letra grande, un paso cada vez, temporizadores y la pantalla no se apaga</i></span></button>'
         : '') +
+      cocinadoFichaHTML(slug) +
       (nmgFicha.length ? '<div class="ficha-nota ojo"><b>Lleva ' + esc(nmgFicha.join(' y ')) + ' (está en tu lista de «no me gusta»)</b>' +
         esc(nmgFicha.map(sustitutoNMG).join(' ')) + '</div>' : '') +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas' + racionesBtnHTML(p) + '</div>' +
@@ -2156,7 +2166,10 @@ function cerrarCocina(){
 }
 function pasoCocina(delta){
   const p = PLATOS[CO.slug];
+  const antes = CO.paso;
   CO.paso = Math.max(-1, Math.min(p.pasos.length, CO.paso + delta));
+  /* Al tocar "Terminado" en el último paso se apunta solo. */
+  if(delta > 0 && antes < p.pasos.length && CO.paso >= p.pasos.length) apuntarCocinado(CO.slug);
   pintarCocina();
   const c = document.querySelector('#cocina .cocina-cuerpo');
   if(c) c.scrollTop = 0;
@@ -2698,7 +2711,7 @@ const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
-  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios','planAlimentacionHabituales'
+  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios','planAlimentacionHabituales','planAlimentacionCocinados'
 ];
 
 /* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
@@ -2712,7 +2725,7 @@ const SYNC_KEYS = [
 const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
-          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales'],
+          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales', 'planAlimentacionCocinados'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
     planAlimentacionCheckins: { campo:'fecha', orden:'desc' }
@@ -4093,6 +4106,7 @@ renderSupers();
 renderDespensaRescate();
 rellenarSugerenciasCompra();
 renderCheckin();
+renderCocinados();
 renderHoy();
 pedirAlmacenamientoPersistente();
 badgeifyHeadings();
@@ -4463,6 +4477,90 @@ function addHabitual(i){
   toast(n === 1 ? 'Añadido a la lista' : 'Añadidos ' + n + ' a la lista');
 }
 
+/* ==================== LO QUE HAS COCINADO ====================
+   El fallo de siempre es no cocinar, y la app nunca enseñaba las veces que sí.
+   Se apunta solo al terminar el modo cocina, o a mano desde la ficha; un plato
+   cuenta una vez por día. Solo cuenta hacia arriba: no hay semanas en cero
+   señaladas ni nada que se rompa. */
+function loadCocinados(){
+  try{
+    const c = JSON.parse(localStorage.getItem('planAlimentacionCocinados'));
+    return (c && typeof c === 'object' && !Array.isArray(c)) ? c : {};
+  }catch(e){ return {}; }
+}
+function cocinadoHoy(slug){ return (loadCocinados()[calDateKeyLocal(new Date())] || []).indexOf(slug) !== -1; }
+function vecesCocinado(slug){
+  const c = loadCocinados();
+  return Object.keys(c).reduce((n, k) => n + ((c[k] || []).indexOf(slug) !== -1 ? 1 : 0), 0);
+}
+function cocinadosDesde(clave){
+  const c = loadCocinados();
+  return Object.keys(c).filter(k => k >= clave).reduce((n, k) => n + (c[k] || []).length, 0);
+}
+function lunesClave(){
+  const d = new Date();
+  d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  return calDateKeyLocal(d);
+}
+function apuntarCocinado(slug){
+  if(!slug || !PLATOS[slug]) return;
+  const hoy = calDateKeyLocal(new Date());
+  const antes = loadCocinados();
+  const c = JSON.parse(JSON.stringify(antes));
+  const dia = c[hoy] || [];
+  if(dia.indexOf(slug) !== -1){ toast('Ya lo tenías apuntado hoy'); return; }
+  dia.push(slug);
+  c[hoy] = dia;
+  setLS('planAlimentacionCocinados', JSON.stringify(c));
+  renderCocinados();
+  pintarCocinadoFicha(slug);
+  const semana = cocinadosDesde(lunesClave());
+  toast('Apuntado. Esta semana llevas ' + semana + (semana === 1 ? ' plato' : ' platos'), () => {
+    setLS('planAlimentacionCocinados', JSON.stringify(antes));
+    renderCocinados();
+    pintarCocinadoFicha(slug);
+  });
+}
+function cocinadoFichaHTML(slug){
+  const p = PLATOS[slug];
+  if(!p || !(p.tiempo > 0)) return '';
+  return '<div class="cocinado-fila" id="cocinadoFicha">' + cocinadoFichaDentro(slug) + '</div>';
+}
+function cocinadoFichaDentro(slug){
+  const hoy = cocinadoHoy(slug);
+  const n = vecesCocinado(slug);
+  return '<button class="cocinado-btn' + (hoy ? ' hecho' : '') + '"' + (hoy ? ' disabled' : ' onclick="apuntarCocinado(\'' + slug + '\')"') + '>' +
+      ico('check') + (hoy ? 'Apuntado hoy' : 'Lo he cocinado hoy') + '</button>' +
+    (n ? '<span class="cocinado-info">Lo has cocinado ' + (n === 1 ? 'una vez' : n + ' veces') + '</span>' : '');
+}
+function pintarCocinadoFicha(slug){
+  const el = document.getElementById('cocinadoFicha');
+  if(el && fichaSlugActual === slug) el.innerHTML = cocinadoFichaDentro(slug);
+}
+function renderCocinados(){
+  const el = document.getElementById('cocinadosCard');
+  if(!el) return;
+  const c = loadCocinados();
+  const total = Object.keys(c).reduce((n, k) => n + (c[k] || []).length, 0);
+  if(!total){
+    el.innerHTML = '<p style="margin:0;">Aquí irá lo que cocines. Se apunta solo al terminar <b>Cocinar paso a paso</b>, o con <b>Lo he cocinado hoy</b> en la ficha de cada plato.</p>';
+    return;
+  }
+  const hoy = new Date();
+  const mes = calDateKeyLocal(new Date(hoy.getFullYear(), hoy.getMonth(), 1));
+  const cuenta = {};
+  Object.keys(c).forEach(k => (c[k] || []).forEach(s => { cuenta[s] = (cuenta[s] || 0) + 1; }));
+  const top = Object.keys(cuenta).filter(s => PLATOS[s]).sort((a, b) => cuenta[b] - cuenta[a]).slice(0, 3);
+  const recientes = Object.keys(c).sort().reverse().slice(0, 5);
+  el.innerHTML = '<div class="statgrid" style="margin:0 0 12px;">' +
+      '<div class="stat"><b>' + cocinadosDesde(lunesClave()) + '</b><span>esta semana</span></div>' +
+      '<div class="stat"><b>' + cocinadosDesde(mes) + '</b><span>este mes</span></div>' +
+      '<div class="stat"><b>' + total + '</b><span>en total</span></div>' +
+    '</div>' +
+    (top.length ? '<p style="font-size:var(--t-sm); margin:0;"><b>Lo que más repites:</b> ' + top.map(s => esc(PLATOS[s].nombre) + ' (' + cuenta[s] + ')').join(', ') + '.</p>' : '') +
+    '<ul class="cocinados-lista">' + recientes.map(k => '<li>' + fechaBonita(k) + ': ' + (c[k] || []).filter(s => PLATOS[s]).map(s => esc(PLATOS[s].nombre)).join(', ') + '</li>').join('') + '</ul>';
+}
+
 /* ==================== RECORDATORIOS EN EL CALENDARIO ====================
    La app no manda avisos; el calendario del iPhone sí. Un archivo .ics con un
    evento semanal la noche antes de cada día de oficina (sale de "Mi semana":
@@ -4595,15 +4693,16 @@ function posponerAvisoCopia(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-14b'; }
+function novedadesId(){ return '2026-09-14c'; }
 function novedadesNuevas(){
   return [
-    '<b>Recordatorio del tupper en el calendario del iPhone:</b> la noche antes de cada día de oficina, y si quieres la compra del sábado. Ajustes → Que te avise el iPhone.',
-    '<b>Hoy más ordenado:</b> «Cambiar la comida» sale arriba, junto a lo de ahora.'
+    '<b>Lo que has cocinado:</b> se apunta solo al terminar el modo cocina, o con «Lo he cocinado hoy» en la ficha. Lo ves en Progreso.'
   ];
 }
 function novedades(){
   return [
+    '<b>Recordatorio del tupper en el calendario del iPhone:</b> Ajustes → Que te avise el iPhone.',
+    '<b>Hoy más ordenado:</b> «Cambiar la comida» sale arriba.',
     '<b>Cambiar la comida o la cena</b> de hoy si no te apetece, desde aquí mismo. También el tupper de mañana.',
     '<b>Qué hago con lo que tengo:</b> marcas lo que hay en la nevera y te dice qué plato sale. En Recetas y aquí en Hoy.',
     '<b>Los tuppers de la semana:</b> el fin de semana te enseña qué te llevas cada día y lo manda a la compra.',
