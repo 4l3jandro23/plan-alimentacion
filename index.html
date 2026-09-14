@@ -39,9 +39,9 @@
     --t-md:1.05rem; --t-lg:1.25rem; --t-xl:1.5rem;
 
     --bg:#f2efe8; --bg2:#fbfaf6; --card:#ffffff;
-    --ink:#23251f; --muted:#6d7067;
+    --ink:#23251f; --muted:#5f625a;
     --accent:#2f7a5f; --accent2:#57a686; --accent-soft:#e4f1eb;
-    --warn:#b5651d; --warn-soft:#fbeee2;
+    --warn:#9a5214; --warn-soft:#fbeee2;
     --border:rgba(38,40,32,.10);
     --protein:#2f7a5f; --carbs:#c98a2b; --fat:#a33333; --barbg:#e7e3d9;
 
@@ -619,6 +619,9 @@
     display:grid; place-items:center; opacity:.5;
   }
   .linea-x .ic-v{width:15px; height:15px;}
+  /* Era de 27×27 y medio transparente: en el súper, con una mano y el carro
+     en la otra, se fallaba. La zona de toque crece sin que crezca la fila. */
+  .linea-x{min-width:44px; min-height:44px; margin:-8px -10px -8px 0; opacity:.75;}
   .compra-cab{flex-wrap:wrap;}
   .cab-nums{display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%;}
   .super-btn{
@@ -1144,6 +1147,13 @@
   .nmg-add input{flex:1; min-width:0; font-family:inherit; font-size:16px; padding:9px 12px; border:1px solid var(--border); border-radius:8px; background:transparent; color:inherit;}
   .nmg-add button{background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 14px; font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;}
   .nmg-lista{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+  /* La línea de la comida de equipo ("pizza Papa John's, hamburguesa o
+     milanesas del Chalito") empujaba la etiqueta y la flecha fuera de la
+     pantalla: el texto no tenía una caja propia en la que partirse. */
+  .meal-txt{flex:1; min-width:0;}
+  .meal-txt .pizza-tag, .meal-txt .libre-tag, .meal-txt .nmg-tag{white-space:normal;}
+  .raciones-btn{margin-left:auto; border:1px solid var(--border); background:var(--card); color:var(--ink); border-radius:999px; padding:6px 12px; min-height:34px; font-family:inherit; font-size:var(--t-2xs); font-weight:700; letter-spacing:0; text-transform:none; cursor:pointer; white-space:nowrap;}
+  .raciones-btn.on{background:var(--accent); border-color:var(--accent); color:#fff;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1906,9 +1916,61 @@ function seleccionarParte(parte){
 /* ==================== FICHA DEL PLATO ==================== */
 let fichaSlugActual = null;
 
+/* ---------- ×2 con tupper ----------
+   Lo normal un día de oficina es cocinar la cena y dejar hecha a la vez la
+   comida de mañana. La ficha decía "dobla todo" y tocaba multiplicar de
+   cabeza con la sartén en la mano. Un toque y las cantidades salen dobladas,
+   también en el modo cocina y al mandarlas a la compra. */
+let fichaPara2 = false;
+const UNIDAD_PLURAL = { diente:'dientes', bote:'botes', lata:'latas', 'puñado':'puñados', rebanada:'rebanadas', vaso:'vasos',
+  vasito:'vasitos', cucharada:'cucharadas', cucharadita:'cucharaditas', filete:'filetes', loncha:'lonchas', pieza:'piezas',
+  unidad:'unidades', bolsa:'bolsas', taza:'tazas', rodaja:'rodajas', tarrina:'tarrinas', sobre:'sobres', yogur:'yogures',
+  huevo:'huevos', 'ración':'raciones', racion:'raciones', tortilla:'tortillas', lomo:'lomos', muslo:'muslos', paquete:'paquetes' };
+function numeroBonito(v){
+  const r = Math.round(v * 100) / 100;
+  if(Number.isInteger(r)) return String(r);
+  const fr = { 0.25:'1/4', 0.5:'1/2', 0.75:'3/4' };
+  if(fr[r]) return fr[r];
+  return String(r).replace('.', ',');
+}
+function dobleCantidad(q){
+  const s = String(q == null ? '' : q);
+  if(/al gusto|necesario|chorro|chorrito|pizca|un poco|^\s*—\s*$/i.test(s)) return s;
+  const m = /^(\s*)(\d+(?:[.,]\d+)?)(?:\s*\/\s*(\d+))?(?:\s*-\s*(\d+(?:[.,]\d+)?))?(.*)$/.exec(s);
+  if(!m) return s;
+  const base = parseFloat(m[2].replace(',', '.')) / (m[3] ? +m[3] : 1);
+  let salida = numeroBonito(base * 2);
+  if(m[4]) salida += '-' + numeroBonito(parseFloat(m[4].replace(',', '.')) * 2);
+  let resto = m[5];
+  if(base * 2 > 1) resto = resto.replace(/^(\s+)([a-záéíóúñ]+)/i, (t, esp, w) => esp + (UNIDAD_PLURAL[w.toLowerCase()] || w));
+  return m[1] + salida + resto;
+}
+function cantidadFicha(q){ return fichaPara2 ? dobleCantidad(q) : q; }
+function puedeDoblar(p){ return !!p && p.tiempo > 0 && (p.ingredientes || []).some(i => /\d/.test(i.q)); }
+function ingredientesLi(p){
+  return p.ingredientes.map(i =>
+    '<li' + (noMeGustaEn(i.item).length ? ' class="nmg"' : '') + '><span class="ing-q">' + esc(cantidadFicha(i.q)) + '</span><span class="ing-txt"><b>' + esc(i.item) + '</b>' +
+    (i.nota ? '<i>' + esc(i.nota) + '</i>' : '') + '</span></li>'
+  ).join('');
+}
+function racionesBtnHTML(p){
+  if(!puedeDoblar(p)) return '';
+  return '<button class="raciones-btn' + (fichaPara2 ? ' on' : '') + '" onclick="alternarRaciones()" aria-pressed="' + fichaPara2 + '">' +
+    (fichaPara2 ? '×2 · hoy y tupper' : '×2 con tupper') + '</button>';
+}
+function alternarRaciones(){
+  const p = PLATOS[fichaSlugActual];
+  if(!p) return;
+  fichaPara2 = !fichaPara2;
+  document.querySelectorAll('#fichaScroll .ing-cant').forEach(ul => { ul.innerHTML = ingredientesLi(p); });
+  document.querySelectorAll('#fichaScroll .raciones-btn').forEach(b => { b.outerHTML = racionesBtnHTML(p); });
+  toast(fichaPara2 ? 'Cantidades para hoy y el tupper de mañana' : 'Cantidades para una ración');
+}
+
 function abrirFicha(slug, momento){
   const p = PLATOS[slug];
   if(!p) return;
+  if(slug !== fichaSlugActual) fichaPara2 = false;
   fichaSlugActual = slug;
   platoComposicion = null;
   const col = ICONO_COLOR[p.icono] || ICONO_COLOR.libre;
@@ -1921,10 +1983,7 @@ function abrirFicha(slug, momento){
   if(p.donde)  chips.push('<span class="chip">' + ico('sarten') + esc(p.donde) + '</span>');
   if(p.tupper && p.tupper !== '—') chips.push('<span class="chip">' + ico('tupper') + esc(p.tupper.split('—')[0].trim()) + '</span>');
 
-  const ingredientes = p.ingredientes.map(i =>
-    '<li' + (noMeGustaEn(i.item).length ? ' class="nmg"' : '') + '><span class="ing-q">' + esc(i.q) + '</span><span class="ing-txt"><b>' + esc(i.item) + '</b>' +
-    (i.nota ? '<i>' + esc(i.nota) + '</i>' : '') + '</span></li>'
-  ).join('');
+  const ingredientes = ingredientesLi(p);
 
   const pasos = p.pasos.map(s => '<li>' + esc(s) + '</li>').join('');
   const trucos = (p.trucos || []).map(t => '<div class="ficha-nota tip">' + esc(t) + '</div>').join('');
@@ -1958,8 +2017,8 @@ function abrirFicha(slug, momento){
         : '') +
       (nmgFicha.length ? '<div class="ficha-nota ojo"><b>Lleva ' + esc(nmgFicha.join(' y ')) + ' (está en tu lista de «no me gusta»)</b>' +
         esc(nmgFicha.map(sustitutoNMG).join(' ')) + '</div>' : '') +
-      '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas</div>' +
-        '<ul class="ing-lista">' + ingredientes + '</ul></div>' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas' + racionesBtnHTML(p) + '</div>' +
+        '<ul class="ing-lista ing-cant">' + ingredientes + '</ul></div>' +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('sarten') + 'Cómo se hace</div>' +
         '<ol class="paso-lista">' + pasos + '</ol></div>' +
       (p.ojo && p.ojo !== 'Nada.' && p.ojo !== 'Nada especial.' && p.ojo !== '—'
@@ -1971,9 +2030,9 @@ function abrirFicha(slug, momento){
     '<div class="ficha-pane">' +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('carrito') + 'Dónde y qué comprar</div>' +
         '<div class="ficha-nota gris">' + esc(p.compra) + '</div></div>' +
-      '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Cantidades para una persona</div>' +
-        '<ul class="ing-lista">' + ingredientes + '</ul>' +
-        '<p style="font-size:var(--t-xs); color:var(--muted); margin:9px 0 0;">Para llevar tupper al día siguiente, dobla todo.</p></div>' +
+      '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Cantidades' + racionesBtnHTML(p) + '</div>' +
+        '<ul class="ing-lista ing-cant">' + ingredientes + '</ul>' +
+        '<p style="font-size:var(--t-xs); color:var(--muted); margin:9px 0 0;">Son para una ración. Si cocinas también la comida de mañana, toca «×2 con tupper».</p></div>' +
       (p.conservar && p.conservar !== '—'
         ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('nevera') + 'Cuánto aguanta</div>' +
           '<div class="ficha-nota gris">' + esc(p.conservar) + '</div></div>' : '') +
@@ -2122,7 +2181,7 @@ function pintarCocina(){
   if(CO.paso < 0){
     const lista = p.ingredientes.map((it, i) =>
       '<button class="cocina-ing' + (CO.tengo[i] ? ' ok' : '') + '" onclick="tengoIngrediente(' + i + ')">' +
-        '<span class="marca">' + ico('check') + '</span><span><b>' + esc(it.item) + '</b><i>' + esc(it.q) + '</i></span></button>'
+        '<span class="marca">' + ico('check') + '</span><span><b>' + esc(it.item) + '</b><i>' + esc(cantidadFicha(it.q)) + '</i></span></button>'
     ).join('');
     cuerpo = '<div class="cocina-eti">Antes de encender nada</div>' +
       '<h2 class="cocina-h">Saca todo y déjalo a mano</h2>' +
@@ -2181,7 +2240,7 @@ function alternarListaRapida(){
     quitarPorSrc('p:' + fichaSlugActual);
     toast('Quitado de la lista');
   } else {
-    const n = addItems(p.ingredientes.map(i => ({ txt:i.item, nota:i.q })), 'p:' + fichaSlugActual);
+    const n = addItems(p.ingredientes.map(i => ({ txt:i.item, nota:cantidadFicha(i.q) })), 'p:' + fichaSlugActual);
     toast(n ? 'Añadidos ' + n + ' ingredientes a la compra' : 'Ya lo tenías todo apuntado');
   }
   const activo = !estaba;
@@ -3644,7 +3703,7 @@ function tarjetaSuper(s){
    había que saber en qué semana del ciclo estás, que es justo lo que la app ya
    sabe. Ahora son tres, y el de la semana ya viene resuelto. */
 function semanaDelCiclo(){
-  return ((getISOWeek(new Date()) - 1) % 4) + 1;
+  return indiceCiclo(new Date()) + 1;
 }
 function addSemanaActual(){
   addLista('fresco' + semanaDelCiclo());
@@ -3888,7 +3947,7 @@ function mealHtml(etiqueta, texto, momento, extra){
     (nmg.length ? ' <span class="nmg-tag">lleva ' + esc(nmg.join(', ')) + '</span>' : '');
   if(!slug) return '<div class="meal">' + cuerpo + '</div>';
   return '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slug + '&quot;,&quot;' + momento + '&quot;)">' +
-         cuerpo + '<span class="flecha">' + ico("flecha") + '</span></div>';
+         '<span class="meal-txt">' + cuerpo + '</span><span class="flecha">' + ico("flecha") + '</span></div>';
 }
 
 function dayCardHtml(d, filterMode, esHoy){
@@ -3948,7 +4007,7 @@ function setMenuFilter(mode){
 function renderWeeks(){
   const container = document.getElementById('weeksContainer');
   const hoy = new Date();
-  const semanaHoy = ((getISOWeek(hoy) - 1) % weeksData.length) + 1;
+  const semanaHoy = indiceCiclo(hoy) + 1;
   const diaHoy = (hoy.getDay() + 6) % 7;
   let html = '';
   weeksData.forEach(w=>{
@@ -4032,6 +4091,19 @@ function badgeifyHeadings(){
   });
 }
 
+/* Semana del ciclo de 4. Antes salía del número de semana ISO, y en los años
+   de 53 semanas (2026 lo es) la semana 1 se repetía dos veces seguidas al
+   pasar a enero, descuadrando menú y compra. Ahora cuenta semanas desde un
+   lunes fijo: durante 2026 da exactamente lo mismo que antes, y después sigue
+   seguido. El lunes base va dentro de la función a propósito: el menú se
+   pinta al arrancar, antes de llegar a esta parte del script, y una const
+   suelta aquí todavía no existiría. */
+function indiceCiclo(date){
+  const lunesBase = Date.UTC(2025, 11, 29);
+  const dias = Math.floor((Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) - lunesBase) / 86400000);
+  const n = weeksData.length;
+  return ((Math.floor(dias / 7) % n) + n) % n;
+}
 function getISOWeek(date){
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   const dayNum = (d.getUTCDay() + 6) % 7;
@@ -4051,8 +4123,7 @@ function isLastFridayOfMonth(date){ return esUltimoViernesLaboral(date); }
 // sustituyendo por la comida de equipo si es el último viernes laboral real del mes.
 function getDayForDate(date){
   const dayIndex = (date.getDay() + 6) % 7; // 0=Lunes ... 6=Domingo
-  const isoWeek = getISOWeek(date);
-  const cycleIndex = (isoWeek - 1) % weeksData.length;
+  const cycleIndex = indiceCiclo(date);
   const week = weeksData[cycleIndex];
   if(isLastFridayOfMonth(date) && !isVacationOn(date)){
     const teamWeek = weeksData[3]; // semana 4: la que tiene la comida de equipo
