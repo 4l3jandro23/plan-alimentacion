@@ -1154,6 +1154,12 @@
   .meal-txt .pizza-tag, .meal-txt .libre-tag, .meal-txt .nmg-tag{white-space:normal;}
   .raciones-btn{margin-left:auto; border:1px solid var(--border); background:var(--card); color:var(--ink); border-radius:999px; padding:6px 12px; min-height:34px; font-family:inherit; font-size:var(--t-2xs); font-weight:700; letter-spacing:0; text-transform:none; cursor:pointer; white-space:nowrap;}
   .raciones-btn.on{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .cambio-tag{display:inline-block; padding:2px 9px; border-radius:99px; font-size:var(--t-2xs); font-weight:700; background:var(--accent-soft); color:var(--accent); vertical-align:middle;}
+  .cambiar-fila{display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:12px 0 0;}
+  .cambiar-fila > span{width:100%; font-size:var(--t-xs); color:var(--muted);}
+  .tip-cambiar{display:inline-flex; align-items:center; margin:10px 0 0; background:none; border:1px solid currentColor; color:var(--accent); border-radius:999px; padding:6px 14px; min-height:36px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer;}
+  .tupper-semana .meal{margin:2px 0;}
+  .tupper-nota{font-size:var(--t-xs); color:var(--muted); margin:10px 0 12px; line-height:1.45;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -2651,7 +2657,7 @@ const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
-  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta'
+  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios'
 ];
 
 /* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
@@ -2665,7 +2671,7 @@ const SYNC_KEYS = [
 const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
-          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta'],
+          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
     planAlimentacionCheckins: { campo:'fecha', orden:'desc' }
@@ -3729,6 +3735,15 @@ function renderAtajos(){
       desc:'Las diez cosas para los días de "no tengo nada". Unos 35 €.'
     }
   ];
+  const obj = semanaTupperObjetivo();
+  const tup = tupperesDeSemana(obj.desde).filter(t => t.slug);
+  if(tup.length){
+    bloques.splice(1, 0, {
+      accion:'addTupperesSemana()', ico:'tupper', grad:'ave',
+      titulo: obj.siguiente ? 'Los tuppers de la semana que viene' : 'Los tuppers de lo que queda de semana',
+      desc: tup.length + (tup.length === 1 ? ' comida para llevar: ' : ' comidas para llevar: ') + tup.map(t => nombreDiaAli(t.dia)).join(', ') + '. Solo sus ingredientes.'
+    });
+  }
   cont.innerHTML = bloques.map(b =>
     '<button class="opt" onclick="' + b.accion + '">' +
       '<span class="opt-ico" style="background:' + degradado(b.grad) + '">' + ico(b.ico) + '</span>' +
@@ -3944,6 +3959,7 @@ function mealHtml(etiqueta, texto, momento, extra){
   const slug = (typeof slugDePlato === "function") ? slugDePlato(texto) : null;
   const nmg = noMeGustaPlato(slug, texto);
   const cuerpo = "<b>" + etiqueta + ":</b> " + ico(iconoDeTexto(texto)) + " " + esc(sinEmoji(texto)) + (extra || "") +
+    (/^🔁/.test(String(texto || '')) ? ' <span class="cambio-tag">cambiado</span>' : '') +
     (nmg.length ? ' <span class="nmg-tag">lleva ' + esc(nmg.join(', ')) + '</span>' : '');
   if(!slug) return '<div class="meal">' + cuerpo + '</div>';
   return '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slug + '&quot;,&quot;' + momento + '&quot;)">' +
@@ -3956,7 +3972,7 @@ function dayCardHtml(d, filterMode, esHoy){
   const isWfhDay = wIdx>=0 && loadWfhDays().includes(wIdx);
   const isBowlDay = wIdx>=0 && loadBowlDays().includes(wIdx);
   const isQuinoaDay = wIdx>=0 && wIdx<=4 && estadoDia(wIdx) === 'quinoa';
-  if(isQuinoaDay && !d.pizza && d.comida !== QUINOA_TEXTO) d = Object.assign({}, d, { comida: QUINOA_TEXTO });
+  if(isQuinoaDay && !d.pizza && !d.comidaCambiada && d.comida !== QUINOA_TEXTO) d = Object.assign({}, d, { comida: QUINOA_TEXTO });
   const badges = (esHoy?' <span class="hoy-tag">hoy</span>':'')
     + (isWfhDay?' <span class="pizza-tag">teletrabajo</span>':'')
     + (isBowlDay?' <span class="pizza-tag">bowl</span>':'')
@@ -4127,13 +4143,157 @@ function getDayForDate(date){
   const week = weeksData[cycleIndex];
   if(isLastFridayOfMonth(date) && !isVacationOn(date)){
     const teamWeek = weeksData[3]; // semana 4: la que tiene la comida de equipo
-    return { d: teamWeek.days[4], week: teamWeek, isTeamLunch: true };
+    return { d: aplicarCambios(teamWeek.days[4], date), week: teamWeek, isTeamLunch: true };
   }
   const base = week.days[dayIndex];
   if(isQuinoaOn(date) && !isVacationOn(date) && !base.pizza){
-    return { d: Object.assign({}, base, { comida: QUINOA_TEXTO, quinoa: true }), week, isTeamLunch: false };
+    return { d: aplicarCambios(Object.assign({}, base, { comida: QUINOA_TEXTO, quinoa: true }), date), week, isTeamLunch: false };
   }
-  return { d: base, week, isTeamLunch: false };
+  return { d: aplicarCambios(base, date), week, isTeamLunch: false };
+}
+
+/* ==================== CAMBIAR UN PLATO ====================
+   "Hoy no me apetece esto" era el principio de acabar pidiendo algo. En vez
+   de saltarse el plan, se cambia por otro plato del mismo menú (así encaja
+   igual en la semana): favoritos primero, otra familia distinta de la que no
+   apetece, y nada de lo que está en "no me gusta". Se guarda por fecha y se
+   borra solo pasada una semana. Todo son funciones, sin const sueltas: el
+   arranque las usa antes de llegar aquí. */
+function loadCambios(){
+  try{
+    const c = JSON.parse(localStorage.getItem('planAlimentacionCambios'));
+    return (c && typeof c === 'object' && !Array.isArray(c)) ? c : {};
+  }catch(e){ return {}; }
+}
+function saveCambios(c){
+  const limite = calDateKeyLocal(new Date(Date.now() - 7 * 86400000));
+  Object.keys(c).forEach(k => { if(k < limite || !c[k] || !Object.keys(c[k]).length) delete c[k]; });
+  setLS('planAlimentacionCambios', JSON.stringify(c));
+}
+function aplicarCambios(d, date){
+  const c = loadCambios()[calDateKeyLocal(date)];
+  if(!c || typeof PLATOS === 'undefined') return d;
+  const extra = {};
+  if(c.comida && PLATOS[c.comida] && !d.pizza){ extra.comida = '🔁 ' + PLATOS[c.comida].nombre; extra.comidaCambiada = true; extra.quinoa = false; }
+  if(c.cena && PLATOS[c.cena] && !d.libre){ extra.cena = '🔁 ' + PLATOS[c.cena].nombre; }
+  return Object.keys(extra).length ? Object.assign({}, d, extra) : d;
+}
+function nombreDiaAli(i){ return ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][i]; }
+function fechaDeClave(k){ const p = String(k).split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+/* Candidatos: los platos que el propio menú usa en ese momento del día. */
+function alternativasPara(momento, slugActual){
+  const vistos = {};
+  weeksData.forEach(w => w.days.forEach(d => {
+    const s = slugDePlato(d[momento]);
+    if(s && PLATOS[s] && PLATOS[s].tiempo > 0) vistos[s] = true;
+  }));
+  const favs = loadFavPlatos();
+  const actual = PLATOS[slugActual];
+  return Object.keys(vistos)
+    .filter(s => s !== slugActual && !noMeGustaPlato(s).length)
+    .map(s => ({ s: s, p: PLATOS[s], puntos: (favs.includes(s) ? 100 : 0) + (actual && PLATOS[s].icono !== actual.icono ? 10 : 0) - PLATOS[s].tiempo / 5 }))
+    .sort((a, b) => b.puntos - a.puntos)
+    .slice(0, 6);
+}
+function abrirCambio(clave, momento){
+  const fecha = fechaDeClave(clave);
+  const d = getDayForDate(fecha).d;
+  const slugActual = slugDePlato(d[momento]);
+  const yaCambiado = (loadCambios()[clave] || {})[momento];
+  const favs = loadFavPlatos();
+  const lista = alternativasPara(momento, slugActual).map(x =>
+    '<button class="opt" onclick="elegirCambio(\'' + clave + '\',\'' + momento + '\',\'' + x.s + '\')">' +
+      '<span class="opt-ico" style="background:' + degradado(x.p.icono) + '">' + ico(x.p.icono) + '</span>' +
+      '<span class="opt-txt"><b>' + esc(x.p.nombre) + '</b><span>' + esc(x.p.donde) + (favs.includes(x.s) ? ' · favorita' : '') + '</span></span>' +
+      '<span class="opt-min">' + x.p.tiempo + '′</span>' +
+    '</button>').join('');
+  const volver = yaCambiado
+    ? '<button class="btn-mini" style="margin-top:12px;" onclick="elegirCambio(\'' + clave + '\',\'' + momento + '\',\'\')">' + ico('flecha') + ' Volver al del menú</button>'
+    : '';
+  const esHoy = clave === calDateKeyLocal(new Date());
+  const titulo = esHoy ? (momento === 'comida' ? '¿Qué te apetece para comer?' : '¿Qué te apetece para cenar?') : 'Mañana, en vez de esto…';
+  abrirSheet({ ico:'dado', label:'Cambiar plato' }, titulo,
+    'Tocaba: <b>' + esc(sinEmoji(d[momento])) + '</b>. Estos son del mismo menú, así que encajan igual en tu semana.',
+    lista + volver);
+}
+function elegirCambio(clave, momento, slug){
+  const c = loadCambios();
+  const dia = Object.assign({}, c[clave] || {});
+  if(slug) dia[momento] = slug; else delete dia[momento];
+  c[clave] = dia;
+  saveCambios(c);
+  cerrarSheet();
+  renderHoy();
+  toast(slug ? 'Cambiado por ' + PLATOS[slug].nombre.toLowerCase() : 'Vuelves al plato del menú');
+}
+function cambiarHoyHTML(d, isTeamLunch, fecha){
+  const k = calDateKeyLocal(fecha);
+  const b = [];
+  if(!isTeamLunch && !d.pizza && slugDePlato(d.comida)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'comida\')">' + ico('dado') + ' Cambiar la comida</button>');
+  if(!d.libre && slugDePlato(d.cena)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'cena\')">' + ico('dado') + ' Cambiar la cena</button>');
+  return b.length ? '<div class="cambiar-fila"><span>¿Hoy no te apetece lo que toca?</span>' + b.join('') + '</div>' : '';
+}
+
+/* ==================== LOS TUPPERS DE LA SEMANA ====================
+   El fallo de siempre es llegar a casa sin nada resuelto. El fin de semana es
+   cuando se puede resolver la semana entera: qué te llevas cada día, cuáles
+   aguantan tres días para hacerlos de una vez, y todo a la compra de golpe.
+   Viernes por la tarde, sábado y domingo miran la semana que viene; entre
+   semana, lo que queda desde mañana. */
+function semanaTupperObjetivo(){
+  const hoy = new Date();
+  const dow = hoy.getDay();
+  if(dow === 5 || dow === 6 || dow === 0){
+    const l = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+    l.setDate(l.getDate() + ((8 - dow) % 7 || 7));
+    return { desde: l, siguiente: true };
+  }
+  return { desde: new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() + 1), siguiente: false };
+}
+function tupperesDeSemana(desde){
+  const res = [];
+  const f = new Date(desde.getFullYear(), desde.getMonth(), desde.getDate());
+  for(let i = 0; i < 7 && f.getDay() !== 6 && f.getDay() !== 0; i++){
+    if(!isVacationOn(f)){
+      const r = getDayForDate(f);
+      if(!r.isTeamLunch && !r.d.pizza && !isWfhOn(f) && !isBowlOn(f)){
+        res.push({ key: calDateKeyLocal(f), dia: f.getDay(), texto: r.d.comida, slug: slugDePlato(r.d.comida) });
+      }
+    }
+    f.setDate(f.getDate() + 1);
+  }
+  return res;
+}
+function aguanta3Dias(slug){ const p = slug && PLATOS[slug]; return !!p && /^\s*[3-9]/.test(p.conservar || ''); }
+function tupperesSemanaHTML(){
+  const hoy = new Date();
+  const dow = hoy.getDay();
+  if(!(dow === 6 || dow === 0 || (dow === 5 && hoy.getHours() >= 15))) return '';
+  const lista = tupperesDeSemana(semanaTupperObjetivo().desde);
+  if(!lista.length) return '';
+  const filas = lista.map(t => {
+    const cuerpo = '<span class="meal-txt"><b>' + nombreDiaAli(t.dia).replace(/^./, c => c.toUpperCase()) + ':</b> ' + ico(iconoDeTexto(t.texto)) + ' ' +
+      esc(sinEmoji(t.texto)) + (aguanta3Dias(t.slug) ? ' <span class="cambio-tag">aguanta 3 días</span>' : '') + '</span>';
+    return t.slug
+      ? '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(\'' + t.slug + '\',\'comida\')">' + cuerpo + '<span class="flecha">' + ico('flecha') + '</span></div>'
+      : '<div class="meal">' + cuerpo + '</div>';
+  }).join('');
+  const aguantan = lista.filter(t => aguanta3Dias(t.slug)).length;
+  return '<div class="daycard tupper-semana" style="margin-top:14px;">' +
+    '<div class="daycard-header"><span class="dayname">' + ico('tupper') + 'La semana que viene te llevas</span></div>' + filas +
+    '<p class="tupper-nota">' + (aguantan >= 2
+      ? 'Los que aguantan 3 días puedes dejarlos hechos el domingo: el lunes y el martes llegas a casa con la comida del día siguiente ya resuelta.'
+      : 'Deja hecho el del lunes el domingo por la noche y empiezas la semana sin tener que pensar nada.') + '</p>' +
+    '<button class="btn-mini solid" onclick="addTupperesSemana()">' + ico('carrito') + ' Añadir sus ingredientes a la compra</button>' +
+  '</div>';
+}
+function addTupperesSemana(){
+  const lista = tupperesDeSemana(semanaTupperObjetivo().desde).filter(t => t.slug && PLATOS[t.slug]);
+  let n = 0;
+  lista.forEach(t => {
+    n += addItems(PLATOS[t.slug].ingredientes.map(i => ({ txt: i.item, nota: i.q + ' · tupper del ' + nombreDiaAli(t.dia) })), 'p:' + t.slug);
+  });
+  toast(n ? 'Añadidos ' + n + ' ingredientes de ' + lista.length + (lista.length === 1 ? ' tupper' : ' tuppers') : 'Ya lo tenías todo en la lista');
 }
 
 function renderTomorrowCard(){
@@ -4154,7 +4314,8 @@ function renderTomorrowCard(){
   if(!slugManana) return '<div class="tip">' + ico('tupper') + ' <b>' + titulo + '</b> ' + esc(sinEmoji(d.comida)) + '</div>';
   return '<div class="tip tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slugManana + '&quot;,&quot;comida&quot;)">' +
     ico('tupper') + ' <b>' + titulo + '</b> ' + esc(sinEmoji(d.comida)) +
-    '<span class="tip-ver">Ver cómo se prepara ' + ico('flecha') + '</span></div>';
+    '<span class="tip-ver">Ver cómo se prepara ' + ico('flecha') + '</span>' +
+    '<br><button class="tip-cambiar" onclick="event.stopPropagation(); abrirCambio(\'' + calDateKeyLocal(tomorrow) + '\',\'comida\')">' + ico('dado') + ' No me apetece, cambiarlo</button></div>';
 }
 
 function renderHoy(){
@@ -4216,7 +4377,7 @@ function renderHoy(){
     } else {
       tipHtml += '<div class="tip">Método del plato en la comida (½ verdura + ¼ proteína + ¼ carbohidrato) y una cena más ligera.</div>';
     }
-    contentHtml = dayCardHtml(d, 'all', true);
+    contentHtml = dayCardHtml(d, 'all', true) + cambiarHoyHTML(d, isTeamLunch, now) + tupperesSemanaHTML();
   }
 
   tipHtml += renderTomorrowCard();

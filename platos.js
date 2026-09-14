@@ -1357,7 +1357,10 @@ const MENU_A_PLATO = {
 function slugDePlato(textoMenu){
   if(!textoMenu) return null;
   const limpio = String(textoMenu).replace(/^[^\p{L}\p{N}]+/u, '').trim();
-  return MENU_A_PLATO[limpio] || null;
+  if(MENU_A_PLATO[limpio]) return MENU_A_PLATO[limpio];
+  /* Un plato elegido con "Cambiar" llega con su nombre de ficha, no con el
+     texto del menú: también tiene que encontrar su ficha. */
+  return Object.keys(PLATOS).find(k => PLATOS[k].nombre === limpio) || null;
 }
 function platoDe(textoMenu){
   const slug = slugDePlato(textoMenu);
