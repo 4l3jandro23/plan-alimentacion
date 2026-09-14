@@ -200,7 +200,7 @@ const FUERA = [
     resumen: 'Lo comes una vez al mes en el trabajo y eso ya está contemplado.',
     pide: [
       'Masa fina antes que masa gruesa o pan.',
-      'Ingredientes: jamón, pollo, atún, verduras, champiñón.',
+      'Ingredientes: jamón, pollo, atún, verduras.',
       'Empieza con una ensalada si el sitio la tiene: acabas comiendo dos porciones menos sin esfuerzo.'
     ],
     evita: [
@@ -303,7 +303,7 @@ const ANTOJOS = [
     antojo: 'Pizza',
     icono: 'equipo',
     min: 8,
-    solucion: 'Pan de molde o base fina, tomate frito, orégano, queso rallado y lo que tengas (jamón, atún, champiñón). Airfryer 190° 6-8 min u horno 200° 10 min.',
+    solucion: 'Pan de molde o base fina, tomate frito, orégano, queso rallado y lo que tengas (jamón, atún, pimiento). Airfryer 190° 6-8 min u horno 200° 10 min.',
     nota: 'No sabe igual que una Papa John\'s y no pasa nada: quita el antojo, que es de lo que se trata.'
   },
   {
@@ -407,7 +407,7 @@ const SUPERS = [
   {
     nombre:'Lidl', dir:'Carrer de Numància', min:4, m:257, horario:'L-S 9:00-21:00',
     tipo:'completa', destacado:true,
-    para:'Lo barato de tu lista: hummus (0,69 €), gazpacho fresco, espinacas baby lavadas, champiñones, frutos secos, salmón ahumado Ocean Sea.',
+    para:'Lo barato de tu lista: hummus (0,69 €), gazpacho fresco, espinacas baby lavadas, calabacín, frutos secos, salmón ahumado Ocean Sea.',
     nota:'Media docena de cosas de tu plan son bastante más baratas aquí que en cualquier otro. Merece la pena bajar cada dos semanas y cargar con eso.'
   },
   {

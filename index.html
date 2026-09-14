@@ -426,6 +426,10 @@
   }
   .hoy-cocinar:active{transform:scale(.97);}
   .hoy-cocinar .ic-v{width:15px; height:15px;}
+  .tip.tocable{cursor:pointer; transition:transform .15s var(--ease-out);}
+  .tip.tocable:active{transform:scale(.99);}
+  .tip-ver{display:flex; align-items:center; gap:4px; margin-top:8px; font-size:var(--t-xs); font-weight:700; color:var(--accent);}
+  .tip-ver .ic-v{width:13px; height:13px;}
 
   /* Botonera de rescate */
   .sos-row{display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:14px;}
@@ -750,7 +754,7 @@
   @keyframes latido{50%{transform:scale(1.02);}}
   .cocina-cuerpo{flex:1; overflow-y:auto; padding:10px 0 16px; -webkit-overflow-scrolling:touch;}
   .cocina-eti{font-family:var(--font-mono); font-size:var(--t-xs); color:var(--accent); font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-bottom:10px;}
-  .cocina-h{font-family:var(--font-display); font-size:var(--t-xl); margin:0 0 8px; line-height:1.2;}
+  .cocina-h{display:block; font-family:var(--font-display); font-size:var(--t-xl); margin:0 0 8px; line-height:1.2;}
   .cocina-txt{font-size:1.45rem; line-height:1.45; margin:0; font-weight:500;}
   .cocina-ayuda{font-size:var(--t-sm); color:var(--muted); margin:0 0 14px;}
   .cocina-tiempos{display:flex; flex-wrap:wrap; gap:8px; margin-top:20px;}
@@ -825,7 +829,11 @@
   }
   .ficha-hero::after{content:""; position:absolute; inset:auto -30% -46% -30%; height:110px; background:rgba(255,255,255,.13); border-radius:50%;}
   .ficha-hero .ic-v{width:64px; height:64px; stroke-width:1.4; position:relative;}
+  /* display:block porque el h2 general es flex (para el icono de las
+     secciones), y en flex el text-align no centra: el título salía pegado
+     a la izquierda y cortado. */
   .ficha-titulo{
+    display:block; padding:0 8px;
     font-family:var(--font-display); font-weight:600; font-size:var(--t-xl);
     text-align:center; margin:0 0 5px; line-height:1.2; letter-spacing:-.4px;
   }
@@ -1511,6 +1519,20 @@
     <button class="btn-mini solid" onclick="addRescate()" style="margin-top:12px;"><svg class="ic-v"><use href="#i-mas"/></svg> Añadir las diez a la lista</button>
   </div>
 
+  <h2>💶 Lo que cuesta de verdad</h2>
+  <div class="card">
+    <p>Haciendo en casa desayuno, comida y cena como dice el menú, la compra para ti solo sale por unos <b>45-55 € a la semana</b>, unos 200 € al mes. Es una estimación con los precios de aquí abajo, no una cuenta al céntimo.</p>
+    <p style="color:var(--muted); font-size:var(--t-sm);">Para comparar: un menú del día en Barcelona ronda los 14-16 €. Cinco comidas fuera ya son 70-80 € a la semana, sin contar ninguna cena.</p>
+    <p style="margin-bottom:6px;"><b>Dónde se va el dinero, y cómo recortar sin cambiar el plan:</b></p>
+    <ul style="margin:0; padding-left:20px; font-size:var(--t-sm); line-height:1.5;">
+      <li><b>Pulpo cocido y salmón ahumado</b> son lo más caro por kilo (25-30 €/kg). Una vez por semana está bien; si aprieta, calamar congelado, o caballa y sardinas en lata (1,20-1,60 €).</li>
+      <li><b>Kéfir y yogur griego de marca:</b> la marca blanca cuesta la mitad y es prácticamente lo mismo.</li>
+      <li><b>Pescado y verdura congelados</b> en vez de frescos: el mismo valor, más baratos y no se estropean.</li>
+      <li><b>Los atajos</b> meten lo que hace falta en la semana, no cantidades: compra lo que dice cada ficha, que es para una persona, no un kilo de cada cosa.</li>
+      <li><b>Aceite, frutos secos y especias</b> son caros, pero duran semanas: no se compran cada vez.</li>
+    </ul>
+  </div>
+
   <h2>📖 Para consultar</h2>
   <p class="lead">Esto no hace falta leerlo ahora. Está aquí para cuando tengas la duda concreta.</p>
 
@@ -1532,7 +1554,7 @@
         <tr><td>Yogur / kéfir</td><td>1-2 semanas</td><td>—</td></tr>
         <tr><td>Queso fresco 0%</td><td>5-7 días abierto</td><td>—</td></tr>
         <tr><td>Espinacas baby / ensalada bolsa</td><td>3-5 días</td><td>no (cruda)</td></tr>
-        <tr><td>Champiñones</td><td>4-6 días</td><td>—</td></tr>
+        <tr><td>Calabacín</td><td>5-7 días</td><td>—</td></tr>
         <tr><td>Pimiento / tomate</td><td>5-7 días</td><td>—</td></tr>
         <tr><td>Brócoli / espárragos</td><td>3-4 días</td><td>8-10 meses</td></tr>
         <tr><td>Patata</td><td>2-3 semanas (fuera de nevera)</td><td>—</td></tr>
@@ -1595,7 +1617,7 @@
         <tr><td>Yogur griego Oikos o Danone</td><td>Bonpreu / Mercadona / Lidl</td><td>1,30-1,80 €</td></tr>
         <tr><td>Kéfir (Kaiku o I love Kéfir)</td><td>Mercadona / Bonpreu</td><td>1,50-2 €</td></tr>
         <tr><td>Espinacas baby lavadas (Chef Select)</td><td>Lidl</td><td>1,09 €/100g</td></tr>
-        <tr><td>Champiñones</td><td>Lidl</td><td>1,49-1,55 €</td></tr>
+        <tr><td>Calabacín</td><td>Mercadona / Bonpreu</td><td>1,50-2,50 €/kg</td></tr>
         <tr><td>Gazpacho fresco (Chef Select, García Millán)</td><td>Lidl</td><td>2,55-2,99 €</td></tr>
         <tr><td>Fruta variada</td><td>Mercat del Ninot / Mercadona</td><td>1,20-2 €/kg</td></tr>
         <tr><td>Frutos secos (500g)</td><td>Lidl</td><td>3-5 €</td></tr>
@@ -2269,9 +2291,14 @@ const DIAS_SEMANA = ['Lunes','Martes','Miércoles','Jueves','Viernes'];
 const ESTADOS_DIA = {
   oficina:{ label:'En la oficina', nota:'toca tupper',        ico:'tupper' },
   casa:   { label:'Teletrabajo',   nota:'comes en casa',      ico:'casa' },
-  bowl:   { label:'Bowl',          nota:'del Ametller Origen', ico:'ensalada' }
+  bowl:   { label:'Bowl',          nota:'del Ametller Origen', ico:'ensalada' },
+  quinoa: { label:'Bowl de quinoa', nota:'te lo llevas de casa', ico:'ensalada' }
 };
-const ORDEN_ESTADOS = ['oficina','casa','bowl'];
+const ORDEN_ESTADOS = ['oficina','casa','bowl','quinoa'];
+/* Un día por semana se lleva a la oficina su bowl de quinoa en vez del tupper
+   del menú. Por defecto el jueves; se cambia en Mi semana como los demás. */
+const QUINOA_TEXTO = '🥗 Bowl de quinoa con salmón ahumado, espinacas y tomate';
+const QUINOA_DEFECTO = [3];
 
 function loadWfhDays(){
   try{ return JSON.parse(localStorage.getItem('planAlimentacionWfh')) || []; }catch(e){ return []; }
@@ -2279,9 +2306,18 @@ function loadWfhDays(){
 function loadBowlDays(){
   try{ return JSON.parse(localStorage.getItem('planAlimentacionBowlDays')) || []; }catch(e){ return []; }
 }
+function loadQuinoaDays(){
+  try{
+    const raw = localStorage.getItem('planAlimentacionQuinoaDays');
+    if(raw === null) return QUINOA_DEFECTO.slice();
+    const v = JSON.parse(raw);
+    return Array.isArray(v) ? v : QUINOA_DEFECTO.slice();
+  }catch(e){ return QUINOA_DEFECTO.slice(); }
+}
 function estadoDia(idx){
   if(loadWfhDays().includes(idx)) return 'casa';
   if(loadBowlDays().includes(idx)) return 'bowl';
+  if(loadQuinoaDays().includes(idx)) return 'quinoa';
   return 'oficina';
 }
 function ciclarDia(idx){
@@ -2289,11 +2325,14 @@ function ciclarDia(idx){
   const siguiente = ORDEN_ESTADOS[(ORDEN_ESTADOS.indexOf(actual) + 1) % ORDEN_ESTADOS.length];
   const wfh  = loadWfhDays().filter(d => d !== idx);
   const bowl = loadBowlDays().filter(d => d !== idx);
+  const quinoa = loadQuinoaDays().filter(d => d !== idx);
   if(siguiente === 'casa') wfh.push(idx);
   if(siguiente === 'bowl') bowl.push(idx);
+  if(siguiente === 'quinoa') quinoa.push(idx);
   try{
     setLS('planAlimentacionWfh', JSON.stringify(wfh));
     setLS('planAlimentacionBowlDays', JSON.stringify(bowl));
+    setLS('planAlimentacionQuinoaDays', JSON.stringify(quinoa.sort()));
   }catch(e){}
   renderSemana();
   renderHoy();
@@ -2330,6 +2369,11 @@ function isWfhOn(date){
 }
 function isBowlOn(date){
   return loadBowlDays().includes((date.getDay()+6)%7);
+}
+/* Solo cuenta si ese día va a la oficina: teletrabajo o bowl del Ametller mandan. */
+function isQuinoaOn(date){
+  const idx = (date.getDay() + 6) % 7;
+  return idx <= 4 && estadoDia(idx) === 'quinoa' && !isWfhOn(date);
 }
 
 /* ===== Pausar el plan =====
@@ -2419,18 +2463,18 @@ function calDateKeyLocal(date){
 
 /* ===== Plantillas de compra: bloques que se vuelcan en la lista única ===== */
 const SHOP_LISTS = {
-  despensa: ['Aceite de oliva virgen extra','Legumbres de bote (garbanzos, lentejas, alubias)','Atún en lata al natural','Arroz integral','Pasta integral','Avena','Pan de molde integral','Frutos secos','Ajo en polvo, pimentón, orégano','Huevos','Verdura congelada','Chocolate negro','Café','Leche semidesnatada'],
-  fresco1: ['Salmón congelado (2 raciones)','Merluza','Pechuga de pollo','Muslos de pollo','Pavo','Calamar','Pulpo cocido','Solomillo de cerdo','Espárragos','Espinacas','Pimientos','Champiñones','Ensalada de bolsa','Tomate','Patata','Fruta variada (para 2-3 días)'],
-  fresco2: ['Pechuga de pollo','Salmón','Pulpo cocido','Bacalao','Ternera','Calamar','Muslos de pollo','Pavo','Pimiento','Champiñón','Espinaca','Brócoli','Tomate','Patata','Fruta variada'],
-  fresco3: ['Salmón','Calamar','Pavo','Merluza','Ternera','Sardinas','Pimiento','Champiñón','Brócoli','Ensalada de bolsa','Patata','Fruta variada'],
-  fresco4: ['Pollo','Pulpo cocido','Salmón','Merluza','Pavo','Calamar','Solomillo de cerdo','Pimiento','Champiñón','Espárragos','Tomate','Ensalada de bolsa','Patata','Fruta variada']
+  despensa: ['Aceite de oliva virgen extra','Legumbres de bote (garbanzos, lentejas, alubias)','Atún en lata al natural','Arroz integral','Quinoa integral Brillante (bowl del jueves)','Pasta integral','Avena','Pan de molde integral','Frutos secos','Ajo en polvo, pimentón, orégano','Huevos','Verdura congelada','Chocolate negro','Café','Leche semidesnatada'],
+  fresco1: ['Salmón congelado (2 raciones)','Merluza','Pechuga de pollo','Muslos de pollo','Pavo','Calamar','Pulpo cocido','Solomillo de cerdo','Espárragos','Espinacas','Pimientos','Calabacín','Ensalada de bolsa','Tomate','Patata','Fruta variada (para 2-3 días)','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
+  fresco2: ['Pechuga de pollo','Salmón','Pulpo cocido','Bacalao','Ternera','Calamar','Muslos de pollo','Pavo','Pimiento','Calabacín','Zanahoria','Espárragos trigueros','Espinaca','Brócoli','Tomate','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
+  fresco3: ['Salmón','Calamar','Pavo','Merluza','Ternera','Sardinas','Pimiento','Calabacín','Espárragos trigueros','Brócoli','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
+  fresco4: ['Pollo','Pulpo cocido','Salmón','Merluza','Pavo','Calamar','Solomillo de cerdo','Pimiento','Calabacín','Espárragos','Tomate','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)']
 };
 
 /* ===== Qué se guarda y qué entra en la copia de seguridad ===== */
 const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
-  'planAlimentacionBowlDays','planAlimentacionVacaciones',
+  'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
   'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins'
 ];
 
@@ -2444,7 +2488,7 @@ const SYNC_KEYS = [
    El tamaño de letra y el tema no viajan: cada pantalla tiene los suyos. */
 const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
-          'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionCompra',
+          'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
           'planAlimentacionFavPlatos', 'planAlimentacionCheckins'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
@@ -3621,34 +3665,34 @@ const weeksData = [
   {day:"Lunes 🐟", desayuno:"🍞 Tostada integral con jamón + manzana", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al horno con espárragos y patata", merienda:"🍫 Yogur + plátano + onza de chocolate", cena:"🐟 Merluza al horno con ajo y limón", kcal:1890,p:118,c:175,f:72},
   {day:"Martes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con arroz integral y pimientos", merienda:"🍎 Yogur + manzana", cena:"🥚 Tortilla francesa con espinacas y tomate aliñado", kcal:1770,p:110,c:158,f:69},
   {day:"Miércoles 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos salteados con espinacas y taquitos de pavo", merienda:"🍎 Yogur + fruta", cena:"🦑 Calamar a la plancha con ensalada verde", kcal:1780,p:104,c:187,f:56},
-  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con pimiento y champiñón asados", kcal:1830,p:116,c:166,f:67},
+  {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con pimiento y calabacín asados", kcal:1830,p:116,c:166,f:67},
   {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
   {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Arroz con pollo, pimiento y cebolla (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada verde ligera", kcal:1900,p:126,c:161,f:74}
 ]},
 { n:2, avg:1740, days:[
-  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y brócoli", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con pimiento y champiñón al horno", kcal:1830,p:120,c:161,f:69},
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y brócoli", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con pimiento y calabacín al horno", kcal:1830,p:120,c:161,f:69},
   {day:"Martes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con limón y ensalada de patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🥚 Huevo escalfado con tomate y espinacas", kcal:1870,p:106,c:172,f:78},
-  {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Lentejas estofadas con pimiento y champiñón", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
+  {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Lentejas estofadas con pimiento y zanahoria", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
   {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
   {day:"Viernes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y pimiento", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1420,p:82,c:156,f:46, libre:true},
-  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Ternera a la plancha con champiñones y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
+  {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Ternera a la plancha con espárragos trigueros y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos de pollo al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1840,p:116,c:158,f:74}
 ]},
 { n:3, avg:1744, days:[
   {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón al horno con brócoli", kcal:1830,p:106,c:186,f:63},
   {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón a la plancha con arroz integral y brócoli", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con pimiento", kcal:1890,p:118,c:166,f:75},
-  {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con champiñones", kcal:1750,p:102,c:165,f:66},
-  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con champiñones salteados y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
+  {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con espárragos trigueros", kcal:1750,p:102,c:165,f:66},
+  {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con calabacín salteado y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
   {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
   {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
   {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
 ]},
 { n:4, avg:1744, days:[
-  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y champiñón salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
+  {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y calabacín salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
   {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
   {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
-  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, champiñón y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
+  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, calabacín y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
   {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}
@@ -3731,12 +3775,15 @@ function dayCardHtml(d, filterMode, esHoy){
   const wIdx = weekdayIndexFromDay(d.day);
   const isWfhDay = wIdx>=0 && loadWfhDays().includes(wIdx);
   const isBowlDay = wIdx>=0 && loadBowlDays().includes(wIdx);
+  const isQuinoaDay = wIdx>=0 && wIdx<=4 && estadoDia(wIdx) === 'quinoa';
+  if(isQuinoaDay && !d.pizza && d.comida !== QUINOA_TEXTO) d = Object.assign({}, d, { comida: QUINOA_TEXTO });
   const badges = (esHoy?' <span class="hoy-tag">hoy</span>':'')
     + (isWfhDay?' <span class="pizza-tag">teletrabajo</span>':'')
-    + (isBowlDay?' <span class="pizza-tag">bowl</span>':'');
+    + (isBowlDay?' <span class="pizza-tag">bowl</span>':'')
+    + (isQuinoaDay?' <span class="pizza-tag">bowl de quinoa</span>':'');
   const showComida = filterMode !== 'cena';
   const showCena = filterMode !== 'comida';
-  const subComida = sustitucionPara(d.comida);
+  const subComida = d.comida === QUINOA_TEXTO ? null : sustitucionPara(d.comida);
   const subCena = sustitucionPara(d.cena);
   /* Los días del menú se llaman "Lunes 🐟": el emoji va al final y sinEmoji()
      solo limpia el principio, así que salía duplicado con el icono vectorial. */
@@ -3890,7 +3937,11 @@ function getDayForDate(date){
     const teamWeek = weeksData[3]; // semana 4: la que tiene la comida de equipo
     return { d: teamWeek.days[4], week: teamWeek, isTeamLunch: true };
   }
-  return { d: week.days[dayIndex], week, isTeamLunch: false };
+  const base = week.days[dayIndex];
+  if(isQuinoaOn(date) && !isVacationOn(date) && !base.pizza){
+    return { d: Object.assign({}, base, { comida: QUINOA_TEXTO, quinoa: true }), week, isTeamLunch: false };
+  }
+  return { d: base, week, isTeamLunch: false };
 }
 
 function renderTomorrowCard(){
@@ -3904,7 +3955,14 @@ function renderTomorrowCard(){
   if(isTeamLunch) return '<div class="tip">Mañana es la comida de equipo del trabajo — no hace falta que prepares nada.</div>';
   if(isWfhOn(tomorrow)) return '<div class="tip">Mañana teletrabajas — nada de tupper, cocinas fresco a mediodía.</div>';
   if(isBowlOn(tomorrow)) return '<div class="tip">Mañana toca bowl del Ametller Origen — no hace falta que prepares tupper.</div>';
-  return '<div class="tip">' + ico('tupper') + ' <b>Prepara esto para el tupper de mañana:</b> ' + esc(sinEmoji(d.comida)) + '</div>';
+  /* Tocar el aviso lleva a la ficha del plato: es justo cuando hay que
+     prepararlo y hace falta saber cómo. */
+  const titulo = d.quinoa ? 'Mañana te llevas el bowl de quinoa:' : 'Prepara esto para el tupper de mañana:';
+  const slugManana = (typeof slugDePlato === 'function') ? slugDePlato(d.comida) : null;
+  if(!slugManana) return '<div class="tip">' + ico('tupper') + ' <b>' + titulo + '</b> ' + esc(sinEmoji(d.comida)) + '</div>';
+  return '<div class="tip tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slugManana + '&quot;,&quot;comida&quot;)">' +
+    ico('tupper') + ' <b>' + titulo + '</b> ' + esc(sinEmoji(d.comida)) +
+    '<span class="tip-ver">Ver cómo se prepara ' + ico('flecha') + '</span></div>';
 }
 
 function renderHoy(){

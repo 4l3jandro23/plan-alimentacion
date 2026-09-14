@@ -50,24 +50,24 @@ const PLATOS = {
 },
 
 'lentejas-estofadas': {
-  nombre:'Lentejas estofadas con pimiento y champiñón',
+  nombre:'Lentejas estofadas con pimiento y zanahoria',
   icono:'legumbre', tiempo:20, donde:'Cazuela', tupper:'Perfecto — mejor al día siguiente',
   porQue:'La legumbre que más hierro te aporta y la que más llena por poco dinero. Para tu colesterol es de lo mejor que puedes comer, y es el plato más barato del menú con diferencia.',
   ingredientes:[
     {q:'1 bote', item:'lentejas cocidas', nota:'400 g, de bote'},
     {q:'1/2', item:'pimiento rojo o verde'},
-    {q:'4-5', item:'champiñones', nota:'O una bandeja de laminados, te ahorra cortar'},
+    {q:'1', item:'zanahoria', nota:'Pelada y en rodajas finas'},
     {q:'1/2', item:'cebolla'},
     {q:'1 diente', item:'ajo'},
     {q:'1 cucharadita', item:'pimentón dulce'},
     {q:'1 chorro', item:'aceite de oliva y sal'}
   ],
-  compra:'Las lentejas de bote, en conservas. Los champiñones laminados vienen en bandeja en la sección de verdura y te ahorran el corte — merece la pena pagar los 20 céntimos de más.',
+  compra:'Las lentejas de bote, en conservas. La zanahoria, suelta en la sección de verdura: con una tienes de sobra y cuesta céntimos.',
   pasos:[
-    'Corta la cebolla y el pimiento en trozos pequeños. No tienen que ser perfectos, nadie lo va a ver.',
-    'Sartén honda o cazuela a fuego medio con aceite. Echa cebolla y pimiento con una pizca de sal.',
+    'Corta la cebolla y el pimiento en trozos pequeños, y la zanahoria en rodajas finas. No tienen que ser perfectos, nadie lo va a ver.',
+    'Sartén honda o cazuela a fuego medio con aceite. Echa cebolla, pimiento y zanahoria con una pizca de sal.',
     'Deja 8 minutos removiendo de vez en cuando, hasta que la cebolla esté blandita y transparente. Esto es lo que da todo el sabor, no te lo saltes.',
-    'Añade el ajo picado y los champiñones. 5 minutos más.',
+    'Añade el ajo picado. 1 minuto más, sin que se queme.',
     'Baja el fuego, echa el pimentón y remueve 10 segundos.',
     'Echa las lentejas escurridas y enjuagadas, más medio vaso de agua. Sal. Deja 5 minutos a fuego suave.'
   ],
@@ -109,13 +109,13 @@ const PLATOS = {
 },
 
 'alubias-pimiento-champinon-jamon': {
-  nombre:'Alubias con pimiento, champiñón y jamón',
+  nombre:'Alubias con pimiento, calabacín y jamón',
   icono:'legumbre', tiempo:15, donde:'Sartén', tupper:'Muy bueno',
   porQue:'Misma jugada que los garbanzos: fibra que ayuda con el colesterol y saciedad de la buena. El jamón está para dar sabor, no como fuente de proteína — con poca cantidad ya cambia el plato entero.',
   ingredientes:[
     {q:'1 bote', item:'alubias blancas cocidas'},
     {q:'1/2', item:'pimiento rojo'},
-    {q:'4-5', item:'champiñones laminados'},
+    {q:'1/2', item:'calabacín', nota:'En dados pequeños, con piel'},
     {q:'60 g', item:'taquitos de jamón serrano'},
     {q:'1 diente', item:'ajo'},
     {q:'1 chorro', item:'aceite de oliva'}
@@ -123,7 +123,7 @@ const PLATOS = {
   compra:'Los taquitos de jamón vienen en tarrina en la nevera. Con una tarrina pequeña tienes para dos o tres platos.',
   pasos:[
     'Aceite en la sartén a fuego medio. Echa el ajo picado y el pimiento en dados.',
-    'A los 5 minutos, echa los champiñones. Otros 4-5 minutos.',
+    'A los 5 minutos, echa el calabacín. Otros 4-5 minutos, hasta que se dore un poco.',
     'Echa los taquitos de jamón y remueve 1 minuto. No más: se ponen duros.',
     'Echa las alubias escurridas y enjuagadas. Remueve con cuidado 3-4 minutos.',
     'Prueba antes de echar sal — el jamón ya sala bastante.'
@@ -374,13 +374,13 @@ const PLATOS = {
 },
 
 'caballa-papillote': {
-  nombre:'Caballa al papillote con pimiento y champiñón',
+  nombre:'Caballa al papillote con pimiento y calabacín',
   icono:'pescado', tiempo:25, donde:'Horno', tupper:'Bueno',
   porQue:'La caballa es de los pescados azules con más omega-3 que existen, y de los más baratos del mostrador. Para tu colesterol es tan buena como el salmón y cuesta la mitad. Deberías comerla más.',
   ingredientes:[
     {q:'2', item:'filetes de caballa'},
     {q:'1/2', item:'pimiento rojo'},
-    {q:'4-5', item:'champiñones'},
+    {q:'1/2', item:'calabacín'},
     {q:'1/2', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva y sal'},
     {q:'Necesario', item:'papel de horno'}
@@ -389,7 +389,7 @@ const PLATOS = {
   pasos:[
     'Horno a 190°C.',
     'Corta un trozo grande de papel de horno, del tamaño de un folio y medio.',
-    'Pon en el centro el pimiento y los champiñones en láminas, con aceite y sal.',
+    'Pon en el centro el pimiento y el calabacín en láminas finas, con aceite y sal.',
     'Encima, los filetes de caballa con sal, limón y un chorrito de aceite.',
     'Cierra el papel como un paquete: junta los dos lados largos y dóblalos varias veces, luego dobla los extremos hacia abajo. Tiene que quedar cerrado para que el vapor no escape.',
     '15-18 minutos. Abre con cuidado, sale vapor muy caliente.'
@@ -618,27 +618,27 @@ Object.assign(PLATOS, {
 },
 
 'pavo-champinones-arroz': {
-  nombre:'Pavo con champiñones salteados y arroz',
+  nombre:'Pavo con calabacín salteado y arroz',
   icono:'ave', tiempo:22, donde:'Sartén', tupper:'Perfecto',
-  porQue:'El pavo es aún más magro que el pollo: es de las carnes con menos grasa que existen, lo cual con tu colesterol viene muy bien. Y los champiñones aportan sabor sin sumar prácticamente nada.',
+  porQue:'El pavo es aún más magro que el pollo: es de las carnes con menos grasa que existen, lo cual con tu colesterol viene muy bien. Y el calabacín aporta volumen y sabor sin sumar prácticamente nada.',
   ingredientes:[
     {q:'150 g', item:'filetes de pavo'},
     {q:'70 g en crudo', item:'arroz'},
-    {q:'1 bandeja', item:'champiñones laminados'},
+    {q:'1', item:'calabacín', nota:'Mediano, en medias lunas'},
     {q:'1 diente', item:'ajo'},
     {q:'1 chorro', item:'aceite de oliva, sal y perejil'}
   ],
-  compra:'Los filetes de pavo están al lado de los de pollo. Los champiñones laminados en bandeja te ahorran cortar.',
+  compra:'Los filetes de pavo están al lado de los de pollo. El calabacín, suelto en verdura: elige uno firme y sin golpes.',
   pasos:[
     'Arroz a cocer.',
-    'Sartén con aceite a fuego fuerte. Champiñones con sal.',
-    'Muy importante: no los toques los primeros 3 minutos. Sueltan agua; hay que esperar a que se evapore y empiecen a dorarse.',
-    'Cuando estén dorados, ajo picado, 30 segundos, y saca a un plato.',
+    'Sartén con aceite a fuego fuerte. El calabacín en medias lunas, sin sal todavía.',
+    'Muy importante: no lo toques los primeros 3 minutos. Tiene que dorarse; si lo remueves todo el rato, se cuece y queda blando.',
+    'Cuando esté dorado, sal, ajo picado, 30 segundos, y saca a un plato.',
     'En la misma sartén, el pavo salpimentado, 2-3 minutos por lado. Es fino y se hace enseguida.',
     'Junta todo y perejil por encima.'
   ],
-  trucos:['El error universal con los champiñones es removerlos todo el rato: sueltan agua y se cuecen en vez de dorarse. Déjalos quietos.'],
-  diaMalo:'Vasito de arroz + pavo al airfryer + champiñones al microondas.',
+  trucos:['El calabacín se sala al final: la sal le hace soltar agua y en vez de dorarse se queda blando.'],
+  diaMalo:'Vasito de arroz + pavo al airfryer + calabacín en rodajas al airfryer, 10 minutos.',
   conservar:'3 días.',
   ojo:'El pavo se seca antes que el pollo porque tiene menos grasa. Cuidado con pasarlo.',
   kcal:560, p:48, c:60, f:14
@@ -667,18 +667,18 @@ Object.assign(PLATOS, {
 },
 
 'pavo-airfryer-pimiento-champinon': {
-  nombre:'Pavo al airfryer con pimiento y champiñón asados',
+  nombre:'Pavo al airfryer con pimiento y calabacín asados',
   icono:'ave', tiempo:18, donde:'Airfryer', tupper:'Bueno',
   porQue:'Todo en el airfryer: enciendes, esperas y ya está. Es la cena de los días que no quieres estar de pie en la cocina.',
   ingredientes:[
     {q:'150 g', item:'filetes de pavo'},
     {q:'1', item:'pimiento rojo'},
-    {q:'1 bandeja', item:'champiñones'},
+    {q:'1', item:'calabacín'},
     {q:'1 chorro', item:'aceite de oliva, sal, ajo en polvo y pimentón'}
   ],
   compra:'Nada especial.',
   pasos:[
-    'Corta el pimiento en tiras y los champiñones por la mitad.',
+    'Corta el pimiento en tiras y el calabacín en rodajas gruesas, de un dedo.',
     'Mézclalos en un bol con aceite, sal y ajo en polvo.',
     'A la cesta del airfryer, 10 minutos a 190°C.',
     'Sacude la cesta y pon el pavo salpimentado encima.',
@@ -870,12 +870,12 @@ Object.assign(PLATOS, {
 },
 
 'ternera-plancha-champinones-patata': {
-  nombre:'Ternera a la plancha con champiñones y patata',
+  nombre:'Ternera a la plancha con espárragos trigueros y patata',
   icono:'carne', tiempo:30, donde:'Sartén', tupper:'Regular',
-  porQue:'Los champiñones salteados con la ternera aportan mucho sabor sin sumar casi nada, y hacen que un plato de carne parezca mucho más completo.',
+  porQue:'Los espárragos trigueros a la plancha aportan mucho sabor sin sumar casi nada, y hacen que un plato de carne parezca mucho más completo.',
   ingredientes:[
     {q:'180 g', item:'filete de ternera'},
-    {q:'1 bandeja', item:'champiñones laminados'},
+    {q:'1 manojo', item:'espárragos trigueros'},
     {q:'2', item:'patatas'},
     {q:'2 dientes', item:'ajo'},
     {q:'Al gusto', item:'aceite, sal, pimienta y perejil'}
@@ -884,14 +884,14 @@ Object.assign(PLATOS, {
   pasos:[
     'Patatas en rodajas al horno con aceite y sal, 30 minutos a 200°C. O al microondas 8 minutos si vas justo.',
     'Saca la carne de la nevera con antelación.',
-    'Sartén fuerte, champiñones con sal, sin tocarlos 3 minutos, luego remueve hasta dorar. Ajo picado al final. Reserva.',
+    'Quita el final duro de los espárragos: dobla cada uno y se parte solo por donde toca. Sartén fuerte con aceite, 5-6 minutos dándoles la vuelta, sal al final. Reserva.',
     'Misma sartén, más caliente aún. Ternera 2-3 minutos por lado.',
-    'Reposo de 3 minutos y monta con los champiñones por encima.'
+    'Reposo de 3 minutos y sírvela con los espárragos al lado.'
   ],
-  trucos:['Haz los champiñones primero y la carne después en la misma sartén: la carne aprovecha el sabor que han dejado.'],
-  diaMalo:'Ternera a la plancha y champiñones de bote escurridos, salteados 2 minutos.',
+  trucos:['Haz los espárragos primero y la carne después en la misma sartén: la carne aprovecha el sabor que han dejado.'],
+  diaMalo:'Ternera a la plancha y los espárragos al airfryer, 8 minutos a 200°C, mientras se hace la carne.',
   conservar:'2 días.',
-  ojo:'Champiñones sin remover los primeros minutos, o sueltan agua y se cuecen.',
+  ojo:'Si los espárragos son muy gruesos, dales 2 minutos más o pártelos a lo largo.',
   kcal:620, p:46, c:46, f:28
 },
 
@@ -952,19 +952,19 @@ Object.assign(PLATOS, {
 },
 
 'revuelto-huevo-champinones': {
-  nombre:'Revuelto de huevo con champiñones',
+  nombre:'Revuelto de huevo con espárragos trigueros',
   icono:'huevo', tiempo:10, donde:'Sartén', tupper:'Malo',
   porQue:'Como la tortilla pero sin el paso de darle la vuelta, que es donde la gente se pone nerviosa. Cena de diez minutos con la proteína resuelta.',
   ingredientes:[
     {q:'3', item:'huevos'},
-    {q:'1 bandeja', item:'champiñones laminados'},
+    {q:'1 manojo', item:'espárragos trigueros', nota:'Sin la parte dura, en trozos de tres dedos'},
     {q:'1 diente', item:'ajo'},
     {q:'Al gusto', item:'aceite de oliva, sal y perejil'}
   ],
   compra:'Nada especial.',
   pasos:[
-    'Champiñones a la sartén con aceite y sal, fuego fuerte, sin tocarlos 3 minutos.',
-    'Remueve hasta que estén dorados. Ajo picado, 30 segundos.',
+    'Espárragos en trozos a la sartén con aceite y sal, fuego medio-fuerte, 5 minutos removiendo de vez en cuando.',
+    'Cuando estén tiernos y algo dorados, ajo picado, 30 segundos.',
     'Baja el fuego a medio-bajo.',
     'Bate los huevos con sal y échalos por encima.',
     'Remueve constantemente con una espátula. Retira del fuego cuando aún estén algo líquidos: se terminan de hacer con el calor de la sartén.'
@@ -1245,6 +1245,39 @@ Object.assign(PLATOS, {
   conservar:'—',
   ojo:'Que sea libre significa libre. Si acabas midiendo también estas cenas, el plan deja de ser sostenible y vuelves al punto de partida.',
   kcal:0, p:0, c:0, f:0
+},
+
+/* Un día a la semana (jueves por defecto) se lleva esto a la oficina en vez
+   del tupper del menú. Es lo que ya hacía él por su cuenta; aquí va con las
+   cantidades y lo que le falta para cumplir el método del plato. */
+'bowl-quinoa-oficina': {
+  nombre:'Bowl de quinoa con salmón ahumado, espinacas y tomate',
+  icono:'ensalada', tiempo:5, donde:'En frío', tupper:'Hecho para llevar — el aliño, aparte',
+  porQue:'Quinoa integral, pescado azul y verdura: cumple el método del plato sin encender el fuego y aguanta bien hasta la hora de comer. El salmón ahumado aporta omega-3, que es justo lo que te interesa para el colesterol. Su única pega es la sal: una vez por semana está perfecto. Si algún jueves te apetece cambiar, atún al natural o dos huevos duros hacen el mismo papel.',
+  ingredientes:[
+    {q:'1 ración', item:'quinoa integral Brillante', nota:'Si es de vasito ya viene cocida. Si es de paquete, cuece 70 g la noche antes (lávala antes para que no amargue)'},
+    {q:'60-80 g', item:'salmón ahumado', nota:'Medio sobre de los de 120-150 g'},
+    {q:'2 puñados', item:'espinacas baby'},
+    {q:'6-8', item:'tomates cherry'},
+    {q:'1/4', item:'aguacate', nota:'Opcional. O un puñado de nueces'},
+    {q:'Al gusto', item:'aceite de oliva virgen extra y limón'}
+  ],
+  compra:'La quinoa integral Brillante está en Bonpreu, en la zona de arroces. El salmón ahumado, en la nevera de los ahumados; en Lidl el de Ocean Sea sale más barato. Las espinacas baby lavadas te ahorran el único paso pesado.',
+  pasos:[
+    'La noche antes (o por la mañana): la quinoa al tupper. Si es de vasito, no hace falta calentarla.',
+    'Encima, las espinacas y los tomates cherry partidos por la mitad.',
+    'El salmón ahumado en tiras por encima. El aguacate, córtalo en el momento de comer para que no se ponga negro.',
+    'El aceite y el limón, en un botecito aparte: se aliña justo antes de comer, o las espinacas se quedan mustias.',
+    'A la nevera de la oficina nada más llegar.'
+  ],
+  trucos:[
+    'Alterna la proteína para no aburrirte: salmón ahumado un jueves, atún al natural otro, dos huevos duros otro. El resto del bowl no cambia.',
+    'Un puñado de garbanzos de bote enjuagados encima suma fibra, que es lo que mejor le va a tu colesterol.'
+  ],
+  diaMalo:'Quinoa + una lata de atún al natural + un puñado de espinacas, todo al tupper. Dos minutos.',
+  conservar:'Móntalo como mucho la noche antes. El salmón ahumado tiene que estar en nevera: fuera de ella, no más de 2 horas.',
+  ojo:'No le eches sal: el salmón ahumado ya lleva mucha. Con el limón basta.',
+  kcal:520, p:30, c:46, f:24
 }
 
 });
@@ -1254,10 +1287,11 @@ Object.assign(PLATOS, {
    adivinando por palabras sueltas: es más largo de escribir, pero no falla.
    ========================================================================== */
 const MENU_A_PLATO = {
+  'Bowl de quinoa con salmón ahumado, espinacas y tomate':'bowl-quinoa-oficina',
   'Garbanzos salteados con espinacas y taquitos de pavo':'garbanzos-espinacas-pavo',
-  'Lentejas estofadas con pimiento y champiñón':'lentejas-estofadas',
+  'Lentejas estofadas con pimiento y zanahoria':'lentejas-estofadas',
   'Ensalada de lentejas con pimiento, tomate y atún':'ensalada-lentejas-atun',
-  'Alubias con pimiento, champiñón y jamón':'alubias-pimiento-champinon-jamon',
+  'Alubias con pimiento, calabacín y jamón':'alubias-pimiento-champinon-jamon',
   'Garbanzos con espinacas (comida familiar)':'garbanzos-espinacas',
   'Salmón al airfryer con espárragos':'salmon-airfryer-esparragos',
   'Salmón al horno con espárragos y patata':'salmon-horno-esparragos-patata',
@@ -1271,36 +1305,36 @@ const MENU_A_PLATO = {
   'Calamares y pulpo a la gallega con patata':'calamares-pulpo-gallega',
   'Calamar encebollado con patata':'calamar-encebollado-patata',
   'Pollo a la plancha con arroz integral y pimientos':'pollo-plancha-arroz-pimientos',
-  'Pollo a la plancha con pimiento y champiñón salteados, y arroz':'pollo-plancha-arroz-pimientos',
+  'Pollo a la plancha con pimiento y calabacín salteados, y arroz':'pollo-plancha-arroz-pimientos',
   'Pechuga a la plancha con quinoa y brócoli':'pechuga-quinoa-brocoli',
-  'Pavo con champiñones salteados y arroz':'pavo-champinones-arroz',
+  'Pavo con calabacín salteado y arroz':'pavo-champinones-arroz',
   'Arroz con pollo, pimiento y cebolla (comida en familia)':'arroz-pollo-familia',
   'Muslitos de pollo al horno con patata (comida familiar)':'muslitos-horno-patata',
   'Muslitos al horno con patata (comida familiar)':'muslitos-horno-patata',
   'Solomillo de cerdo con patata al horno y ensalada':'solomillo-patata-pimientos',
   'Solomillo con patata y pimientos':'solomillo-patata-pimientos',
   'Bistec de ternera con ensalada de patata':'bistec-ternera-ensalada-patata',
-  'Ternera a la plancha con champiñones y patata':'ternera-plancha-champinones-patata',
+  'Ternera a la plancha con espárragos trigueros y patata':'ternera-plancha-champinones-patata',
   "Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito":'comida-equipo',
   'Merluza al horno con ajo y limón':'merluza-horno-ajo',
   'Merluza al horno con ajo y perejil':'merluza-horno-ajo',
   'Merluza a la plancha con limón':'merluza-plancha-limon',
   'Bacalao crujiente al horno con ajo':'bacalao-horno-ajo',
-  'Caballa al papillote con pimiento y champiñón al horno':'caballa-papillote',
+  'Caballa al papillote con pimiento y calabacín al horno':'caballa-papillote',
   'Sardinas al horno con ensalada':'sardinas-horno-ensalada',
   'Salmón al horno con brócoli':'salmon-horno-brocoli',
   'Salmón ahumado con ensalada verde ligera':'salmon-ahumado-ensalada',
   'Salmón ahumado con ensalada':'salmon-ahumado-ensalada',
   'Calamar a la plancha con ensalada verde':'calamar-plancha-ensalada',
   'Calamar a la plancha con pimientos':'calamar-plancha-ensalada',
-  'Pavo al airfryer con pimiento y champiñón asados':'pavo-airfryer-pimiento-champinon',
+  'Pavo al airfryer con pimiento y calabacín asados':'pavo-airfryer-pimiento-champinon',
   'Pavo a la plancha con ensalada':'pavo-plancha-ensalada',
   'Brochetas de pavo con pimiento':'brochetas-pavo-pimiento',
   'Pollo al curry ligero con pimiento':'pollo-curry-pimiento',
   'Tortilla francesa con espinacas y tomate aliñado':'tortilla-francesa-tomate',
   'Tortilla francesa con tomate':'tortilla-francesa-tomate',
   'Tortilla de espinacas con ensalada':'tortilla-espinacas-ensalada',
-  'Revuelto de huevo con champiñones':'revuelto-huevo-champinones',
+  'Revuelto de huevo con espárragos trigueros':'revuelto-huevo-champinones',
   'Huevo escalfado con tomate y espinacas':'huevo-escalfado-tomate-espinacas',
   'Cena libre — disfruta sin culpa':'cena-libre',
   'Cena libre de finde — disfruta':'cena-libre',
