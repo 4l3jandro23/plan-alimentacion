@@ -1282,6 +1282,180 @@ Object.assign(PLATOS, {
 
 });
 
+/* ============================ OTROS DESAYUNOS ============================
+   No entran en el menú ni rotan solos: están para las mañanas en que apetece
+   otra cosa. Salen en «Otro desayuno» de Hoy (a la hora del desayuno) y en
+   Recetas. Hay salados y dulces. */
+Object.assign(PLATOS, {
+
+'tostada-tomate-queso-fresco': {
+  nombre:'Tostada con tomate, aceite y queso fresco',
+  icono:'desayuno', tiempo:4, donde:'Tostadora', tupper:'—', momentos:['desayuno'],
+  porQue:'El pan con tomate de toda la vida, con queso fresco encima para que lleve proteína y aguantes hasta media mañana. Salado, rápido y sin pensar.',
+  ingredientes:[
+    {q:'1-2 rebanadas', item:'pan integral'},
+    {q:'1', item:'tomate maduro', nota:'O una cucharada de tomate triturado'},
+    {q:'60 g', item:'queso fresco', nota:'Tipo Burgos, en lonchas'},
+    {q:'1 hilo', item:'aceite de oliva virgen extra y sal'},
+    {q:'Opcional', item:'pieza de fruta'}
+  ],
+  compra:'El queso fresco tipo Burgos está en la nevera de los quesos. El 0% vale igual, y abierto dura 5-7 días.',
+  pasos:[
+    'Tuesta el pan.',
+    'Parte el tomate por la mitad y restriégalo sobre el pan caliente.',
+    'Un hilo de aceite y una pizca de sal.',
+    'Las lonchas de queso fresco encima.'
+  ],
+  trucos:['Un poco de orégano o pimienta negra sobre el queso cambia bastante y no suma nada.'],
+  diaMalo:'Pan sin tostar, el queso fresco y un tomate cortado al lado. Cuenta igual.',
+  conservar:'—',
+  ojo:'El tomate se pone justo antes de comer: si lo dejas preparado, el pan se reblandece.',
+  kcal:370, p:15, c:45, f:14
+},
+
+'tostada-aguacate-huevo': {
+  nombre:'Tostada con aguacate y huevo',
+  icono:'desayuno', tiempo:8, donde:'Sartén', tupper:'—', momentos:['desayuno'],
+  porQue:'De los salados, el que más sacia: el huevo pone la proteína y el aguacate las grasas buenas, que además le vienen bien a tu colesterol. Para una mañana sin prisa.',
+  ingredientes:[
+    {q:'1-2 rebanadas', item:'pan integral'},
+    {q:'1/3', item:'aguacate'},
+    {q:'1', item:'huevo'},
+    {q:'Al gusto', item:'sal, pimienta y unas gotas de limón'}
+  ],
+  compra:'Un aguacate que cede un poco al apretarlo está para hoy; si está duro, en 2-3 días. Lo que sobre, guárdalo con el hueso y tapado.',
+  pasos:[
+    'Pon el pan a tostar.',
+    'Sartén a fuego medio con unas gotas de aceite. Casca el huevo y déjalo 3-4 minutos, hasta que la clara esté blanca del todo.',
+    'Mientras, chafa el aguacate con un tenedor, con sal y unas gotas de limón.',
+    'Unta el aguacate en la tostada y pon el huevo encima.'
+  ],
+  trucos:['Sin sartén: huevo duro en rodajas encima. Hervir seis el domingo te deja media semana de desayunos resuelta.'],
+  diaMalo:'Tostada con el aguacate chafado y sal. Sin huevo también vale.',
+  conservar:'—',
+  ojo:'El aguacate abierto se pone negro en horas: el limón y guardarlo con el hueso lo retrasan.',
+  kcal:330, p:13, c:30, f:17
+},
+
+'tostada-atun-tomate': {
+  nombre:'Tostada con atún y tomate',
+  icono:'desayuno', tiempo:4, donde:'Tostadora', tupper:'—', momentos:['desayuno'],
+  porQue:'Salado y con mucha proteína sin encender nada. Parece más de merienda, pero por la mañana te deja lleno hasta la comida.',
+  ingredientes:[
+    {q:'1-2 rebanadas', item:'pan integral'},
+    {q:'1 lata', item:'atún al natural'},
+    {q:'1/2', item:'tomate'},
+    {q:'1 hilo', item:'aceite de oliva virgen extra'},
+    {q:'Opcional', item:'pieza de fruta'}
+  ],
+  compra:'Latas de atún al natural en pack: una por desayuno, y duran años en la despensa.',
+  pasos:[
+    'Tuesta el pan.',
+    'Restriega el tomate encima o ponlo en rodajas.',
+    'Escurre el atún y ponlo encima, con un hilo de aceite.'
+  ],
+  trucos:['Con unas aceitunas picadas o pimiento asado de bote es otro desayuno distinto sin comprar casi nada.'],
+  diaMalo:'Atún con pan, sin tostar. Dos minutos.',
+  conservar:'—',
+  ojo:'Nada especial.',
+  kcal:330, p:21, c:44, f:8
+},
+
+'bocadillo-tortilla-francesa': {
+  nombre:'Bocadillo pequeño de tortilla francesa',
+  icono:'desayuno', tiempo:6, donde:'Sartén', tupper:'—', momentos:['desayuno'],
+  porQue:'El de los días que desayunas de camino: se envuelve y te lo comes andando o al llegar. Huevo y pan, y aguantas hasta media mañana.',
+  ingredientes:[
+    {q:'1 panecillo', item:'pan integral', nota:'O dos rebanadas de molde'},
+    {q:'2', item:'huevos'},
+    {q:'Opcional', item:'medio tomate'},
+    {q:'1 chorro', item:'aceite de oliva y sal'}
+  ],
+  compra:'Nada especial.',
+  pasos:[
+    'Bate los huevos con una pizca de sal.',
+    'Sartén a fuego medio con unas gotas de aceite. Echa el huevo y deja que cuaje 1-2 minutos.',
+    'Dobla la tortilla en dos o en tres, al tamaño del pan.',
+    'Si quieres, restriega tomate en el pan. Mete la tortilla y envuélvelo en papel de aluminio si te lo llevas.'
+  ],
+  trucos:['Envuelto en aluminio aguanta templado el trayecto de casa al trabajo.'],
+  diaMalo:'Pan con un huevo duro chafado dentro. Igual de rápido y sin sartén.',
+  conservar:'Hecho por la mañana, se come en unas horas.',
+  ojo:'A fuego fuerte la tortilla queda seca: fuego medio, y en cuanto cuaje, fuera.',
+  kcal:400, p:19, c:40, f:18
+},
+
+'yogur-avena-fruta': {
+  nombre:'Yogur griego con avena, fruta y canela',
+  icono:'desayuno', tiempo:3, donde:'Sin cocinar', tupper:'—', momentos:['desayuno'],
+  porQue:'Dulce, pero con proteína y fibra: la avena hace que aguante bastante más que un yogur solo. Se hace en el mismo bol en tres minutos.',
+  ingredientes:[
+    {q:'1', item:'yogur griego natural', nota:'O skyr, que lleva más proteína'},
+    {q:'3 cucharadas', item:'copos de avena'},
+    {q:'1', item:'pieza de fruta', nota:'Plátano, manzana o frutos rojos'},
+    {q:'Al gusto', item:'canela'}
+  ],
+  compra:'Los copos de avena están con los cereales. Un paquete dura semanas.',
+  pasos:[
+    'El yogur en un bol.',
+    'La avena por encima y remueve.',
+    'La fruta troceada y un poco de canela.'
+  ],
+  trucos:['Déjalo hecho la noche antes en un tarro: la avena se ablanda y por la mañana solo hay que abrirlo.'],
+  diaMalo:'Yogur con fruta, sin avena. Vale igual.',
+  conservar:'Hecho en tarro, hasta la mañana siguiente en la nevera.',
+  ojo:'Yogur natural, no de sabores: esos llevan tanto azúcar como un postre.',
+  kcal:320, p:14, c:40, f:11
+},
+
+'gachas-avena-platano': {
+  nombre:'Gachas de avena con plátano',
+  icono:'desayuno', tiempo:4, donde:'Microondas', tupper:'—', momentos:['desayuno'],
+  porQue:'Un desayuno caliente para los días de frío o de estómago revuelto. La avena es de lo que mejor le sienta al colesterol, y con leche te llena toda la mañana.',
+  ingredientes:[
+    {q:'40 g', item:'copos de avena', nota:'Unas 4 cucharadas'},
+    {q:'1 vaso', item:'leche semidesnatada', nota:'O bebida de avena'},
+    {q:'1', item:'plátano'},
+    {q:'Al gusto', item:'canela'}
+  ],
+  compra:'Nada especial.',
+  pasos:[
+    'La avena y la leche en un bol grande, porque sube al hervir.',
+    'Al microondas 2 minutos, remueve y 30 segundos más.',
+    'El plátano en rodajas y canela por encima.'
+  ],
+  trucos:['Chafa medio plátano dentro antes del microondas: endulza sin nada de azúcar.'],
+  diaMalo:'Ya lo es: cuatro minutos y un bol.',
+  conservar:'—',
+  ojo:'Usa un bol grande: la leche con avena sube y se sale en el microondas.',
+  kcal:350, p:13, c:56, f:7
+},
+
+'tostada-cacahuete-platano': {
+  nombre:'Tostada con crema de cacahuete y plátano',
+  icono:'desayuno', tiempo:3, donde:'Tostadora', tupper:'—', momentos:['desayuno'],
+  porQue:'Dulce, rápido y llena de verdad: la crema de cacahuete pone grasa buena y algo de proteína. Con un vaso de leche o un yogur al lado queda completo.',
+  ingredientes:[
+    {q:'1-2 rebanadas', item:'pan integral'},
+    {q:'1 cucharada', item:'crema de cacahuete', nota:'100% cacahuete, sin azúcar'},
+    {q:'1/2', item:'plátano'},
+    {q:'1', item:'vaso de leche o yogur natural'}
+  ],
+  compra:'Crema de cacahuete que ponga «100% cacahuete» en los ingredientes, sin azúcar ni aceite de palma. Dura meses.',
+  pasos:[
+    'Tuesta el pan.',
+    'Unta la crema de cacahuete.',
+    'El plátano en rodajas encima, y la leche o el yogur al lado.'
+  ],
+  trucos:['Una pizca de canela sobre el plátano y parece otra cosa.'],
+  diaMalo:'Medio plátano con una cucharada de crema de cacahuete, sin pan.',
+  conservar:'—',
+  ojo:'Mejor untada en la tostada que a cucharadas del bote: está tan buena que se va sola.',
+  kcal:390, p:15, c:50, f:14
+}
+
+});
+
 /* ==========================================================================
    Cada texto del menú apunta a su ficha. Se hace con un mapa explícito y no
    adivinando por palabras sueltas: es más largo de escribir, pero no falla.
@@ -1366,3 +1540,170 @@ function platoDe(textoMenu){
   const slug = slugDePlato(textoMenu);
   return slug ? PLATOS[slug] : null;
 }
+
+/* ==========================================================================
+   AIRFRYER PRIMERO
+   Los platos que en airfryer salen igual o mejor: menos cacharros, sin
+   precalentar el horno y sin estar pendiente de la sartén. La ficha propone
+   esta versión y deja volver a la de siempre con un toque. Mismos
+   ingredientes que la ficha. La carne a la plancha y los guisos se quedan
+   como están, porque ahí la sartén gana.
+   ========================================================================== */
+const AIRFRYER = {
+  'salmon-horno-esparragos-patata': {
+    tiempo:25,
+    pasos:[
+      'Corta las patatas en dados de un dedo y mézclalas en un bol con un chorrito de aceite y sal.',
+      'A la cesta del airfryer, 15 minutos a 200°C, sacudiendo la cesta a mitad.',
+      'Salpimienta el salmón y riégalo con limón. Los espárragos, con un poco de aceite y sal.',
+      'Sacude la cesta, pon el salmón y los espárragos encima de las patatas y baja a 180°C: 9-10 minutos más.',
+      'El salmón está cuando se abre en láminas al apretarlo con un tenedor.'
+    ],
+    nota:'Sin precalentar el horno y en una sola cesta. Si tu airfryer es pequeño y no cabe sin amontonar, haz primero la patata y apártala.'
+  },
+  'salmon-plancha-arroz-brocoli': {
+    tiempo:25, donde:'Airfryer y cazo',
+    pasos:[
+      'Pon el arroz a cocer según el paquete, o usa un vasito de arroz integral al microondas.',
+      'El brócoli en ramitos, con un poco de aceite y sal, a la cesta del airfryer: 6 minutos a 180°C.',
+      'Sacude la cesta, pon el salmón salpimentado al lado y 9-10 minutos más a 180°C.',
+      'Monta el plato con el arroz, el brócoli y el salmón.'
+    ],
+    nota:'Sin salpicaduras ni olor a pescado en toda la casa, y el brócoli sale tostado por los bordes.'
+  },
+  'salmon-horno-brocoli': {
+    tiempo:16,
+    pasos:[
+      'El brócoli en ramitos, con aceite, sal y el ajo picado, a la cesta del airfryer: 6 minutos a 180°C.',
+      'Sacude la cesta y pon el salmón encima, con sal, pimienta y limón.',
+      '9-10 minutos más a 180°C.'
+    ],
+    nota:'Lo mismo que al horno, sin precalentar y en la mitad de tiempo.'
+  },
+  'merluza-horno-ajo': {
+    tiempo:14,
+    pasos:[
+      'Si es congelada, descongélala la noche antes en la nevera, o bajo el grifo de agua fría dentro de una bolsa cerrada.',
+      'Seca los lomos con papel de cocina y ponlos en la cesta sobre un trozo de papel de horno, con sal, aceite y el zumo de medio limón.',
+      'Lamina los ajos y repártelos por encima. Si usas perejil, también.',
+      '10-12 minutos a 190°C.',
+      'Está lista cuando pasa de transparente a blanca y se separa en láminas.'
+    ],
+    nota:'El papel de horno, siempre con la comida encima: suelto, el aire lo levanta y se pega a la resistencia.'
+  },
+  'merluza-plancha-limon': {
+    tiempo:12,
+    pasos:[
+      'Seca bien la merluza con papel de cocina.',
+      'Con sal y un hilo de aceite, en la cesta sobre un trozo de papel de horno.',
+      '8-10 minutos a 190°C, sin darle la vuelta.',
+      'Limón por encima al servir.'
+    ],
+    nota:'En la sartén la merluza se pega y se rompe si no está muy caliente. Aquí no hay que darle la vuelta.'
+  },
+  'bacalao-horno-ajo': {
+    tiempo:15,
+    pasos:[
+      'Seca el bacalao con papel de cocina y ponlo en la cesta sobre papel de horno, con un chorro de aceite.',
+      'Lamina los ajos y repártelos por encima. Si lo quieres crujiente, una cucharada de pan rallado.',
+      '10-12 minutos a 190°C.',
+      'Está cuando se separa en láminas al apretarlo.'
+    ],
+    nota:'Lo de «crujiente» sale mejor aquí que en el horno: el aire caliente dora el pan rallado por igual.'
+  },
+  'caballa-papillote': {
+    tiempo:20,
+    pasos:[
+      'Corta un trozo de papel de aluminio del tamaño de un folio.',
+      'En el centro, el pimiento y la cebolla en tiras finas, con aceite y sal. Encima, los filetes de caballa con sal, limón y un chorrito de aceite.',
+      'Cierra el paquete doblando los bordes varias veces, para que no se escape el vapor.',
+      'Al airfryer, 14-16 minutos a 180°C.',
+      'Abre con cuidado: sale vapor muy caliente.'
+    ],
+    nota:'El papillote funciona igual en airfryer, con aluminio en vez de papel de horno.'
+  },
+  'sardinas-horno-ensalada': {
+    tiempo:12,
+    pasos:[
+      'Las sardinas limpias, en la cesta sin amontonar, con sal gorda y un hilo de aceite.',
+      '7-8 minutos a 200°C.',
+      'Mientras, aliña la ensalada con aceite, vinagre y sal.',
+      'Limón sobre las sardinas al servir.'
+    ],
+    nota:'Con el cajón cerrado huele bastante menos que con el horno abierto. Friega la cesta en cuanto se enfríe.'
+  },
+  'pollo-plancha-arroz-pimientos': {
+    tiempo:25, donde:'Airfryer y cazo',
+    pasos:[
+      'Pon el arroz a cocer según el paquete.',
+      'El pimiento (y la cebolla, si pones) en tiras, con aceite y sal, a la cesta: 8 minutos a 200°C.',
+      'Sacude la cesta, pon los filetes de pollo salpimentados encima y 10-12 minutos a 190°C, dándoles la vuelta a mitad.',
+      'Comprueba que está hecho: córtalo por el centro, tiene que estar blanco entero.',
+      'Monta el plato con el arroz, el pimiento y el pollo.'
+    ],
+    nota:'La pechuga en airfryer queda más jugosa que en la sartén y no hay que estar encima.'
+  },
+  'pechuga-quinoa-brocoli': {
+    tiempo:25, donde:'Airfryer y cazo',
+    pasos:[
+      'Enjuaga la quinoa y ponla a cocer con el doble de agua, 15 minutos.',
+      'Mientras, la pechuga salpimentada y con unas gotas de aceite, a la cesta: 12-14 minutos a 190°C, dándole la vuelta a mitad.',
+      'A los 6 minutos, añade el brócoli en ramitos alrededor.',
+      'Comprueba que la pechuga está blanca por dentro y monta el plato.'
+    ],
+    nota:'Pechuga y brócoli en la misma cesta mientras se hace la quinoa: un cazo y el airfryer, nada más.'
+  },
+  'pavo-champinones-arroz': {
+    tiempo:22, donde:'Airfryer y cazo',
+    pasos:[
+      'Pon el arroz a cocer.',
+      'Judías verdes congeladas, 5 minutos al microondas en un plato tapado con un poco de agua. Escúrrelas bien.',
+      'A la cesta con aceite, sal y ajo en polvo: 8 minutos a 200°C, sacudiendo a mitad.',
+      'Aparta las judías a un lado, pon el pavo salpimentado y 6-8 minutos más a 190°C.',
+      'Junta todo y perejil por encima.'
+    ],
+    nota:'Las judías salen tostadas en vez de hervidas, y el pavo, que se seca enseguida en la sartén, queda más jugoso.'
+  },
+  'pavo-plancha-ensalada': {
+    tiempo:10,
+    pasos:[
+      'El pavo con sal, ajo en polvo y pimentón, a la cesta.',
+      '8-10 minutos a 190°C, dándole la vuelta a mitad.',
+      'La ensalada aliñada al lado.'
+    ],
+    nota:'Mismo tiempo que en la sartén, pero sin estar de pie delante.'
+  },
+  'muslitos-horno-patata': {
+    tiempo:30,
+    pasos:[
+      'Frota los muslitos con sal, pimentón, orégano y un poco de aceite.',
+      'La patata en dados de un dedo y la cebolla en gajos, con aceite y sal.',
+      'Primero los muslitos solos en la cesta: 12 minutos a 190°C.',
+      'Dales la vuelta, pon la patata y la cebolla alrededor y 14-16 minutos más a 190°C, sacudiendo a mitad.',
+      'Están cuando al pinchar cerca del hueso sale jugo transparente, no rosado.'
+    ],
+    nota:'Media hora en vez de cincuenta minutos de horno, con la piel crujiente. Si no cabe todo sin amontonar, hazlo en dos tandas.'
+  },
+  'solomillo-patata-pimientos': {
+    tiempo:30,
+    pasos:[
+      'La patata en dados y el pimiento en tiras, con aceite y sal, a la cesta: 12 minutos a 200°C.',
+      'Mientras, salpimienta el solomillo entero con un poco de romero.',
+      'Sacude la cesta, pon el solomillo encima y 14-16 minutos a 190°C, dándole la vuelta a mitad.',
+      'MUY IMPORTANTE: déjalo reposar 5 minutos antes de cortar.',
+      'Córtalo en medallones de dos dedos.'
+    ],
+    nota:'Sin sellarlo en la sartén ni encender el horno: todo en la cesta.'
+  },
+  'ternera-plancha-champinones-patata': {
+    tiempo:25, donde:'Airfryer y sartén',
+    pasos:[
+      'La patata en dados, con aceite y sal, a la cesta del airfryer: 12 minutos a 200°C.',
+      'Quita el final duro de los espárragos (dóblalos y se parten solos) y añádelos a la cesta con un poco de aceite: 8 minutos más a 200°C.',
+      'Mientras, saca la carne de la nevera y calienta bien la sartén.',
+      'La ternera, 2-3 minutos por lado en la sartén muy caliente.',
+      'Reposo de 3 minutos y sírvela con la patata y los espárragos.'
+    ],
+    nota:'La carne, en la sartén, que ahí se dora mejor. La patata y los espárragos, en el airfryer mientras tanto.'
+  }
+};

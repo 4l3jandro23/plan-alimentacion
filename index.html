@@ -147,25 +147,30 @@
   }
   /* Si el navegador no sabe desenfocar, opacamos para que siga siendo legible. */
   @supports not ((backdrop-filter:blur(2px)) or (-webkit-backdrop-filter:blur(2px))){
-    .glass, .pane, header, .bottomnav, .ficha, .sheet, .settings-panel{
+    .glass, .pane, .bottomnav, .ficha, .sheet, .settings-panel{
       background:var(--card);
     }
   }
   /* Quien pide menos transparencia en el sistema, la recibe. */
   @media (prefers-reduced-transparency: reduce){
-    .glass, .pane, header, .bottomnav, .ficha, .sheet, .settings-panel{
+    .glass, .pane, .bottomnav, .ficha, .sheet, .settings-panel{
       background:var(--card); -webkit-backdrop-filter:none; backdrop-filter:none;
     }
     body::before{background:var(--bg);}
   }
 
+  /* La cabecera va de un color liso y opaco arriba del todo. Desde iOS 26, si
+     el iPhone no encuentra un color liso en el borde de arriba (y el degradado
+     semitransparente con desenfoque no lo era), pinta encima su propia franja
+     de vidrio borroso: era la "sombra fea" sobre el título. Con color plano la
+     usa como color de la barra de estado y no pinta nada. Sin sombra propia. */
+  :root{ --cab:var(--accent); --cab2:color-mix(in srgb, var(--accent) 84%, var(--accent2)); }
+  html.dark{ --cab:color-mix(in srgb, var(--accent2) 62%, #000); --cab2:color-mix(in srgb, var(--accent2) 54%, #000); }
   header{
-    background:linear-gradient(135deg, color-mix(in srgb, var(--accent) 92%, transparent), color-mix(in srgb, var(--accent2) 88%, transparent));
-    -webkit-backdrop-filter:var(--blur); backdrop-filter:var(--blur);
+    background:linear-gradient(180deg, var(--cab) 0%, var(--cab) 50%, var(--cab2) 100%);
     color:#fff; padding:calc(14px + env(safe-area-inset-top)) 16px 16px;
     position:sticky; top:0; z-index:20;
-    border-bottom:1px solid rgba(255,255,255,.16);
-    box-shadow:0 6px 24px rgba(20,40,32,.14);
+    border-bottom:1px solid rgba(0,0,0,.10);
   }
   .headtop{display:flex; justify-content:space-between; align-items:center; gap:12px; max-width:760px; margin:0 auto;}
   header h1{margin:0 0 2px; font-size:var(--t-lg); font-family:var(--font-display); font-weight:600; letter-spacing:-.3px; display:flex; align-items:center; gap:9px;}
@@ -1196,6 +1201,48 @@
   .cocinado-btn .ic-v{width:15px; height:15px;}
   .cocinado-info{font-size:var(--t-xs); color:var(--muted);}
   .cocinados-lista{margin:10px 0 0; padding-left:18px; font-size:var(--t-sm); line-height:1.55;}
+  /* Airfryer primero */
+  .af-selector{display:flex; gap:6px; margin:0 0 12px;}
+  .af-selector button{flex:1; min-width:0; min-height:42px; border:1px solid var(--border); background:var(--card); color:var(--ink); border-radius:var(--r-sm); padding:8px 8px; font-family:inherit; font-size:var(--t-xs); font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;}
+  .af-selector button.on{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .af-selector .ic-v{width:14px; height:14px; flex-shrink:0;}
+  .chip-fav{font-family:inherit; cursor:pointer;}
+  .chip-fav.on{background:var(--accent-soft); border-color:transparent; color:var(--accent);}
+  .chip-fav.on .ic-v{color:var(--accent); fill:currentColor;}
+  /* Lo que sobra y el congelador */
+  .sobra-caja{width:100%;}
+  .sobra{margin:10px 0 0; padding:12px 14px; border-radius:var(--r-sm); background:var(--pane); border:1px solid var(--border); font-size:var(--t-sm); text-align:left; color:var(--ink);}
+  .sobra > b{display:block; margin-bottom:8px;}
+  .sobra-ya{display:block; color:var(--muted); font-size:var(--t-xs); margin:-4px 0 8px;}
+  .sobra-botones{display:flex; flex-wrap:wrap; gap:6px;}
+  .sobra-botones .btn-mini{min-height:40px;}
+  .opt.congelado{cursor:default; align-items:flex-start;}
+  .opt.congelado:active{transform:none;}
+  .opt.congelado .sobra-botones{margin-top:10px;}
+  .congelar-mano{display:flex; gap:8px; align-items:center;}
+  .congelar-mano select{flex:1; min-width:0; font-family:inherit; font-size:16px; padding:9px 10px; border:1px solid var(--border); border-radius:var(--r-sm); background:var(--card); color:var(--ink);}
+  .cocina-extra{margin:18px auto 0; max-width:440px; display:flex; flex-direction:column; gap:8px;}
+  .fav-fin{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:46px; border-radius:var(--r-sm); border:1px solid var(--border); background:var(--card); color:var(--ink); font-family:inherit; font-size:var(--t-sm); font-weight:700; cursor:pointer;}
+  .fav-fin.on{background:var(--accent-soft); color:var(--accent); border-color:transparent;}
+  .fav-fin.on .ic-v{fill:currentColor;}
+  /* Usa esto primero */
+  .aviso-fresco{display:flex; flex-direction:column; gap:10px;}
+  .aviso-fresco > span .ic-v{color:var(--warn);}
+  /* Hambre por la noche */
+  .resp-noche{display:flex; flex-direction:column; align-items:center; padding:18px 0 6px;}
+  .resp-bola{width:128px; height:128px; border-radius:50%; background:var(--accent-soft); border:3px solid var(--accent); transform:scale(.6); transition:transform 6s ease-in-out;}
+  .resp-bola.dentro{transform:scale(1); transition-duration:4s;}
+  .resp-txt{font-family:var(--font-display); font-size:var(--t-lg); margin:18px 0 8px; min-height:1.4em; text-align:center;}
+  @media (prefers-reduced-motion: reduce){ .resp-bola{transition:none;} }
+  /* Compra: cuánto cuesta y por súper */
+  .cab-precio{width:100%; margin-top:10px; font-size:var(--t-sm); color:var(--ink); line-height:1.45;}
+  .compra-cab .cab-precio b{display:inline; font-family:var(--font-mono); font-size:var(--t-base); color:var(--accent);}
+  .compra-cab .cab-precio span{display:block; font-size:var(--t-2xs); color:var(--muted); margin-top:2px;}
+  .compra-vista{width:100%; display:flex; gap:6px; margin-top:10px;}
+  .compra-vista .style-opt{padding:8px 6px; font-size:var(--t-xs);}
+  .compra-vista .btn-mini{flex-shrink:0;}
+  /* Menú en imagen */
+  .menu-previa img{display:block; width:100%; height:auto; border-radius:var(--r-md); border:1px solid var(--border); margin:0 0 12px;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1384,6 +1431,7 @@
     </table>
     </div>
     <div class="tip">Si es ansiedad: intenta posponer 10-15 minutos haciendo otra cosa (andar cinco minutos, llamar a alguien, agua o infusión). Si sigue después, come. No se trata de aguantar, sino de no reaccionar en automático. Esto complementa, no sustituye, el trabajo con psicología y psiquiatría.</div>
+    <button class="btn-mini solid" style="margin:0 0 12px;" onclick="abrirHambreNoche()"><svg class="ic-v"><use href="#i-luna"/></svg> Tengo hambre y no sé de qué tipo</button>
     <p><b>Tus disparadores:</b> estrés puntual del trabajo, tardes-noches solo en casa, y el picoteo después de cenar.</p>
     <ul>
       <li>Fruta siempre a mano (mochila, mesa del trabajo)</li>
@@ -1447,6 +1495,7 @@
     <p>Todo es intercambiable: si un día no te apetece lo propuesto, cambia por otra opción de la misma categoría. Lunes-jueves con tupper en el trabajo; viernes y sábado noche, libres siempre.</p>
     <div class="tip">Las <b>kcal y macros son una estimación orientativa</b> (no un cálculo clínico exacto) — de media rondan los <b>~1.740 kcal/día</b>, un déficit moderado y sostenible. Los días con cena libre o pizza no cuentan esa comida en el total. Si quieres precisión real, pesa ingredientes con Fitia.</div>
   </div>
+  <button class="btn-mini solid" style="margin:0 0 12px;" onclick="abrirMenuImagen()"><svg class="ic-v"><use href="#i-compartir"/></svg> Mandar el menú de la semana como imagen</button>
   <div class="style-options" id="menuFilter" style="margin-bottom:14px;">
     <button class="style-opt active" data-filter="all" onclick="setMenuFilter('all')">Todo</button>
     <button class="style-opt" data-filter="comida" onclick="setMenuFilter('comida')">Solo comidas</button>
@@ -1470,6 +1519,7 @@
   <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;">
     <button class="btn-mini solid" onclick="sorprendeme()"><svg class="ic-v"><use href="#i-dado"/></svg> Sorpréndeme</button>
     <button class="btn-mini" onclick="abrirNevera()"><svg class="ic-v"><use href="#i-nevera"/></svg> Qué hago con lo que tengo</button>
+    <button class="btn-mini" onclick="abrirCongelador()"><svg class="ic-v"><use href="#i-nevera"/></svg> Congelador</button>
     <button class="btn-mini" onclick="abrirRescate()"><svg class="ic-v"><use href="#i-rayo"/></svg> Sin cocinar</button>
   </div>
 
@@ -1561,7 +1611,7 @@
 
   <div class="add-row">
     <datalist id="sugCompra"></datalist>
-    <input id="addItem" list="sugCompra" autocomplete="off" placeholder="Añadir algo a mano…" aria-label="Añadir producto"
+    <input id="addItem" list="sugCompra" autocomplete="off" placeholder="Añadir o dictar: pan, huevos y leche" aria-label="Añadir producto"
            onkeydown="if(event.key==='Enter'){event.preventDefault();addManual();}">
     <button onclick="addManual()" aria-label="Añadir"><svg class="ic-v"><use href="#i-mas"/></svg></button>
   </div>
@@ -2023,20 +2073,17 @@ function abrirFicha(slug, momento){
   if(!p) return;
   if(slug !== fichaSlugActual) fichaPara2 = false;
   fichaSlugActual = slug;
+  window.fichaMomento = momento;
+  window.sobraPaso = null;
   platoComposicion = null;
   const col = ICONO_COLOR[p.icono] || ICONO_COLOR.libre;
 
   const etiquetaMomento = { desayuno:'Desayuno', media:'Media mañana', comida:'Comida', merienda:'Merienda', cena:'Cena' }[momento] || 'Plato';
   document.getElementById('fichaTipo').innerHTML = ico(p.icono) + ' ' + etiquetaMomento;
 
-  const chips = [];
-  if(p.tiempo) chips.push('<span class="chip">' + ico('reloj') + p.tiempo + ' min</span>');
-  if(p.donde)  chips.push('<span class="chip">' + ico('sarten') + esc(p.donde) + '</span>');
-  if(p.tupper && p.tupper !== '—') chips.push('<span class="chip">' + ico('tupper') + esc(p.tupper.split('—')[0].trim()) + '</span>');
 
   const ingredientes = ingredientesLi(p);
 
-  const pasos = p.pasos.map(s => '<li>' + esc(s) + '</li>').join('');
   const trucos = (p.trucos || []).map(t => '<div class="ficha-nota tip">' + esc(t) + '</div>').join('');
 
   const enCompra = enListaRapida(slug);
@@ -2046,8 +2093,8 @@ function abrirFicha(slug, momento){
     (platoVisualHTML(p) ||
       '<div class="ficha-hero" style="background:linear-gradient(140deg,' + col[0] + ',' + col[1] + ')">' + ico(p.icono) + '</div>') +
     '<h2 class="ficha-titulo" id="fichaTitulo">' + esc(p.nombre) + '</h2>' +
-    '<p class="ficha-sub">' + esc(p.donde) + (p.tiempo ? ' · ' + p.tiempo + ' minutos' : '') + '</p>' +
-    '<div class="ficha-chips">' + chips.join('') + '</div>' +
+    '<p class="ficha-sub" id="fichaSub">' + subFichaTxt(slug) + '</p>' +
+    '<div class="ficha-chips" id="fichaChips">' + chipsFichaHTML(slug) + '</div>' +
 
     (p.ingredientes.length && p.ingredientes[0].item !== 'lo que te apetezca' && p.ingredientes[0].q !== '—'
       ? '<button class="ficha-cta' + (enCompra ? ' hecho' : '') + '" id="fichaCta" onclick="alternarListaRapida()">' +
@@ -2062,7 +2109,7 @@ function abrirFicha(slug, momento){
 
     /* --- Cocinar --- */
     '<div class="ficha-pane on">' +
-      (p.pasos.length > 1
+      (pasosDe(slug).length > 1
         ? '<button class="cocina-abrir" onclick="abrirCocina()">' + ico('fuego') + '<span><b>Cocinar paso a paso</b>' +
           '<i>Letra grande, un paso cada vez, temporizadores y la pantalla no se apaga</i></span></button>'
         : '') +
@@ -2071,8 +2118,7 @@ function abrirFicha(slug, momento){
         esc(nmgFicha.map(sustitutoNMG).join(' ')) + '</div>' : '') +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas' + racionesBtnHTML(p) + '</div>' +
         '<ul class="ing-lista ing-cant">' + ingredientes + '</ul></div>' +
-      '<div class="ficha-bloque"><div class="ficha-h">' + ico('sarten') + 'Cómo se hace</div>' +
-        '<ol class="paso-lista">' + pasos + '</ol></div>' +
+      '<div class="ficha-bloque" id="fichaPasos">' + pasosFichaHTML(slug) + '</div>' +
       (p.ojo && p.ojo !== 'Nada.' && p.ojo !== 'Nada especial.' && p.ojo !== '—'
         ? '<div class="ficha-nota ojo"><b>' + '⚠ Lo que suele salir mal' + '</b>' + esc(p.ojo) + '</div>' : '') +
       (trucos ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('bombilla') + 'Trucos</div>' + trucos + '</div>' : '') +
@@ -2151,6 +2197,7 @@ function mmss(s){ s = Math.max(0, Math.ceil(s)); return Math.floor(s / 60) + ':'
 function abrirCocina(){
   if(!fichaSlugActual || !PLATOS[fichaSlugActual]) return;
   CO.abierta = true; CO.slug = fichaSlugActual; CO.paso = -1; CO.tengo = {}; CO.pasoLeido = null;
+  CO.pasos = pasosDe(fichaSlugActual); window.sobraPaso = null;
   try{ if(!audioCocina) audioCocina = new (window.AudioContext || window.webkitAudioContext)(); audioCocina.resume(); }catch(e){}
   document.getElementById('cocina').classList.add('show');
   pantallaSuper(true);
@@ -2167,9 +2214,10 @@ function cerrarCocina(){
 function pasoCocina(delta){
   const p = PLATOS[CO.slug];
   const antes = CO.paso;
-  CO.paso = Math.max(-1, Math.min(p.pasos.length, CO.paso + delta));
+  const pasos = CO.pasos || p.pasos;
+  CO.paso = Math.max(-1, Math.min(pasos.length, CO.paso + delta));
   /* Al tocar "Terminado" en el último paso se apunta solo. */
-  if(delta > 0 && antes < p.pasos.length && CO.paso >= p.pasos.length) apuntarCocinado(CO.slug);
+  if(delta > 0 && antes < pasos.length && CO.paso >= pasos.length) apuntarCocinado(CO.slug);
   pintarCocina();
   const c = document.querySelector('#cocina .cocina-cuerpo');
   if(c) c.scrollTop = 0;
@@ -2233,7 +2281,8 @@ function pintarCocina(){
   const el = document.getElementById('cocina');
   const p = PLATOS[CO.slug];
   if(!el || !p) return;
-  const n = p.pasos.length;
+  const pasosCo = CO.pasos || p.pasos;
+  const n = pasosCo.length;
   let cuerpo, siguiente;
   if(CO.paso < 0){
     const lista = p.ingredientes.map((it, i) =>
@@ -2246,13 +2295,18 @@ function pintarCocina(){
       '<div class="cocina-ings">' + lista + '</div>';
     siguiente = 'Empezar';
   } else if(CO.paso >= n){
+    const fav = loadFavPlatos().includes(CO.slug);
     cuerpo = '<div class="cocina-fin">' + ico('check', 'ic-lg') + '<h2 class="cocina-h">Hecho</h2>' +
       '<p class="cocina-ayuda">' + esc(p.nombre) + '. Ya está, a comer.</p>' +
-      (p.conservar && p.conservar !== '—' ? '<div class="cocina-nota"><b>Si sobra:</b> ' + esc(p.conservar) + '</div>' : '') +
+      '<div class="cocina-extra">' +
+        '<button class="fav-fin' + (fav ? ' on' : '') + '" aria-pressed="' + fav + '" onclick="favDesdeCocina()">' + ico('estrella') + (fav ? 'En tus favoritas' : 'Me ha gustado: a favoritas') + '</button>' +
+        '<div class="sobra-caja">' + sobraHTML(CO.slug) + '</div>' +
+      '</div>' +
+      (p.conservar && p.conservar !== '—' ? '<div class="cocina-nota"><b>Cuánto aguanta:</b> ' + esc(p.conservar) + '</div>' : '') +
       '</div>';
     siguiente = 'Cerrar';
   } else {
-    const txt = p.pasos[CO.paso];
+    const txt = pasosCo[CO.paso];
     const tiempos = tiemposDePaso(txt);
     cuerpo = '<div class="cocina-eti">Paso ' + (CO.paso + 1) + ' de ' + n + '</div>' +
       '<p class="cocina-txt">' + esc(txt) + '</p>' +
@@ -2711,7 +2765,8 @@ const SYNC_KEYS = [
   'planAlimentacionColor','planAlimentacionTextSize',
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
-  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios','planAlimentacionHabituales','planAlimentacionCocinados'
+  'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios','planAlimentacionHabituales','planAlimentacionCocinados',
+  'planAlimentacionCongelador','planAlimentacionMisSupers','planAlimentacionSinAirfryer'
 ];
 
 /* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
@@ -2725,10 +2780,12 @@ const SYNC_KEYS = [
 const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
-          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales', 'planAlimentacionCocinados'],
+          'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales', 'planAlimentacionCocinados',
+          'planAlimentacionCongelador', 'planAlimentacionMisSupers', 'planAlimentacionSinAirfryer'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
-    planAlimentacionCheckins: { campo:'fecha', orden:'desc' }
+    planAlimentacionCheckins: { campo:'fecha', orden:'desc' },
+    planAlimentacionCongelador: { campo:'id', orden:'asc' }
   }
 };
 const KS = {
@@ -3188,6 +3245,7 @@ function abrirSheet(tipo, titulo, sub, cuerpo, apilar){
   document.body.style.overflow = 'hidden';
 }
 function cerrarSheet(){
+  pararRespiraNoche();
   document.getElementById('sheetBack').classList.remove('show');
   document.body.style.overflow = '';
   sheetPila = [];
@@ -3218,15 +3276,15 @@ function abrirRescate(){
   /* Los platos del propio menú que se hacen en 12 minutos o menos: si hoy
      puedes con la sartén cinco minutos, mejor esto que abrir una lata. */
   const rapidos = Object.keys(PLATOS)
-    .filter(k => PLATOS[k].tiempo > 0 && PLATOS[k].tiempo <= 12)
-    .sort((a,b) => PLATOS[a].tiempo - PLATOS[b].tiempo)
+    .filter(k => PLATOS[k].tiempo > 0 && tiempoDe(k) <= 12 && ['desayuno', 'media', 'capricho'].indexOf(PLATOS[k].icono) === -1)
+    .sort((a,b) => tiempoDe(a) - tiempoDe(b))
     .slice(0, 8)
     .map(k => {
       const p = PLATOS[k];
       return '<button class="opt" onclick="abrirFicha(\'' + k + '\',\'cena\')">' +
         '<span class="opt-ico" style="background:' + degradado(p.icono) + '">' + ico(p.icono) + '</span>' +
-        '<span class="opt-txt"><b>' + esc(p.nombre) + '</b><span>' + esc(p.donde) + '</span></span>' +
-        '<span class="opt-min">' + p.tiempo + '′</span>' +
+        '<span class="opt-txt"><b>' + esc(p.nombre) + '</b><span>' + esc(dondeDe(k)) + '</span></span>' +
+        '<span class="opt-min">' + tiempoDe(k) + '′</span>' +
       '</button>';
     }).join('');
 
@@ -3426,13 +3484,13 @@ function renderRecetas(){
     }
     switch(recFiltro){
       case 'fav':      return favs.includes(k);
-      case 'rapido':   return p.tiempo <= 12;
-      case 'airfryer': return /airfryer/i.test(p.donde);
+      case 'rapido':   return tiempoDe(k) <= 12;
+      case 'airfryer': return /airfryer/i.test(p.donde) || !!afDe(k);
       case 'sinfuego': return /en frío|sin cocinar|tostadora/i.test(p.donde);
       case 'todas':    return true;
       default:         return p.icono === recFiltro;
     }
-  }).sort((a,b) => PLATOS[a].tiempo - PLATOS[b].tiempo);
+  }).sort((a,b) => tiempoDe(a) - tiempoDe(b));
 
   document.getElementById('recVacio').style.display = slugs.length ? 'none' : 'block';
 
@@ -3445,7 +3503,7 @@ function renderRecetas(){
       '</div>' +
       '<div class="rec-body">' +
         '<div class="rec-nombre">' + esc(p.nombre) + '</div>' +
-        '<div class="rec-meta">' + ico('reloj') + p.tiempo + ' min · ' + esc(p.donde) + '</div>' +
+        '<div class="rec-meta">' + ico('reloj') + tiempoDe(k) + ' min · ' + esc(dondeDe(k)) + '</div>' +
       '</div></div>';
   }).join('');
 }
@@ -3556,6 +3614,7 @@ function toggleItem(id){
   if(!it) return;
   it.done = !it.done;
   contarHabitual(it);
+  apuntarFresco(it);
   saveCompra(lista);
   renderCompra();
 }
@@ -3599,9 +3658,13 @@ function addManual(){
   const input = document.getElementById('addItem');
   const v = (input.value || '').trim();
   if(!v) return;
-  addItems([v], 'm');
+  /* Dictando con el micro del teclado sale "leche, huevos y pan": son tres cosas. */
+  const partes = v.split(/\s*(?:[,;\n]|\s+y\s+|\s+e\s+)\s*/i).map(x => x.trim()).filter(Boolean)
+    .map(x => x.charAt(0).toUpperCase() + x.slice(1));
+  const n = addItems(partes.length ? partes : [v], 'm');
   input.value = '';
   input.focus();
+  if(partes.length > 1) toast(n === 1 ? 'Añadida 1 cosa' : 'Añadidas ' + n + ' cosas');
 }
 function limpiarMarcados(){
   const lista = loadCompra();
@@ -3675,11 +3738,18 @@ function renderCompra(){
   const pend = lista.filter(i => !i.done).length;
   const hechos = lista.length - pend;
 
+  const vista = vistaCompra();
   if(cab){
     const pct = lista.length ? Math.round(hechos / lista.length * 100) : 0;
     cab.innerHTML = lista.length
       ? '<div class="cab-nums"><div><b>' + pend + '</b><span>por coger' + (hechos ? ' · ' + hechos + ' ya en el carro' : '') + '</span></div>' +
         '<div style="text-align:right;"><b style="color:var(--muted); font-size:var(--t-md);">' + lista.length + '</b><span>en total</span></div></div>' +
+        precioCompraHTML(lista) +
+        '<div class="compra-vista">' +
+          '<button class="style-opt' + (vista === 'pasillo' ? ' active' : '') + '" onclick="setVistaCompra(\'pasillo\')">Por pasillo</button>' +
+          '<button class="style-opt' + (vista === 'super' ? ' active' : '') + '" onclick="setVistaCompra(\'super\')">Por súper</button>' +
+          (vista === 'super' ? '<button class="btn-mini" onclick="abrirMisSupers()">' + ico('tienda') + ' Tus súpers</button>' : '') +
+        '</div>' +
         (enSuper
           ? '<div class="super-barra"><i style="width:' + pct + '%"></i></div>' +
             '<button class="super-btn fin" onclick="terminarSuper()">' + (pend ? 'Salir del modo súper' : 'Todo cogido · terminar') + '</button>'
@@ -3693,6 +3763,7 @@ function renderCompra(){
     return;
   }
 
+  if(vista === 'super'){ cont.innerHTML = compraPorSuperHTML(lista); return; }
   let html = '';
   SECCIONES.forEach(sec => {
     const items = lista.filter(i => seccionDe(i.txt) === sec.id);
@@ -3701,13 +3772,7 @@ function renderCompra(){
     const p = items.filter(i => !i.done).length;
     html += '<div class="seccion">' +
       '<div class="seccion-h">' + ico(sec.ico) + esc(sec.label) + '<span class="cuenta">' + p + '/' + items.length + '</span></div>' +
-      items.map(i =>
-        '<div class="linea' + (i.done ? ' hecho' : '') + '" onclick="toggleItem(\'' + i.id + '\')">' +
-          '<span class="marca">' + ico('check') + '</span>' +
-          '<span class="linea-txt">' + esc(i.txt) + (i.nota ? '<i>' + esc(i.nota) + '</i>' : '') + '</span>' +
-          '<button class="linea-x" onclick="borrarItem(\'' + i.id + '\', event)" aria-label="Quitar">' + ico('x') + '</button>' +
-        '</div>'
-      ).join('') +
+      items.map(lineaCompraHTML).join('') +
     '</div>';
   });
   cont.innerHTML = html;
@@ -4237,6 +4302,7 @@ function aplicarCambios(d, date){
   const extra = {};
   if(c.comida && PLATOS[c.comida] && !d.pizza){ extra.comida = '🔁 ' + PLATOS[c.comida].nombre; extra.comidaCambiada = true; extra.quinoa = false; }
   if(c.cena && PLATOS[c.cena] && !d.libre){ extra.cena = '🔁 ' + PLATOS[c.cena].nombre; }
+  if(c.desayuno && PLATOS[c.desayuno]){ extra.desayuno = '🔁 ' + PLATOS[c.desayuno].nombre; }
   return Object.keys(extra).length ? Object.assign({}, d, extra) : d;
 }
 function nombreDiaAli(i){ return ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'][i]; }
@@ -4248,13 +4314,15 @@ function alternativasPara(momento, slugActual){
     const s = slugDePlato(d[momento]);
     if(s && PLATOS[s] && PLATOS[s].tiempo > 0) vistos[s] = true;
   }));
+  /* Los desayunos de más solo salen aquí, cuando se piden: no rotan solos. */
+  if(momento === 'desayuno') Object.keys(PLATOS).forEach(s => { if((PLATOS[s].momentos || []).indexOf('desayuno') !== -1) vistos[s] = true; });
   const favs = loadFavPlatos();
   const actual = PLATOS[slugActual];
   return Object.keys(vistos)
     .filter(s => s !== slugActual && !noMeGustaPlato(s).length)
-    .map(s => ({ s: s, p: PLATOS[s], puntos: (favs.includes(s) ? 100 : 0) + (actual && PLATOS[s].icono !== actual.icono ? 10 : 0) - PLATOS[s].tiempo / 5 }))
+    .map(s => ({ s: s, p: PLATOS[s], puntos: (favs.includes(s) ? 100 : 0) + (actual && PLATOS[s].icono !== actual.icono ? 10 : 0) - tiempoDe(s) / 5 }))
     .sort((a, b) => b.puntos - a.puntos)
-    .slice(0, 6);
+    .slice(0, momento === 'desayuno' ? 10 : 6);
 }
 function abrirCambio(clave, momento){
   const fecha = fechaDeClave(clave);
@@ -4265,14 +4333,14 @@ function abrirCambio(clave, momento){
   const lista = alternativasPara(momento, slugActual).map(x =>
     '<button class="opt" onclick="elegirCambio(\'' + clave + '\',\'' + momento + '\',\'' + x.s + '\')">' +
       '<span class="opt-ico" style="background:' + degradado(x.p.icono) + '">' + ico(x.p.icono) + '</span>' +
-      '<span class="opt-txt"><b>' + esc(x.p.nombre) + '</b><span>' + esc(x.p.donde) + (favs.includes(x.s) ? ' · favorita' : '') + '</span></span>' +
-      '<span class="opt-min">' + x.p.tiempo + '′</span>' +
+      '<span class="opt-txt"><b>' + esc(x.p.nombre) + '</b><span>' + esc(dondeDe(x.s)) + (favs.includes(x.s) ? ' · favorita' : '') + '</span></span>' +
+      '<span class="opt-min">' + tiempoDe(x.s) + '′</span>' +
     '</button>').join('');
   const volver = yaCambiado
     ? '<button class="btn-mini" style="margin-top:12px;" onclick="elegirCambio(\'' + clave + '\',\'' + momento + '\',\'\')">' + ico('flecha') + ' Volver al del menú</button>'
     : '';
   const esHoy = clave === calDateKeyLocal(new Date());
-  const titulo = esHoy ? (momento === 'comida' ? '¿Qué te apetece para comer?' : '¿Qué te apetece para cenar?') : 'Mañana, en vez de esto…';
+  const titulo = esHoy ? (momento === 'desayuno' ? '¿Qué te apetece desayunar?' : momento === 'comida' ? '¿Qué te apetece para comer?' : '¿Qué te apetece para cenar?') : 'Mañana, en vez de esto…';
   abrirSheet({ ico:'dado', label:'Cambiar plato' }, titulo,
     'Tocaba: <b>' + esc(sinEmoji(d[momento])) + '</b>. Estos son del mismo menú, así que encajan igual en tu semana.',
     lista + volver);
@@ -4281,6 +4349,7 @@ function elegirCambio(clave, momento, slug){
   const c = loadCambios();
   const dia = Object.assign({}, c[clave] || {});
   if(slug) dia[momento] = slug; else delete dia[momento];
+  if(Array.isArray(dia.sobra)){ dia.sobra = dia.sobra.filter(m => m !== momento); if(!dia.sobra.length) delete dia.sobra; }
   c[clave] = dia;
   saveCambios(c);
   cerrarSheet();
@@ -4292,6 +4361,7 @@ function cambiarHoyHTML(d, isTeamLunch, fecha){
   const b = [];
   if(!isTeamLunch && !d.pizza && slugDePlato(d.comida)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'comida\')">' + ico('dado') + ' Cambiar la comida</button>');
   if(!d.libre && slugDePlato(d.cena)) b.push('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'cena\')">' + ico('dado') + ' Cambiar la cena</button>');
+  if(momentoAhora().id === 'desayuno' && slugDePlato(d.desayuno)) b.unshift('<button class="btn-mini" onclick="abrirCambio(\'' + k + '\',\'desayuno\')">' + ico('dado') + ' Otro desayuno</button>');
   if(b.length) b.push('<button class="btn-mini" onclick="abrirNevera()">' + ico('nevera') + ' Mirar qué tengo</button>');
   return b.length ? '<div class="cambiar-fila"><span>¿No te apetece lo que toca?</span>' + b.join('') + '</div>' : '';
 }
@@ -4427,7 +4497,7 @@ function pintarNevera(){
         '<span class="opt-ico" style="background:' + degradado(x.p.icono) + '">' + ico(x.p.icono) + '</span>' +
         '<span class="opt-txt"><b>' + esc(x.p.nombre) + '</b><span>' +
           (x.falta.length ? 'Te falta: ' + esc(x.falta.slice(0, 3).join(', ')) + (x.falta.length > 3 ? '…' : '') : 'Tienes todo') + '</span></span>' +
-        '<span class="opt-min">' + x.p.tiempo + '′</span>' +
+        '<span class="opt-min">' + tiempoDe(x.k) + '′</span>' +
       '</button>').join('');
 }
 
@@ -4531,7 +4601,8 @@ function cocinadoFichaDentro(slug){
   const n = vecesCocinado(slug);
   return '<button class="cocinado-btn' + (hoy ? ' hecho' : '') + '"' + (hoy ? ' disabled' : ' onclick="apuntarCocinado(\'' + slug + '\')"') + '>' +
       ico('check') + (hoy ? 'Apuntado hoy' : 'Lo he cocinado hoy') + '</button>' +
-    (n ? '<span class="cocinado-info">Lo has cocinado ' + (n === 1 ? 'una vez' : n + ' veces') + '</span>' : '');
+    (n ? '<span class="cocinado-info">Lo has cocinado ' + (n === 1 ? 'una vez' : n + ' veces') + '</span>' : '') +
+    (hoy ? '<div class="sobra-caja">' + sobraHTML(slug) + '</div>' : '');
 }
 function pintarCocinadoFicha(slug){
   const el = document.getElementById('cocinadoFicha');
@@ -4559,6 +4630,805 @@ function renderCocinados(){
     '</div>' +
     (top.length ? '<p style="font-size:var(--t-sm); margin:0;"><b>Lo que más repites:</b> ' + top.map(s => esc(PLATOS[s].nombre) + ' (' + cuenta[s] + ')').join(', ') + '.</p>' : '') +
     '<ul class="cocinados-lista">' + recientes.map(k => '<li>' + fechaBonita(k) + ': ' + (c[k] || []).filter(s => PLATOS[s]).map(s => esc(PLATOS[s].nombre)).join(', ') + '</li>').join('') + '</ul>';
+}
+
+/* ==================== AIRFRYER PRIMERO ====================
+   Si un plato sale igual o mejor en airfryer, la ficha lo propone así de
+   entrada (tiempos, cocina paso a paso y Recetas lo tienen en cuenta), con un
+   toque para volver a la forma de siempre en ese plato. AIRFRYER vive en
+   platos.js; se comprueba que exista por si llega un platos.js antiguo. */
+function afDe(slug){ return (typeof AIRFRYER !== 'undefined' && slug && AIRFRYER[slug]) || null; }
+function loadSinAirfryer(){
+  try{ const l = JSON.parse(localStorage.getItem('planAlimentacionSinAirfryer')); return Array.isArray(l) ? l : []; }catch(e){ return []; }
+}
+function usaAirfryer(slug){ return !!afDe(slug) && loadSinAirfryer().indexOf(slug) === -1; }
+function pasosDe(slug){ const p = PLATOS[slug]; return usaAirfryer(slug) ? afDe(slug).pasos : ((p && p.pasos) || []); }
+function tiempoDe(slug){ const p = PLATOS[slug]; return usaAirfryer(slug) ? afDe(slug).tiempo : (p ? p.tiempo : 0); }
+function dondeDe(slug){ const p = PLATOS[slug]; return usaAirfryer(slug) ? (afDe(slug).donde || 'Airfryer') : (p ? p.donde : ''); }
+function subFichaTxt(slug){ const t = tiempoDe(slug); return esc(dondeDe(slug)) + (t ? ' · ' + t + ' minutos' : ''); }
+function chipsFichaHTML(slug){
+  const p = PLATOS[slug];
+  if(!p) return '';
+  const chips = [];
+  const t = tiempoDe(slug);
+  if(t) chips.push('<span class="chip">' + ico('reloj') + t + ' min</span>');
+  if(dondeDe(slug)) chips.push('<span class="chip">' + ico(usaAirfryer(slug) ? 'fuego' : 'sarten') + esc(dondeDe(slug)) + '</span>');
+  if(p.tupper && p.tupper !== '—') chips.push('<span class="chip">' + ico('tupper') + esc(p.tupper.split('—')[0].trim()) + '</span>');
+  if(p.tiempo > 0){
+    const fav = loadFavPlatos().includes(slug);
+    chips.push('<button class="chip chip-fav' + (fav ? ' on' : '') + '" aria-pressed="' + fav + '" onclick="favFicha(\'' + slug + '\')">' + ico('estrella') + (fav ? 'Favorita' : 'A favoritas') + '</button>');
+  }
+  return chips.join('');
+}
+function favFicha(slug){
+  toggleFavPlato(slug);
+  const el = document.getElementById('fichaChips');
+  if(el) el.innerHTML = chipsFichaHTML(slug);
+}
+function pasosFichaHTML(slug){
+  const p = PLATOS[slug], af = afDe(slug);
+  if(!p) return '';
+  const con = usaAirfryer(slug);
+  return '<div class="ficha-h">' + ico('sarten') + 'Cómo se hace</div>' +
+    (af ? '<div class="af-selector" role="group" aria-label="Cómo hacerlo">' +
+      '<button class="' + (con ? 'on' : '') + '" aria-pressed="' + con + '" onclick="elegirAirfryer(\'' + slug + '\', true)">' + ico('fuego') + 'Airfryer · ' + af.tiempo + ' min</button>' +
+      '<button class="' + (con ? '' : 'on') + '" aria-pressed="' + !con + '" onclick="elegirAirfryer(\'' + slug + '\', false)">' + esc(p.donde) + ' · ' + p.tiempo + ' min</button>' +
+    '</div>' : '') +
+    (con && af.nota ? '<div class="ficha-nota tip">' + esc(af.nota) + '</div>' : '') +
+    '<ol class="paso-lista">' + pasosDe(slug).map(s => '<li>' + esc(s) + '</li>').join('') + '</ol>';
+}
+function elegirAirfryer(slug, con){
+  const l = loadSinAirfryer().filter(s => s !== slug);
+  if(!con) l.push(slug);
+  setLS('planAlimentacionSinAirfryer', JSON.stringify(l));
+  const b = document.getElementById('fichaPasos');
+  if(b) b.innerHTML = pasosFichaHTML(slug);
+  const sub = document.getElementById('fichaSub');
+  if(sub) sub.innerHTML = subFichaTxt(slug);
+  const chips = document.getElementById('fichaChips');
+  if(chips) chips.innerHTML = chipsFichaHTML(slug);
+  renderRecetas();
+  renderHoy();
+}
+
+/* ==================== LO QUE SOBRA Y EL CONGELADOR ====================
+   Al terminar de cocinar (o al marcar «Lo he cocinado hoy»), dos salidas de un
+   toque si ha sobrado: comérselo mañana, que cambia el plato de mañana por este
+   ya hecho, o al congelador. Lo congelado sale en Hoy antes de cocinar y en el
+   aviso del tupper de mañana. Todo son funciones: el arranque pinta Hoy antes
+   de llegar aquí. */
+function loadCongelador(){
+  try{
+    const l = JSON.parse(localStorage.getItem('planAlimentacionCongelador'));
+    return Array.isArray(l) ? l.filter(x => x && x.id && x.slug && x.n > 0) : [];
+  }catch(e){ return []; }
+}
+function saveCongelador(l){ setLS('planAlimentacionCongelador', JSON.stringify(l.filter(x => x.n > 0))); }
+function racionesCongeladas(){ return loadCongelador().filter(x => PLATOS[x.slug]).reduce((a, x) => a + x.n, 0); }
+function congelaBien(slug){
+  const p = PLATOS[slug];
+  if(!p || !(p.tiempo > 0)) return false;
+  if(['desayuno', 'media', 'capricho', 'huevo', 'ensalada'].indexOf(p.icono) !== -1) return false;
+  if(/en frío|sin cocinar|tostadora/i.test(p.donde || '')) return false;
+  return !/^\s*(malo|regular|mejor)/i.test(p.tupper || '');
+}
+function mananaOpciones(){
+  const m = new Date(); m.setDate(m.getDate() + 1);
+  const r = getDayForDate(m);
+  const ops = [];
+  if(!isVacationOn(m)){
+    if(!r.isTeamLunch && !r.d.pizza) ops.push('comida');
+    if(!r.d.libre) ops.push('cena');
+  }
+  return ops;
+}
+function yaHechoEl(fecha, momento){
+  const c = loadCambios()[calDateKeyLocal(fecha)] || {};
+  return Array.isArray(c.sobra) && c.sobra.indexOf(momento) !== -1;
+}
+function sobraYaTxt(slug){
+  const partes = [];
+  const m = new Date(); m.setDate(m.getDate() + 1);
+  const cm = loadCambios()[calDateKeyLocal(m)] || {};
+  ['comida', 'cena'].forEach(x => { if(cm[x] === slug && yaHechoEl(m, x)) partes.push('mañana en la ' + x); });
+  const hoyK = calDateKeyLocal(new Date());
+  const cong = loadCongelador().filter(x => x.slug === slug && x.f === hoyK).reduce((a, x) => a + x.n, 0);
+  if(cong) partes.push(cong + (cong === 1 ? ' ración' : ' raciones') + ' al congelador');
+  return partes.length ? 'Apuntado: ' + partes.join(' y ') + '.' : '';
+}
+function sobraHTML(slug){
+  const p = PLATOS[slug];
+  if(!p || !(p.tiempo > 0)) return '';
+  const ops = /^\s*malo/i.test(p.tupper || '') ? [] : mananaOpciones();
+  const congelar = congelaBien(slug);
+  if(!ops.length && !congelar) return '';
+  if(window.sobraPaso === 'congelar' && congelar){
+    return '<div class="sobra"><b>¿Cuántas raciones congelas?</b><div class="sobra-botones">' +
+      [1, 2, 3, 4].map(n => '<button class="btn-mini" onclick="congelarSobra(\'' + slug + '\',' + n + ')">' + n + '</button>').join('') +
+      '<button class="btn-mini" onclick="window.sobraPaso = null; pintarSobra(\'' + slug + '\')">Cancelar</button></div></div>';
+  }
+  const ya = sobraYaTxt(slug);
+  return '<div class="sobra"><b>¿Ha sobrado?</b>' + (ya ? '<span class="sobra-ya">' + esc(ya) + '</span>' : '') +
+    '<div class="sobra-botones">' +
+      ops.map(m => '<button class="btn-mini" onclick="sobraManana(\'' + slug + '\',\'' + m + '\')">' + ico('tupper') + ' Mañana en la ' + m + '</button>').join('') +
+      (congelar ? '<button class="btn-mini" onclick="window.sobraPaso = \'congelar\'; pintarSobra(\'' + slug + '\')">' + ico('nevera') + ' Al congelador</button>' : '') +
+    '</div></div>';
+}
+function pintarSobra(slug){
+  document.querySelectorAll('.sobra-caja').forEach(el => { el.innerHTML = sobraHTML(slug); });
+}
+function sobraManana(slug, momento){
+  const m = new Date(); m.setDate(m.getDate() + 1);
+  const clave = calDateKeyLocal(m);
+  const antes = loadCambios();
+  const c = JSON.parse(JSON.stringify(antes));
+  const dia = Object.assign({}, c[clave] || {});
+  dia[momento] = slug;
+  dia.sobra = (Array.isArray(dia.sobra) ? dia.sobra.filter(x => x !== momento) : []).concat(momento);
+  c[clave] = dia;
+  saveCambios(c);
+  window.sobraPaso = null;
+  pintarSobra(slug);
+  renderHoy();
+  toast('Mañana en la ' + momento + ': lo que ha sobrado', () => { saveCambios(antes); pintarSobra(slug); renderHoy(); });
+}
+function congelarSobra(slug, n){
+  const antes = loadCongelador();
+  const l = antes.map(x => Object.assign({}, x));
+  const hoyK = calDateKeyLocal(new Date());
+  const ya = l.find(x => x.slug === slug && x.f === hoyK);
+  if(ya) ya.n += n; else l.push({ id: nuevoId(), slug: slug, n: n, f: hoyK });
+  saveCongelador(l);
+  window.sobraPaso = null;
+  pintarSobra(slug);
+  renderHoy();
+  if(window.congeladorCtx && document.getElementById('congeladorLista')) abrirCongelador(window.congeladorCtx.momento, window.congeladorCtx.diaSig);
+  toast(n + (n === 1 ? ' ración' : ' raciones') + ' al congelador', () => { saveCongelador(antes); pintarSobra(slug); renderHoy(); });
+}
+function abrirCongelador(momento, diaSig){
+  window.congeladorCtx = { momento: momento || null, diaSig: !!diaSig };
+  const hoy0 = fechaDeClave(calDateKeyLocal(new Date()));
+  const l = loadCongelador().filter(x => PLATOS[x.slug]).sort((a, b) => a.f < b.f ? -1 : 1);
+  const usar = diaSig ? 'Me lo llevo mañana' : momento === 'comida' ? 'Para comer hoy' : momento === 'cena' ? 'Para cenar hoy' : '';
+  const filas = l.map(x => {
+    const p = PLATOS[x.slug];
+    const dias = Math.round((hoy0 - fechaDeClave(x.f)) / 86400000);
+    return '<div class="opt congelado">' +
+      '<span class="opt-ico" style="background:' + degradado(p.icono) + '">' + ico(p.icono) + '</span>' +
+      '<span class="opt-txt"><b>' + esc(p.nombre) + '</b><span>' + x.n + (x.n === 1 ? ' ración' : ' raciones') + ' · desde el ' + fechaBonita(x.f) + (dias > 90 ? ' · mejor usarlo ya' : '') + '</span>' +
+        '<span class="sobra-botones">' +
+          (usar ? '<button class="btn-mini solid" onclick="usarCongelado(\'' + x.id + '\')">' + usar + '</button>' : '') +
+          '<button class="btn-mini" onclick="usarCongelado(\'' + x.id + '\', true)">Quitar una</button>' +
+        '</span></span></div>';
+  }).join('');
+  const opciones = platosCocinables().filter(congelaBien).sort((a, b) => PLATOS[a].nombre.localeCompare(PLATOS[b].nombre, 'es'));
+  abrirSheet({ ico:'nevera', label:'Congelador' }, l.length ? 'Lo que tienes congelado' : 'El congelador está vacío',
+    l.length ? 'Para mañana, sácalo a la nevera esta noche. Para hoy, al microondas en descongelar.' : 'Se llena solo al terminar de cocinar, con «¿Ha sobrado?». O apúntalo a mano aquí abajo.',
+    '<div id="congeladorLista">' + filas + '</div>' +
+    '<div class="ficha-h" style="margin-top:18px;">' + ico('mas') + 'Apuntar algo que congelaste</div>' +
+    '<div class="congelar-mano"><select id="congelarSel" aria-label="Plato">' +
+      opciones.map(s => '<option value="' + s + '">' + esc(PLATOS[s].nombre) + '</option>').join('') +
+    '</select><button class="btn-mini solid" onclick="congelarAMano()">Apuntar 1</button></div>');
+}
+function congelarAMano(){
+  const sel = document.getElementById('congelarSel');
+  if(sel && PLATOS[sel.value]) congelarSobra(sel.value, 1);
+}
+function usarCongelado(id, soloQuitar){
+  const ctx = window.congeladorCtx || {};
+  const antes = loadCongelador();
+  const l = antes.map(x => Object.assign({}, x));
+  const x = l.find(y => y.id === id);
+  if(!x || !PLATOS[x.slug]) return;
+  x.n -= 1;
+  saveCongelador(l);
+  const cambiosAntes = loadCambios();
+  const momento = soloQuitar ? null : ctx.momento;
+  if(momento){
+    const f = new Date(); if(ctx.diaSig) f.setDate(f.getDate() + 1);
+    const clave = calDateKeyLocal(f);
+    const c = JSON.parse(JSON.stringify(cambiosAntes));
+    const dia = Object.assign({}, c[clave] || {});
+    dia[momento] = x.slug;
+    dia.sobra = (Array.isArray(dia.sobra) ? dia.sobra.filter(m => m !== momento) : []).concat(momento);
+    c[clave] = dia;
+    saveCambios(c);
+  }
+  cerrarSheet();
+  renderHoy();
+  const nombre = PLATOS[x.slug].nombre.toLowerCase();
+  toast(!momento ? 'Quitada una ración' : ctx.diaSig ? 'Mañana te llevas ' + nombre + ': sácalo esta noche a la nevera' : 'Hoy toca ' + nombre + ': al microondas en descongelar',
+    () => { saveCongelador(antes); if(momento) saveCambios(cambiosAntes); renderHoy(); });
+}
+function congeladorHoyHTML(d, now){
+  const n = racionesCongeladas();
+  if(!n) return '';
+  const m = momentoAhora().id;
+  const finde = now.getDay() === 0 || now.getDay() === 6;
+  let momento = null;
+  if(m === 'comida' && (finde || isWfhOn(now)) && !d.pizza) momento = 'comida';
+  else if((m === 'merienda' || m === 'cena') && !d.libre) momento = 'cena';
+  if(!momento || yaHechoEl(now, momento)) return '';
+  return '<div class="tip tip-mini"><span>Antes de cocinar: tienes ' + n + (n === 1 ? ' ración' : ' raciones') + ' en el congelador.</span>' +
+    '<button class="btn-mini" onclick="abrirCongelador(\'' + momento + '\')">' + ico('nevera') + ' Ver</button></div>';
+}
+function congeladorMananaBtn(){
+  return racionesCongeladas()
+    ? '<button class="tip-cambiar" onclick="event.stopPropagation(); abrirCongelador(\'comida\', true)">' + ico('nevera') + ' Llevarme algo del congelador</button>'
+    : '';
+}
+function favDesdeCocina(){
+  if(!CO.slug) return;
+  toggleFavPlato(CO.slug);
+  pintarCocina();
+  const el = document.getElementById('fichaChips');
+  if(el && fichaSlugActual === CO.slug) el.innerHTML = chipsFichaHTML(CO.slug);
+}
+
+/* ==================== USA ESTO PRIMERO ====================
+   Lo fresco que dura poco (pescado, carne, hojas verdes) se apunta al marcarlo
+   como cogido en la compra. Si se va a pasar antes del día que el menú lo
+   usa, Hoy lo dice con tiempo: congélalo o adelanta ese plato. Queda en este
+   móvil, que es donde se tacha la compra. */
+function perecederos(){
+  return [
+    [/salmon|merluza|bacalao|lubina|dorada|sardina|caballa|boqueron|pescado/, 2],
+    [/calamar|sepia|gamba|langostino|mejillon/, 2],
+    [/pollo|pechuga|muslo|contramuslo|jamoncito|pavo|carne picada|hamburguesa/, 2],
+    [/ternera|cerdo|solomillo|bistec|lomo/, 3],
+    [/espinaca|ensalada|lechuga|rucula|canonig|brotes/, 4],
+    [/esparrago|brocoli|judias? verde/, 4],
+    [/fresa|frambuesa|arandano|mora/, 3]
+  ];
+}
+function perecederoDe(txt){
+  const s = normalizeText(txt);
+  if(/congelad|ahumad|cocid|lata|bote|conserva|lonchead|taquito|fiambre|jamon|atun|hummus|gazpacho|seco|polvo/.test(s)) return null;
+  const r = perecederos().find(x => x[0].test(s));
+  /* Para buscar en qué plato se usa vale la palabra concreta (salmón), no la
+     familia entera: si no, el bacalao del jueves «usaba» el salmón. */
+  return r ? { re: new RegExp(s.match(r[0])[0]), dias: r[1] } : null;
+}
+function loadFrescos(){
+  try{ const l = JSON.parse(localStorage.getItem('planAlimentacionFrescos')); return Array.isArray(l) ? l : []; }catch(e){ return []; }
+}
+function apuntarFresco(it){
+  if(!it || !perecederoDe(it.txt)) return;
+  const k = normalizeText(it.txt);
+  const l = loadFrescos().filter(x => x.k !== k);
+  if(it.done) l.push({ k: k, txt: it.txt, f: calDateKeyLocal(new Date()) });
+  setRaw('planAlimentacionFrescos', JSON.stringify(l.slice(-20)));
+}
+function platoQueLoUsa(re){
+  for(let i = 0; i <= 6; i++){
+    const f = new Date(); f.setDate(f.getDate() + i);
+    if(isVacationOn(f)) continue;
+    const d = getDayForDate(f).d;
+    const momentos = ['comida', 'cena'];
+    for(let j = 0; j < momentos.length; j++){
+      const slug = slugDePlato(d[momentos[j]]);
+      const p = slug && PLATOS[slug];
+      if(p && (p.ingredientes || []).some(ing => { const n = normalizeText(ing.item); return re.test(n) && !/ahumad|lata|bote|congelad|cocid/.test(n); })) return { i: i, momento: momentos[j], slug: slug, fecha: f };
+    }
+  }
+  return null;
+}
+function usaPrimeroHTML(){
+  const hoy0 = fechaDeClave(calDateKeyLocal(new Date()));
+  const avisos = [];
+  loadFrescos().forEach((x, i) => {
+    const per = perecederoDe(x.txt);
+    if(!per) return;
+    const quedan = per.dias - Math.round((hoy0 - fechaDeClave(x.f)) / 86400000);
+    if(quedan > 1 || quedan < -1) return;
+    const uso = platoQueLoUsa(per.re);
+    if(uso && uso.i <= Math.max(0, quedan)) return;
+    avisos.push({ i: i, x: x, quedan: quedan, uso: uso });
+  });
+  return avisos.slice(0, 2).map(a => {
+    const nombre = a.x.txt.charAt(0).toUpperCase() + a.x.txt.slice(1);
+    const aguanta = a.quedan <= 0 ? 'hay que usarlo hoy' : 'solo aguanta hasta mañana';
+    const txt = a.uso
+      ? 'lo usas el ' + nombreDiaAli(a.uso.fecha.getDay()) + ', pero fresco ' + aguanta + '. Congélalo hoy, o pasa ese plato a hoy.'
+      : 'fresco ' + aguanta + '. Úsalo antes, o congélalo hoy y no se pierde.';
+    return '<div class="tip aviso-fresco"><span>' + ico('alerta') + ' <b>' + esc(nombre) + ':</b> ' + esc(txt) + '</span><div class="sobra-botones">' +
+      (a.uso ? '<button class="btn-mini solid" onclick="frescoAccion(' + a.i + ',\'hoy\')">Pasarlo a hoy</button>' : '') +
+      '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'congelar\')">' + ico('nevera') + ' Lo congelo</button>' +
+      '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'listo\')">Ya está</button></div></div>';
+  }).join('');
+}
+function frescoAccion(i, accion){
+  const l = loadFrescos();
+  const x = l[i];
+  if(!x) return;
+  if(accion === 'hoy'){
+    const per = perecederoDe(x.txt), uso = per && platoQueLoUsa(per.re), now = new Date();
+    if(uso){
+      const finde = now.getDay() === 0 || now.getDay() === 6;
+      const momento = (now.getHours() + now.getMinutes() / 60 < 16.5 && (finde || isWfhOn(now))) ? 'comida' : 'cena';
+      if(momento === 'cena' && getDayForDate(now).d.libre){ toast('Esta noche es cena libre: mejor congélalo'); return; }
+      elegirCambio(calDateKeyLocal(now), momento, uso.slug);
+    }
+  } else if(accion === 'congelar'){
+    toast('Al congelador en su bandeja o en una bolsa, plano. La noche antes de usarlo, a la nevera.');
+  }
+  l.splice(i, 1);
+  setRaw('planAlimentacionFrescos', JSON.stringify(l));
+  renderHoy();
+}
+
+/* ==================== HAMBRE POR LA NOCHE ====================
+   De 21:00 a 3:00, una línea en Hoy. Nada de "aguanta": primero saber qué
+   tipo de hambre es. Si es de verdad, qué comer que sacie y deje dormir. Si
+   es más bien ansiedad, un minuto de respiración, y después se decide. */
+function hambreNocheHTML(){
+  const h = new Date().getHours();
+  if(!(h >= 21 || h < 3)) return '';
+  return '<div class="tip tip-mini"><span>¿Hambre a estas horas?</span><button class="btn-mini" onclick="abrirHambreNoche()">' + ico('luna') + ' Qué hago</button></div>';
+}
+function abrirHambreNoche(){
+  pararRespiraNoche();
+  abrirSheet({ ico:'luna', label:'Por la noche' }, 'Hambre a estas horas',
+    'Pasa, y no es ningún fallo: ni hay que ganárselo ni compensarlo mañana. Primero, qué tipo de hambre es.',
+    '<button class="opt" onclick="verHambreReal()"><span class="opt-ico" style="background:' + degradado('media') + '">' + ico('media') + '</span>' +
+      '<span class="opt-txt"><b>Hambre de verdad</b><span>Cenaste pronto o poco, y el estómago lo nota.</span></span></button>' +
+    '<button class="opt" onclick="verRespiraNoche()"><span class="opt-ico" style="background:' + degradado('capricho') + '">' + ico('agobio') + '</span>' +
+      '<span class="opt-txt"><b>Más bien ansiedad o aburrimiento</b><span>Ganas de comer, pero sin hambre en el estómago.</span></span></button>' +
+    '<div class="veredicto">Si no lo tienes claro, empieza por el minuto de respirar. Si después sigue el hambre, es hambre, y se come.</div>');
+}
+function verHambreReal(){
+  pararRespiraNoche();
+  const ops = [
+    ['Yogur griego o skyr con canela', 'Unos 15-20 g de proteína: sacia y deja dormir.'],
+    ['Un vaso de leche o kéfir, templado si te apetece', 'Lo más sencillo, y de lo que mejor sienta a esta hora.'],
+    ['Tostada integral con pavo o queso fresco', 'Para cuando el hambre es de las de verdad.'],
+    ['Una pieza de fruta y 4-5 nueces', 'Fibra y grasa buena: tarda en bajar.'],
+    ['Un huevo duro con un poco de pan', 'Si los tienes hervidos, es cosa de un minuto.'],
+    ['Una infusión y una onza de chocolate negro', 'Cuando lo que pide el cuerpo es algo dulce.']
+  ];
+  abrirSheet({ ico:'luna', label:'Por la noche' }, 'Algo que sacie y deje dormir',
+    'Elige uno, ponlo en un plato y cómetelo sentado, sin pantalla delante. Con eso basta.',
+    '<ul class="lista-si">' + ops.map(o => '<li>' + ico('check') + '<span><b>' + esc(o[0]) + '</b><br>' + esc(o[1]) + '</span></li>').join('') + '</ul>' +
+    '<div class="ficha-nota tip" style="margin-top:12px;"><b>Si pasa muchas noches</b>Suele ser que la merienda o la cena se quedan cortas. La respuesta es subirlas un poco, no aguantar.</div>' +
+    '<button class="btn-mini" onclick="volverSheet()" style="margin-top:6px;">' + ico('flecha') + ' Volver</button>', true);
+}
+function verRespiraNoche(){
+  pararRespiraNoche();
+  abrirSheet({ ico:'luna', label:'Por la noche' }, 'Un minuto antes de decidir',
+    'Coge aire mientras el círculo crece y suéltalo despacio mientras baja. Seis veces. No hay que hacer nada más.',
+    '<div class="resp-noche"><div class="resp-bola" id="respBola"></div><p class="resp-txt" id="respTxt">Cuando quieras</p></div>' +
+    '<button class="ficha-cta" id="respBoton" onclick="empezarRespiraNoche()">' + ico('corazon') + '<span>Empezar el minuto</span></button>' +
+    '<div id="respDespues"></div>' +
+    '<button class="btn-mini" onclick="volverSheet()" style="margin-top:12px;">' + ico('flecha') + ' Volver</button>', true);
+}
+function empezarRespiraNoche(){
+  pararRespiraNoche();
+  const btn = document.getElementById('respBoton');
+  if(btn) btn.style.display = 'none';
+  const inicio = Date.now(), ciclo = 10000, total = 60000;
+  window.respNocheT = setInterval(() => {
+    const b = document.getElementById('respBola'), x = document.getElementById('respTxt');
+    if(!b || !x){ pararRespiraNoche(); return; }
+    const t = Date.now() - inicio;
+    if(t >= total){
+      pararRespiraNoche();
+      b.classList.remove('dentro');
+      x.textContent = 'Ya está';
+      const d = document.getElementById('respDespues');
+      if(d) d.innerHTML = '<div class="veredicto">¿Sigue apeteciendo? Entonces come algo, tranquilo: no es un examen.</div>' +
+        '<button class="btn-mini solid" style="margin-top:12px;" onclick="verHambreReal()">' + ico('lista') + ' Ver qué comer</button>';
+      return;
+    }
+    const enCiclo = t % ciclo, dentro = enCiclo < 4000;
+    b.classList.toggle('dentro', dentro);
+    x.textContent = dentro ? 'Coge aire · ' + Math.ceil((4000 - enCiclo) / 1000) : 'Suéltalo despacio · ' + Math.ceil((ciclo - enCiclo) / 1000);
+  }, 200);
+}
+function pararRespiraNoche(){
+  if(window.respNocheT){ clearInterval(window.respNocheT); window.respNocheT = null; }
+}
+
+/* ==================== LA SEMANA PASADA ====================
+   Lunes y martes, una línea con lo que sí se hizo. Si no hubo nada, no sale:
+   ni ceros ni "esta semana a ver si…". */
+function resumenSemanaAliHTML(){
+  const hoy = new Date(), dow = hoy.getDay();
+  if(dow !== 1 && dow !== 2) return '';
+  const lunes = fechaDeClave(lunesClave());
+  const lunesAntes = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate() - 7);
+  const desde = calDateKeyLocal(lunesAntes), hasta = calDateKeyLocal(lunes);
+  let visto = '';
+  try{ visto = localStorage.getItem('planAlimentacionResumenVisto') || ''; }catch(e){}
+  if(visto === desde) return '';
+  const c = loadCocinados();
+  const platos = Object.keys(c).filter(k => k >= desde && k < hasta).reduce((n, k) => n + (c[k] || []).length, 0);
+  if(!platos) return '';
+  const congeladas = loadCongelador().filter(x => x.f >= desde && x.f < hasta).reduce((n, x) => n + x.n, 0);
+  return '<div class="tip tip-mini"><span>La semana pasada cocinaste <b>' + platos + (platos === 1 ? ' plato' : ' platos') + '</b>' +
+    (congeladas ? ' y dejaste ' + congeladas + (congeladas === 1 ? ' ración' : ' raciones') + ' en el congelador' : '') + '. Eso ya está hecho.</span>' +
+    '<button class="btn-mini" onclick="setRaw(\'planAlimentacionResumenVisto\', \'' + desde + '\'); renderHoy();">Visto</button></div>';
+}
+
+/* ==================== SIN TUPPER, AL LADO DEL TRABAJO ====================
+   Al lado del trabajo hay un Ametller Origen (el de los bowls) y un Bonpreu.
+   Olvidarse el tupper o no haberlo hecho no es saltarse el plan: esto es el
+   plan, comprado. */
+function cercaTrabajo(){
+  return {
+    ametller: {
+      nombre:'Ametller Origen', precio:'unos 6-9 €',
+      pide:[
+        'Un bowl con proteína: pollo, salmón, atún, huevo o legumbre. El de quinoa o arroz integral, mejor que el de pasta.',
+        'Si el bowl es pequeño, añade una fruta o un yogur natural de la nevera.',
+        'Una ensalada grande con hummus o huevo duro.'
+      ],
+      evita:[
+        'Los de pasta con salsas cremosas: parecen ligeros y llenan menos de lo que cuestan.',
+        'Los zumos de botella: el azúcar de varias naranjas, sin la fibra.'
+      ]
+    },
+    bonpreu: {
+      nombre:'Bonpreu', precio:'unos 4-6 €',
+      pide:[
+        'Ensalada preparada de la nevera y una lata de atún o caballa al natural (con abrefácil).',
+        'Quinoa o arroz integral en vasito (frío también se come), atún y tomates cherry: tu bowl de los jueves, montado en la oficina.',
+        'Pavo o pollo cocido en lonchas, pan integral y tomates cherry.',
+        'Hummus con pan integral y zanahorias para mojar, y un yogur de postre.',
+        'Gazpacho y un huevo duro o una lata de atún, cuando hace calor.'
+      ],
+      evita:[
+        'Los platos preparados de pasta o pizza de la nevera: llenan poco para lo que cuestan.',
+        'La bollería de la entrada, que es donde acaba la mano cuando llegas con hambre y sin decidir.'
+      ]
+    }
+  };
+}
+function sinTupperCuerpo(x){
+  return '<div class="ficha-h">' + ico('check') + 'Coge esto</div><ul class="lista-si">' + x.pide.map(t => '<li>' + ico('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul>' +
+    '<div class="ficha-h" style="margin-top:18px;">' + ico('x') + 'Mejor no</div><ul class="lista-no">' + x.evita.map(t => '<li>' + ico('x') + '<span>' + esc(t) + '</span></li>').join('') + '</ul>' +
+    '<p class="sheet-sub" style="margin:12px 0 0;">Sale por ' + esc(x.precio) + '.</p>';
+}
+function abrirSinTupper(cual){
+  const d = cercaTrabajo();
+  abrirSheet({ ico:'tienda', label:'Sin tupper' }, cual === 'ametller' ? 'Qué coger en el Ametller' : 'Hoy sin tupper',
+    cual === 'ametller' ? 'El de al lado del trabajo.' : 'Al lado del trabajo tienes el Ametller Origen y un Bonpreu. Con esto comes como dice el plan, sin pensarlo allí.',
+    (cual === 'ametller' ? sinTupperCuerpo(d.ametller)
+      : '<div class="style-options" style="margin-bottom:14px;">' +
+          '<button class="style-opt active" id="sinTupper0" onclick="sinTupperTab(0)">Ametller</button>' +
+          '<button class="style-opt" id="sinTupper1" onclick="sinTupperTab(1)">Bonpreu</button></div>' +
+        '<div id="sinTupperCuerpo0">' + sinTupperCuerpo(d.ametller) + '</div>' +
+        '<div id="sinTupperCuerpo1" style="display:none;">' + sinTupperCuerpo(d.bonpreu) + '</div>') +
+    '<div class="veredicto">Olvidarte el tupper no es saltarte el plan: esto es el plan, comprado.</div>');
+}
+function sinTupperTab(i){
+  [0, 1].forEach(j => {
+    const c = document.getElementById('sinTupperCuerpo' + j), b = document.getElementById('sinTupper' + j);
+    if(c) c.style.display = j === i ? '' : 'none';
+    if(b) b.classList.toggle('active', j === i);
+  });
+}
+
+/* ==================== EL MENÚ, EN UNA IMAGEN ====================
+   Comida y cena de cada día de la semana, para mandárselo a la familia o
+   guardarlo. Sin kcal ni macros. Se genera primero y se enseña, y se comparte
+   con otro toque: así el iPhone no bloquea la hoja de compartir. */
+function semanaParaImagen(siguiente){
+  const hoy = new Date();
+  const lunes = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - ((hoy.getDay() + 6) % 7) + (siguiente ? 7 : 0));
+  const dias = [];
+  for(let i = 0; i < 7; i++){
+    const f = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate() + i);
+    const r = getDayForDate(f);
+    dias.push({ f: f, comida: r.d.comida, cena: r.d.cena, equipo: r.isTeamLunch || !!r.d.pizza, libre: !!r.d.libre, pausa: isVacationOn(f) });
+  }
+  return { lunes: lunes, dias: dias };
+}
+function abrirMenuImagen(){
+  const dow = new Date().getDay();
+  abrirSheet({ ico:'compartir', label:'Menú' }, 'El menú, en una imagen',
+    'Para mandarlo a quien quieras. Mantén pulsada la imagen para guardarla, o compártela.',
+    '<div class="style-options" id="menuImgOps" style="margin-bottom:12px;">' +
+      '<button class="style-opt" data-sem="0" onclick="verMenuImagen(0)">Esta semana</button>' +
+      '<button class="style-opt" data-sem="1" onclick="verMenuImagen(1)">La que viene</button>' +
+    '</div><div class="menu-previa" id="menuImgPrevia"></div>');
+  verMenuImagen(dow === 0 || dow === 5 || dow === 6 ? 1 : 0);
+}
+async function verMenuImagen(sig){
+  document.querySelectorAll('#menuImgOps .style-opt').forEach(b => b.classList.toggle('active', b.getAttribute('data-sem') === String(sig)));
+  const el = document.getElementById('menuImgPrevia');
+  if(!el) return;
+  el.innerHTML = '<p class="vacio">Preparando la imagen…</p>';
+  try{
+    if(document.fonts && document.fonts.load) await Promise.race([document.fonts.load("600 64px 'Fraunces'"), new Promise(r => setTimeout(r, 900))]);
+  }catch(e){}
+  const c = dibujarMenuSemana(semanaParaImagen(sig));
+  window.menuArchivo = null;
+  try{ c.toBlob(b => { if(b) window.menuArchivo = new File([b], 'menu-de-la-semana.png', { type:'image/png' }); }, 'image/png'); }catch(e){}
+  if(!document.getElementById('menuImgPrevia')) return;
+  el.innerHTML = '<img src="' + c.toDataURL('image/png') + '" alt="Menú de la semana">' +
+    '<button class="ficha-cta" onclick="compartirMenuImagen()">' + ico('compartir') + '<span>Compartir o guardar</span></button>';
+}
+function compartirMenuImagen(){
+  try{
+    if(window.menuArchivo && navigator.canShare && navigator.canShare({ files:[window.menuArchivo] })){
+      navigator.share({ files:[window.menuArchivo], title:'Menú de la semana' }).catch(() => {});
+      return;
+    }
+  }catch(e){}
+  const img = document.querySelector('#menuImgPrevia img');
+  if(!img) return;
+  const a = document.createElement('a');
+  a.href = img.src;
+  a.download = 'menu-de-la-semana.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  toast('Imagen descargada');
+}
+function envolverTexto(g, txt, max){
+  const out = [];
+  let linea = '';
+  String(txt).split(/\s+/).filter(Boolean).forEach(p => {
+    const t = linea ? linea + ' ' + p : p;
+    if(linea && g.measureText(t).width > max){ out.push(linea); linea = p; } else linea = t;
+  });
+  if(linea) out.push(linea);
+  return out.length ? out : [''];
+}
+function lienzoRedondeadoAli(g, x, y, w, h, r){
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+}
+function dibujarMenuSemana(sem){
+  const colores = { '':'#2f7a5f', azul:'#2b6cb0', morado:'#6b46c1', naranja:'#c2660a', rosa:'#be185d', turquesa:'#0f766e' };
+  const acc = colores[document.documentElement.getAttribute('data-color') || ''] || '#2f7a5f';
+  const W = 1080, M = 60, PAD = 36, COL = 176, CAB = 250, PIE = 100, SEP = 18;
+  const sans = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const DIA = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const limpio = t => sinEmoji(String(t || '').replace(/🔁/g, '')).replace(/\s*\((comida en familia|comida familiar|capricho controlado)\)\s*$/i, '').replace(/\s*—.*$/, '').trim();
+  const c = document.createElement('canvas');
+  let g = c.getContext('2d');
+  const ancho = W - 2 * M - 2 * PAD - COL;
+  g.font = '500 36px ' + sans;
+  const filas = sem.dias.map(d => {
+    const comida = d.pausa ? 'Plan en pausa' : d.equipo ? 'Comida de equipo' : limpio(d.comida);
+    const cena = d.pausa ? '' : d.libre ? 'Cena libre' : limpio(d.cena);
+    const lc = envolverTexto(g, comida, ancho), le = cena ? envolverTexto(g, cena, ancho) : [];
+    return { d: d, lc: lc, le: le, alto: PAD + 50 + lc.length * 46 + (le.length ? 16 + le.length * 46 : 0) + PAD };
+  });
+  const H = CAB + filas.reduce((a, f) => a + f.alto + SEP, 0) + PIE;
+  c.width = W; c.height = H;
+  g = c.getContext('2d');
+  g.fillStyle = '#f5f3ee'; g.fillRect(0, 0, W, H);
+  g.fillStyle = acc; g.fillRect(0, 0, W, CAB - 34);
+  const l = sem.lunes, dom = sem.dias[6].f;
+  g.textAlign = 'left';
+  g.fillStyle = '#ffffff'; g.font = "600 64px 'Fraunces', Georgia, serif";
+  g.fillText('Mi menú de la semana', M, 116);
+  g.fillStyle = 'rgba(255,255,255,.88)'; g.font = '500 34px ' + sans;
+  g.fillText('Del ' + l.getDate() + (l.getMonth() !== dom.getMonth() ? ' de ' + MES[l.getMonth()] : '') + ' al ' + dom.getDate() + ' de ' + MES[dom.getMonth()], M, 172);
+  let y = CAB;
+  filas.forEach(f => {
+    lienzoRedondeadoAli(g, M, y, W - 2 * M, f.alto, 26);
+    g.fillStyle = '#ffffff'; g.fill();
+    let yy = y + PAD + 34;
+    g.textAlign = 'left'; g.fillStyle = acc; g.font = '700 36px ' + sans;
+    g.fillText(DIA[f.d.f.getDay()] + ' ' + f.d.f.getDate(), M + PAD, yy);
+    const bloque = (etiqueta, lineas) => {
+      yy += 46;
+      g.fillStyle = '#7a7d74'; g.font = '600 25px ' + sans;
+      g.fillText(etiqueta, M + PAD, yy - 3);
+      g.fillStyle = '#23251f'; g.font = '500 36px ' + sans;
+      lineas.forEach((t, i) => { if(i) yy += 46; g.fillText(t, M + PAD + COL, yy); });
+    };
+    bloque('COMIDA', f.lc);
+    if(f.le.length){ yy += 16; bloque('CENA', f.le); }
+    y += f.alto + SEP;
+  });
+  g.textAlign = 'center'; g.fillStyle = '#7a7d74'; g.font = '500 28px ' + sans;
+  g.fillText('Plan de alimentación · método del plato', W / 2, H - 46);
+  return c;
+}
+
+/* ==================== COMPRA: CUÁNTO CUESTA Y DÓNDE ====================
+   Un precio medio por lo que se compra de una vez (un bote, una bandeja, una
+   bolsa), para tener una idea antes de ir, no una cuenta al céntimo. Lo que
+   dura semanas (aceite, especias, café) se separa, porque no se paga cada
+   semana. Y la lista se puede ver repartida entre los súpers a los que vas:
+   cada cosa, al que mejor sale de esos. */
+function preciosCompra(){
+  return [
+    [/crema de cacahuete/, 2.5, true],
+    [/frutos secos|nueces|almendra|cacahuete/, 2.8, true],
+    [/atun/, 2.7],
+    [/aceite/, 8.5, true],
+    [/vinagre/, 1, true],
+    [/\bsal\b|pimienta|pimenton|oregano|comino|curry|canela|laurel|azafran|colorante|ajo en polvo|especia|romero|tomillo/, 1.2, true],
+    [/cafe/, 3.5, true],
+    [/miel/, 2.5, true],
+    [/mostaza/, 1, true],
+    [/papel|aluminio|brocheta/, 1.5, true],
+    [/chocolate/, 1.8, true],
+    [/salmon ahumado/, 3.5],
+    [/(salmon|merluza|bacalao).*congelad|congelad.*(salmon|merluza|bacalao)/, 6],
+    [/salmon/, 5.5],
+    [/merluza|bacalao|lubina|dorada/, 5],
+    [/(caballa|sardina).*(lata|natural)|lata.*(caballa|sardina)/, 1.4],
+    [/caballa|sardina/, 3.5],
+    [/pulpo/, 5.5],
+    [/calamar|sepia/, 4],
+    [/gamba|langostino/, 5],
+    [/taquitos? de pavo|pavo cocido|fiambre/, 1.9],
+    [/jamon/, 2.2],
+    [/muslo|jamoncito|contramuslo/, 3.5],
+    [/pollo|pechuga/, 4],
+    [/pavo/, 3.8],
+    [/solomillo|cerdo|lomo/, 4],
+    [/ternera|bistec|filete/, 5.5],
+    [/hamburguesa/, 3],
+    [/huevo/, 2.8],
+    [/queso fresco|queso batido|burgos/, 2.2],
+    [/queso/, 2],
+    [/skyr/, 1.6],
+    [/yogur griego/, 1.8],
+    [/yogur/, 1.2],
+    [/kefir/, 1.7],
+    [/leche de coco/, 1.8],
+    [/leche|bebida de avena/, 1],
+    [/hummus/, 1.2],
+    [/gazpacho/, 2.6],
+    [/\bpan\b|molde|panecillo/, 1.8],
+    [/bolleria|croissant|empanadilla/, 1.2],
+    [/garbanzo|lenteja|alubia|legumbre/, 0.9],
+    [/quinoa/, 2.5],
+    [/arroz/, 1.4],
+    [/pasta|espagueti|macarron/, 1],
+    [/avena/, 1],
+    [/tomate frito|tomate triturado/, 0.9],
+    [/aceituna/, 1.2],
+    [/maiz/, 0.9],
+    [/caldo/, 1.5],
+    [/tomate cherry|cherry/, 1.5],
+    [/congelad/, 1.5],
+    [/espinaca|canonig|rucula|ensalada|lechuga|brotes/, 1.4],
+    [/tomate/, 1.8],
+    [/pimiento/, 1.6],
+    [/cebolleta/, 0.9],
+    [/cebolla/, 1.3],
+    [/\bajo\b/, 0.8],
+    [/perejil/, 0.8],
+    [/patata|boniato/, 2.2],
+    [/zanahoria/, 1.1],
+    [/brocoli/, 1.6],
+    [/esparrago/, 2.2],
+    [/judias? verde/, 1.8],
+    [/aguacate/, 1.3],
+    [/limon/, 0.9],
+    [/pepino/, 0.7],
+    [/platano/, 1.6],
+    [/fruta|manzana|pera|naranja|mandarina|kiwi|uva|fresa/, 2.5]
+  ];
+}
+function precioDe(txt){
+  const s = normalizeText(txt);
+  const r = preciosCompra().find(x => x[0].test(s));
+  return r ? { p: r[1], larga: !!r[2] } : null;
+}
+function cuentaCompra(items){
+  let total = 0, larga = 0, sin = 0;
+  items.forEach(i => {
+    const x = precioDe(i.txt);
+    if(!x){ sin++; return; }
+    total += x.p;
+    if(x.larga) larga += x.p;
+  });
+  return { total: total, larga: larga, sin: sin };
+}
+function euros(n){ return Math.max(1, Math.round(n)) + ' €'; }
+function precioCompraHTML(lista){
+  const pend = cuentaCompra(lista.filter(i => !i.done)), cogido = cuentaCompra(lista.filter(i => i.done));
+  let linea;
+  if(enSuper && cogido.total){
+    linea = 'Llevas unos <b>' + euros(cogido.total) + '</b> en el carro' + (pend.total ? ' · faltan unos ' + euros(pend.total) : '');
+  } else if(pend.total){
+    linea = 'Lo que te queda por comprar: unos <b>' + euros(pend.total) + '</b>';
+  } else {
+    return '';
+  }
+  const notas = [];
+  if(pend.larga >= 1) notas.push(euros(pend.larga) + ' son despensa que dura semanas');
+  if(pend.sin) notas.push(pend.sin + (pend.sin === 1 ? ' cosa sin precio' : ' cosas sin precio'));
+  notas.push('precio medio de súper, aproximado');
+  return '<div class="cab-precio">' + linea + '<span>' + notas.join(' · ') + '</span></div>';
+}
+function supersNombres(){
+  if(typeof SUPERS === 'undefined') return [];
+  const vistos = {};
+  return SUPERS.filter(s => { if(vistos[s.nombre]) return false; vistos[s.nombre] = true; return true; });
+}
+function loadMisSupers(){
+  try{
+    const l = JSON.parse(localStorage.getItem('planAlimentacionMisSupers'));
+    if(Array.isArray(l) && l.length) return l;
+  }catch(e){}
+  return ['Bonpreu', 'Lidl', 'Mercadona', 'BonÀrea'];
+}
+function dondeMejor(){
+  return [
+    [/salmon ahumado|hummus|gazpacho|espinacas baby|frutos secos|nueces|almendra|crema de cacahuete|chocolate/, ['Lidl', 'Aldi', 'Mercadona', 'Consum', 'Bonpreu']],
+    [/pan (100% )?integral|pan de molde|pavo cocido|queso fresco|quinoa/, ['Bonpreu', 'Mercadona', 'Consum', 'Caprabo', 'Lidl']],
+    [/congelad/, ['Mercadona', 'Lidl', 'Aldi', 'Consum', 'Bonpreu']],
+    [/salmon|merluza|bacalao|lubina|dorada|sardina fresca|boqueron/, ['Mercat del Ninot', 'Mercat de Sants', 'Mercadona', 'Bonpreu', 'Consum']],
+    [/calamar|pulpo|sepia|gamba|langostino/, ['Mercadona', 'Lidl', 'Bonpreu', 'Consum']],
+    [/pollo|pechuga|muslo|contramuslo|jamoncito|pavo|cerdo|solomillo|ternera|bistec|hamburguesa|lomo|carne/, ['BonÀrea', 'Mercadona', 'Bonpreu', 'Consum', 'Lidl']],
+    [/huevo|leche|yogur|kefir|skyr|queso/, ['Aldi', 'Lidl', 'Mercadona', 'Consum', 'Dia', 'Bonpreu']],
+    [/garbanzo|lenteja|alubia|legumbre|atun|caballa|sardina|lata|bote|arroz|pasta|avena|aceite|tomate frito|tomate triturado|maiz|aceituna|conserva|cafe|miel|mostaza|especia|pimenton|oregano|comino|curry|canela|vinagre|\bsal\b/, ['Mercadona', 'Lidl', 'Aldi', 'Consum', 'Dia', 'Bonpreu']],
+    [/fruta|manzana|pera|platano|naranja|mandarina|fresa|kiwi|uva|aguacate|limon|tomate|pimiento|cebolla|cebolleta|patata|zanahoria|brocoli|esparrago|judias|espinaca|lechuga|ensalada|canonig|rucula|pepino|\bajo\b|perejil/, ['Lidl', 'Mercadona', 'Consum', 'Ametller Origen', 'Mercat del Ninot', 'Bonpreu']]
+  ];
+}
+function superPara(txt, mis){
+  const s = normalizeText(txt);
+  const r = dondeMejor().find(x => x[0].test(s));
+  const pref = r ? r[1] : ['Bonpreu', 'Mercadona', 'Consum', 'Caprabo', 'Condis', 'Lidl'];
+  return pref.find(n => mis.indexOf(n) !== -1) || mis[0] || 'Bonpreu';
+}
+function vistaCompra(){ try{ return localStorage.getItem('planAlimentacionCompraVista') === 'super' ? 'super' : 'pasillo'; }catch(e){ return 'pasillo'; } }
+function setVistaCompra(v){ setRaw('planAlimentacionCompraVista', v === 'super' ? 'super' : 'pasillo'); renderCompra(); }
+function abrirMisSupers(){
+  abrirSheet({ ico:'tienda', label:'Tus súpers' }, '¿A cuáles vas?',
+    'Marca los que te pillan bien. La lista reparte cada cosa al que mejor sale de los que marques: lo barato al Lidl, la carne al BonÀrea, lo del plan que solo tiene el Bonpreu…',
+    '<div class="nevera-chips" id="misSupersChips"></div>');
+  pintarMisSupers();
+}
+function pintarMisSupers(){
+  const el = document.getElementById('misSupersChips');
+  if(!el) return;
+  const mis = loadMisSupers();
+  el.innerHTML = supersNombres().map((s, i) => {
+    const on = mis.indexOf(s.nombre) !== -1;
+    return '<button class="nevera-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" onclick="alternarMiSuper(' + i + ')">' + esc(s.nombre) + ' · ' + s.min + ' min</button>';
+  }).join('');
+}
+function alternarMiSuper(i){
+  const s = supersNombres()[i];
+  if(!s) return;
+  const mis = loadMisSupers();
+  const j = mis.indexOf(s.nombre);
+  if(j === -1) mis.push(s.nombre);
+  else if(mis.length > 1) mis.splice(j, 1);
+  else { toast('Deja al menos uno marcado'); return; }
+  setLS('planAlimentacionMisSupers', JSON.stringify(mis));
+  pintarMisSupers();
+  renderCompra();
+}
+function lineaCompraHTML(i){
+  return '<div class="linea' + (i.done ? ' hecho' : '') + '" onclick="toggleItem(\'' + i.id + '\')">' +
+    '<span class="marca">' + ico('check') + '</span>' +
+    '<span class="linea-txt">' + esc(i.txt) + (i.nota ? '<i>' + esc(i.nota) + '</i>' : '') + '</span>' +
+    '<button class="linea-x" onclick="borrarItem(\'' + i.id + '\', event)" aria-label="Quitar">' + ico('x') + '</button>' +
+  '</div>';
+}
+function compraPorSuperHTML(lista){
+  const mis = loadMisSupers();
+  const grupos = {};
+  lista.forEach(i => { const n = superPara(i.txt, mis); (grupos[n] = grupos[n] || []).push(i); });
+  const info = n => supersNombres().find(s => s.nombre === n) || { min: 99, horario: '' };
+  const ordenSec = SECCIONES.map(s => s.id);
+  return Object.keys(grupos).sort((a, b) => info(a).min - info(b).min).map(n => {
+    const items = grupos[n].slice().sort((a, b) => ((a.done ? 1 : 0) - (b.done ? 1 : 0)) || (ordenSec.indexOf(seccionDe(a.txt)) - ordenSec.indexOf(seccionDe(b.txt))));
+    const pend = items.filter(i => !i.done);
+    const cuenta = cuentaCompra(pend);
+    const s = info(n);
+    return '<div class="seccion">' +
+      '<div class="seccion-h">' + ico('tienda') + esc(n) + (s.min < 99 ? ' · ' + s.min + ' min' : '') +
+        '<span class="cuenta">' + (cuenta.total ? '~' + euros(cuenta.total) + ' · ' : '') + pend.length + '/' + items.length + '</span></div>' +
+      items.map(lineaCompraHTML).join('') +
+    '</div>';
+  }).join('');
 }
 
 /* ==================== RECORDATORIOS EN EL CALENDARIO ====================
@@ -4693,14 +5563,19 @@ function posponerAvisoCopia(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-14c'; }
+function novedadesId(){ return '2026-09-16'; }
 function novedadesNuevas(){
   return [
-    '<b>Lo que has cocinado:</b> se apunta solo al terminar el modo cocina, o con «Lo he cocinado hoy» en la ficha. Lo ves en Progreso.'
+    '<b>Airfryer primero:</b> la ficha te propone el airfryer cuando sale mejor, con tiempos. Un toque y vuelves a la de siempre.',
+    '<b>¿Ha sobrado?</b> Al terminar de cocinar: para mañana o al congelador.',
+    '<b>Compra:</b> cuánto cuesta la lista y qué coger en cada súper.',
+    '<b>El menú en una imagen</b>, para mandarlo. En Menú.',
+    '<b>En Hoy, cuando toca:</b> hambre por la noche, sin tupper, otro desayuno y lo fresco que se va a pasar.'
   ];
 }
 function novedades(){
   return [
+    '<b>Lo que has cocinado:</b> se apunta solo al terminar el modo cocina. Lo ves en Progreso.',
     '<b>Recordatorio del tupper en el calendario del iPhone:</b> Ajustes → Que te avise el iPhone.',
     '<b>Hoy más ordenado:</b> «Cambiar la comida» sale arriba.',
     '<b>Cambiar la comida o la cena</b> de hoy si no te apetece, desde aquí mismo. También el tupper de mañana.',
@@ -4752,7 +5627,7 @@ function leerPasoCocina(p, n){
   CO.pasoLeido = CO.paso;
   if(CO.paso < 0) decirCocina('Antes de encender nada, saca los ingredientes y déjalos a mano.');
   else if(CO.paso >= n) decirCocina('Hecho. ' + p.nombre + '.');
-  else decirCocina('Paso ' + (CO.paso + 1) + '. ' + p.pasos[CO.paso]);
+  else decirCocina('Paso ' + (CO.paso + 1) + '. ' + (CO.pasos || p.pasos)[CO.paso]);
 }
 function alternarVozCocina(){
   const activar = !vozCocina();
@@ -4775,13 +5650,14 @@ function renderTomorrowCard(){
   if(isBowlOn(tomorrow)) return '<div class="tip">Mañana toca bowl del Ametller Origen — no hace falta que prepares tupper.</div>';
   /* Tocar el aviso lleva a la ficha del plato: es justo cuando hay que
      prepararlo y hace falta saber cómo. */
+  if(yaHechoEl(tomorrow, 'comida')) return '<div class="tip">' + ico('tupper') + ' <b>Mañana te llevas lo que ya tienes hecho:</b> ' + esc(sinEmoji(d.comida.replace(/🔁/g, ''))) + '. Solo falta meterlo en el tupper.</div>';
   const titulo = d.quinoa ? 'Mañana te llevas el bowl de quinoa:' : 'Prepara esto para el tupper de mañana:';
   const slugManana = (typeof slugDePlato === 'function') ? slugDePlato(d.comida) : null;
   if(!slugManana) return '<div class="tip">' + ico('tupper') + ' <b>' + titulo + '</b> ' + esc(sinEmoji(d.comida)) + '</div>';
   return '<div class="tip tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slugManana + '&quot;,&quot;comida&quot;)">' +
     ico('tupper') + ' <b>' + titulo + '</b> ' + esc(sinEmoji(d.comida)) +
     '<span class="tip-ver">Ver cómo se prepara ' + ico('flecha') + '</span>' +
-    '<br><button class="tip-cambiar" onclick="event.stopPropagation(); abrirCambio(\'' + calDateKeyLocal(tomorrow) + '\',\'comida\')">' + ico('dado') + ' No me apetece, cambiarlo</button></div>';
+    '<br><button class="tip-cambiar" onclick="event.stopPropagation(); abrirCambio(\'' + calDateKeyLocal(tomorrow) + '\',\'comida\')">' + ico('dado') + ' No me apetece, cambiarlo</button>' + congeladorMananaBtn() + '</div>';
 }
 
 function renderHoy(){
@@ -4803,7 +5679,7 @@ function renderHoy(){
   btnAhora.innerHTML =
     '<span class="hoy-ahora-ico">' + ico(iconoDeTexto(textoAhora)) + '</span>' +
     '<span class="hoy-ahora-txt">' +
-      '<span class="hoy-ahora-momento">Ahora · ' + esc(m.label) + '</span>' +
+      '<span class="hoy-ahora-momento">Ahora · ' + esc(m.label) + (yaHechoEl(now, m.id) ? ' · ya lo tienes hecho' : '') + '</span>' +
       '<span class="hoy-ahora-plato">' + esc(sinEmoji(textoAhora)) + '</span>' +
     '</span>' +
     (ahoraSlug ? '<span class="flecha">' + ico('flecha') + '</span>' : '');
@@ -4812,9 +5688,9 @@ function renderHoy(){
   const btnCocinar = document.getElementById('hoyCocinar');
   if(btnCocinar){
     const pc = ahoraSlug && PLATOS[ahoraSlug];
-    const vale = !!(pc && pc.tiempo > 0 && Array.isArray(pc.pasos) && pc.pasos.length > 1);
+    const vale = !!(pc && pc.tiempo > 0 && pasosDe(ahoraSlug).length > 1) && !yaHechoEl(now, m.id);
     btnCocinar.style.display = vale ? '' : 'none';
-    if(vale) btnCocinar.innerHTML = ico('fuego') + 'Cocinar paso a paso · ' + pc.tiempo + ' min';
+    if(vale) btnCocinar.innerHTML = ico('fuego') + 'Cocinar paso a paso · ' + tiempoDe(ahoraSlug) + ' min';
   }
 
   const enPausa = isVacationToday();
@@ -4826,16 +5702,19 @@ function renderHoy(){
     contentHtml = dayCardHtml(d, 'all', true);
   } else {
     /* Cambiar va arriba: medido, quedaba a 1.500 px, debajo del día entero. */
-    tipHtml += cambiarHoyHTML(d, isTeamLunch, now);
+    tipHtml += cambiarHoyHTML(d, isTeamLunch, now) + usaPrimeroHTML() + congeladorHoyHTML(d, now);
     if(isWfhOn(now)){
       tipHtml += '<div class="tip">Hoy teletrabajas: nada de tupper, cocina la comida fresca a mediodía tranquilamente en casa.' +
         (loadWfhDates().includes(calDateKeyLocal(now)) ? ' <button class="btn-mini" style="margin-top:8px;" onclick="toggleWfhHoy()">No, hoy sí voy a la oficina</button>' : '') + '</div>';
     } else if(isBowlOn(now) && !isTeamLunch){
-      tipHtml += '<div class="tip">Hoy toca bowl del Ametller Origen — no hace falta tupper.</div>';
+      tipHtml += '<div class="tip tip-mini"><span>Hoy toca bowl del Ametller Origen: nada de tupper.</span><button class="btn-mini" onclick="abrirSinTupper(\'ametller\')">' + ico('tienda') + ' Qué coger</button></div>';
     } else if(now.getDay() >= 1 && now.getDay() <= 5){
       /* El día suelto de teletrabajo se sabe por la mañana, no tres semanas
-         antes: por eso se marca aquí y no en los ajustes. */
-      tipHtml += '<div class="tip tip-mini"><span>¿Hoy te quedas en casa?</span><button class="btn-mini" onclick="toggleWfhHoy()">' + ico('casa') + ' Trabajo en casa</button></div>';
+         antes: por eso se marca aquí y no en los ajustes. Y el tupper olvidado,
+         también: al lado del trabajo hay dónde comprar algo que sea el plan. */
+      tipHtml += '<div class="tip tip-mini"><span>' + (now.getHours() < 16 ? '¿Hoy es distinto?' : '¿Hoy has trabajado en casa?') + '</span>' +
+        '<button class="btn-mini" onclick="toggleWfhHoy()">' + ico('casa') + ' En casa</button>' +
+        (!isTeamLunch && now.getHours() < 16 ? '<button class="btn-mini" onclick="abrirSinTupper()">' + ico('tienda') + ' Sin tupper</button>' : '') + '</div>';
     }
     if(isTeamLunch || d.pizza){
       tipHtml += '<div class="tip">Hoy es la comida de equipo del trabajo (pizza, hamburguesa o milanesas, según toque) — sin sustituirla por nada y sin compensarla después. Disfrútala.</div>';
@@ -4847,7 +5726,7 @@ function renderHoy(){
     contentHtml = dayCardHtml(d, 'all', true) + tupperesSemanaHTML();
   }
 
-  tipHtml += renderTomorrowCard();
+  tipHtml += renderTomorrowCard() + hambreNocheHTML() + (enPausa ? '' : resumenSemanaAliHTML());
 
   document.getElementById('hoyTip').innerHTML = tipHtml;
   document.getElementById('hoyContent').innerHTML = contentHtml;
