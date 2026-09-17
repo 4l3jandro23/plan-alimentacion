@@ -1243,6 +1243,15 @@
   .compra-vista .btn-mini{flex-shrink:0;}
   /* Menú en imagen */
   .menu-previa img{display:block; width:100%; height:auto; border-radius:var(--r-md); border:1px solid var(--border); margin:0 0 12px;}
+  /* Lo fresco que tienes y consejos */
+  .fresco-fila.pronto{border-color:var(--warn);}
+  .fresco-fecha{font-family:inherit; font-size:16px; padding:6px 8px; min-height:40px; border:1px solid var(--border); border-radius:var(--r-sm); background:var(--card); color:var(--ink);}
+  .congelar-mano input[type=text]{flex:1; min-width:0; font-family:inherit; font-size:16px; padding:9px 10px; border:1px solid var(--border); border-radius:var(--r-sm); background:var(--card); color:var(--ink);}
+  #frescosCompra{margin:14px 0 4px;}
+  .consejo{display:flex; flex-direction:column; align-items:flex-start; gap:8px; margin-top:14px;}
+  .consejo-h{display:flex; align-items:center; gap:6px; font-size:var(--t-2xs); font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.6px;}
+  .consejo-h .ic-v{width:14px; height:14px;}
+  .cab-barata{margin-top:8px;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
@@ -1298,7 +1307,7 @@
       <div class="settings-row">
         <p style="font-size:var(--t-xs); color:var(--muted); margin:0 0 10px;">Toca cada día para cambiarlo. Con esto la pestaña Hoy ya sabe si te toca preparar tupper o no, y deja de decírtelo los días que no hace falta.</p>
         <div id="semanaLista"></div>
-        <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Sábado y domingo van siempre libres, no hay nada que configurar. Y si un día suelto acabas trabajando en casa, se cambia desde <b>Hoy</b> sin tocar esto.</p>
+        <p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Sábado y domingo no son de oficina, así que no hay nada que configurar. Y si un día suelto acabas trabajando en casa, se cambia desde <b>Hoy</b> sin tocar esto.</p>
       </div>
     </details>
 
@@ -1387,7 +1396,7 @@
 
   <div class="statgrid">
     <div class="stat"><b>58-78</b><span>kg rango sano</span></div>
-    <div class="stat"><b>~1.740</b><span>kcal media/día</span></div>
+    <div class="stat"><b>~50 €</b><span>compra a la semana</span></div>
     <div class="stat"><b id="statPlatos">47</b><span>platos con ficha</span></div>
   </div>
 
@@ -1483,17 +1492,21 @@
       <li><b>Tostada con jamón o queso fresco</b> (mejor cocido o serrano que fuet) + fruta</li>
       <li><b>Huevo</b> revuelto o tortilla francesa + tostada (fin de semana)</li>
     </ul>
-    <div class="tip">La bollería no desaparece: 1-2 veces por semana. El resto de días, kéfir o tostada con jamón.</div>
+    <div class="tip">La bollería no desaparece: el menú la pone algún día, y si otro te apetece, también vale. El resto de días, kéfir o tostada con jamón.</div>
     <div class="tip">Tus dos cafés con leche están contemplados tal cual los tomas. No hace falta contarlos ni cambiarlos. Si algún día cae un tercero, tampoco pasa nada.</div>
   </div>
+
+  <h2>💡 Consejos</h2>
+  <p class="lead">Cosas pequeñas que ahorran dinero, comida tirada y agobio. En Hoy sale uno cada día.</p>
+  <div id="consejosInicio"></div>
 </div>
 
 <!-- ==================== MENU ==================== -->
 <div id="tab-menu" class="tabpanel">
   <h2>📅 Menú de 4 semanas</h2>
   <div class="card">
-    <p>Todo es intercambiable: si un día no te apetece lo propuesto, cambia por otra opción de la misma categoría. Lunes-jueves con tupper en el trabajo; viernes y sábado noche, libres siempre.</p>
-    <div class="tip">Las <b>kcal y macros son una estimación orientativa</b> (no un cálculo clínico exacto) — de media rondan los <b>~1.740 kcal/día</b>, un déficit moderado y sostenible. Los días con cena libre o pizza no cuentan esa comida en el total. Si quieres precisión real, pesa ingredientes con Fitia.</div>
+    <p>Todo es intercambiable: si un día no te apetece lo que toca, «Cambiar» en Hoy te da otro plato del mismo menú. Los días de oficina, tupper (se marcan en Ajustes → Mi semana); viernes y sábado noche, cena libre.</p>
+    <div class="tip">Las <b>kcal y macros son una estimación orientativa</b> (no un cálculo clínico exacto) — de media rondan los <b>~1.740 kcal/día</b>. Los días con cena libre o pizza no cuentan esa comida en el total. No son para contar: el plan funciona con el método del plato.</div>
   </div>
   <button class="btn-mini solid" style="margin:0 0 12px;" onclick="abrirMenuImagen()"><svg class="ic-v"><use href="#i-compartir"/></svg> Mandar el menú de la semana como imagen</button>
   <div class="style-options" id="menuFilter" style="margin-bottom:14px;">
@@ -1520,6 +1533,7 @@
     <button class="btn-mini solid" onclick="sorprendeme()"><svg class="ic-v"><use href="#i-dado"/></svg> Sorpréndeme</button>
     <button class="btn-mini" onclick="abrirNevera()"><svg class="ic-v"><use href="#i-nevera"/></svg> Qué hago con lo que tengo</button>
     <button class="btn-mini" onclick="abrirCongelador()"><svg class="ic-v"><use href="#i-nevera"/></svg> Congelador</button>
+    <button class="btn-mini" onclick="abrirFrescos()"><svg class="ic-v"><use href="#i-calendario"/></svg> Lo que caduca</button>
     <button class="btn-mini" onclick="abrirRescate()"><svg class="ic-v"><use href="#i-rayo"/></svg> Sin cocinar</button>
   </div>
 
@@ -1624,13 +1638,14 @@
     <button class="btn-mini" onclick="vaciarCompra()"><svg class="ic-v"><use href="#i-basura"/></svg> Vaciar</button>
   </div>
   <div id="habitualesCompra"></div>
+  <div id="frescosCompra"></div>
 
   <h2>➕ Llenar la lista sin pensar</h2>
-  <p class="lead">Tres botones. No hace falta ir plato por plato: esto mete un bloque entero de una vez y luego ya quitas lo que te sobre.</p>
+  <p class="lead">No hace falta ir plato por plato: cada botón mete un bloque entero de una vez, y luego quitas lo que ya tengas.</p>
   <div id="atajosCompra"></div>
 
   <h2>🏠 Dónde comprar</h2>
-  <p class="lead">Todos los súper que tienes andando desde casa, ordenados por lo que tardas en llegar. Dentro de siete minutos a pie hay <b id="supersTotal">28</b> supermercados: el problema nunca va a ser que no haya dónde comprar.</p>
+  <p class="lead">Todos los súper que tienes andando desde casa, ordenados por lo que tardas en llegar. A menos de diez minutos andando hay <b id="supersTotal">28</b> supermercados: el problema nunca va a ser que no haya dónde comprar.</p>
 
   <div class="tip" id="supersRegla"></div>
 
@@ -1651,7 +1666,7 @@
 
   <h2>💶 Lo que cuesta de verdad</h2>
   <div class="card">
-    <p>Haciendo en casa desayuno, comida y cena como dice el menú, la compra para ti solo sale por unos <b>45-55 € a la semana</b>, unos 200 € al mes. Es una estimación con los precios de aquí abajo, no una cuenta al céntimo.</p>
+    <p>Haciendo en casa desayuno, comida y cena como dice el menú, la compra para ti solo sale de media por unos <b>45-55 € a la semana</b>, unos 200 € al mes. La lista de arriba suma el paquete entero de cada cosa (una bandeja, una bolsa, una docena), así que una semana suelta puede marcar 60 € o algo más; como parte de eso dura más de una semana, de media se queda en esa cifra.</p>
     <p style="color:var(--muted); font-size:var(--t-sm);">Para comparar: un menú del día en Barcelona ronda los 14-16 €. Cinco comidas fuera ya son 70-80 € a la semana, sin contar ninguna cena.</p>
     <p style="margin-bottom:6px;"><b>Dónde se va el dinero, y cómo recortar sin cambiar el plan:</b></p>
     <ul style="margin:0; padding-left:20px; font-size:var(--t-sm); line-height:1.5;">
@@ -1705,7 +1720,7 @@
     <div class="ref-cuerpo">
       <p>No es falta de organización: es que la compra grande semanal no encaja con tu ritmo. Vives solo, no siempre cenas en casa, y la mitad de lo fresco llega al viernes intacto.</p>
       <ul>
-        <li><b>Compra dos veces por semana, poco.</b> Con Bonpreu a dos minutos y BonÀrea enfrente, la compra grande del sábado no tiene mucho sentido — es más fácil bajar el lunes y el jueves a por lo de tres días.</li>
+        <li><b>Dos compras pequeñas mejor que una grande.</b> El fin de semana, lo que aguanta y la proteína (congelada, o al congelador al llegar). A mitad de semana, lo fresco de los días que quedan: el botón «Lo fresco de lo que queda de semana» te lo saca. Con Bonpreu a dos minutos y BonÀrea enfrente, bajar cuesta nada.</li>
         <li><b>Congelado como primera opción</b> para proteína (pollo, pescado, calamar): no caduca y sacas solo la ración de hoy. Fresco solo si lo vas a cocinar en 1-2 días.</li>
         <li><b>Congela en raciones el mismo día de compra.</b> Bandeja de pechugas → cuatro bolsitas. Es el gesto que más comida te salva.</li>
         <li><b>En el mercado puedes pedir la cantidad exacta.</b> Dos filetes de salmón, 200 g de merluza. En el súper eso no existe, y ahí empieza el problema.</li>
@@ -2753,11 +2768,7 @@ function calDateKeyLocal(date){
 
 /* ===== Plantillas de compra: bloques que se vuelcan en la lista única ===== */
 const SHOP_LISTS = {
-  despensa: ['Aceite de oliva virgen extra','Legumbres de bote (garbanzos, lentejas, alubias)','Atún en lata al natural','Arroz integral','Quinoa integral Brillante (bowl del jueves)','Pasta integral','Avena','Pan de molde integral','Frutos secos','Ajo en polvo, pimentón, orégano','Huevos','Verdura congelada','Chocolate negro','Café','Leche semidesnatada'],
-  fresco1: ['Salmón congelado (2 raciones)','Merluza','Pechuga de pollo','Muslos de pollo','Pavo','Calamar','Pulpo cocido','Solomillo de cerdo','Espárragos','Espinacas','Pimientos','Cebolla','Ensalada de bolsa','Tomate','Patata','Fruta variada (para 2-3 días)','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
-  fresco2: ['Pechuga de pollo','Salmón','Pulpo cocido','Bacalao','Ternera','Calamar','Muslos de pollo','Pavo','Pimiento','Judías verdes (congeladas valen)','Zanahoria','Espárragos trigueros','Espinaca','Brócoli','Tomate','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
-  fresco3: ['Salmón','Calamar','Pavo','Merluza','Ternera','Sardinas','Pimiento','Cebolla','Espárragos trigueros','Brócoli','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)'],
-  fresco4: ['Pollo','Pulpo cocido','Salmón','Merluza','Pavo','Calamar','Solomillo de cerdo','Pimiento','Judías verdes (congeladas valen)','Espárragos','Tomate','Ensalada de bolsa','Patata','Fruta variada','Salmón ahumado (bowl del jueves)','Espinacas baby y tomate cherry (bowl del jueves)']
+  despensa: ['Aceite de oliva virgen extra','Legumbres de bote (garbanzos, lentejas, alubias)','Atún en lata al natural','Arroz integral','Quinoa integral Brillante (bowl del jueves)','Pasta integral','Avena','Pan de molde integral','Frutos secos','Ajo en polvo, pimentón, orégano','Huevos','Verdura congelada','Chocolate negro','Café','Leche semidesnatada']
 };
 
 /* ===== Qué se guarda y qué entra en la copia de seguridad ===== */
@@ -3731,6 +3742,7 @@ function addLista(key){
 
 function renderCompra(){
   renderHabituales();
+  renderFrescosCompra();
   const cont = document.getElementById('compraLista');
   if(!cont) return;
   const lista = loadCompra();
@@ -3759,7 +3771,7 @@ function renderCompra(){
   }
 
   if(!lista.length){
-    cont.innerHTML = '<div class="card"><p style="margin:0;">Está vacía. Para llenarla: el botón «Añadir a la lista» de cualquier ficha de plato, los tres atajos de aquí abajo, o escribiendo arriba a mano.</p></div>';
+    cont.innerHTML = '<div class="card"><p style="margin:0;">Está vacía. Para llenarla: el botón «Añadir a la lista» de cualquier ficha de plato, los atajos de aquí abajo, o escribiendo arriba a mano.</p></div>';
     return;
   }
 
@@ -3832,21 +3844,15 @@ function tarjetaSuper(s){
    Antes había cinco botones: despensa y "fresco semana 1/2/3/4". Para usarlos
    había que saber en qué semana del ciclo estás, que es justo lo que la app ya
    sabe. Ahora son tres, y el de la semana ya viene resuelto. */
-function semanaDelCiclo(){
-  return indiceCiclo(new Date()) + 1;
-}
-function addSemanaActual(){
-  addLista('fresco' + semanaDelCiclo());
-}
 function renderAtajos(){
   const cont = document.getElementById('atajosCompra');
   if(!cont) return;
-  const n = semanaDelCiclo();
+  const fr = frescoDeSemana();
   const bloques = [
     {
-      accion:'addSemanaActual()', ico:'ensalada', grad:'ensalada',
-      titulo:'El fresco de esta semana',
-      desc:'Lo que piden los platos del menú de esta semana (la ' + n + ' del ciclo) — ' + SHOP_LISTS['fresco' + n].length + ' cosas.'
+      accion:'addFrescoSemana()', ico:'ensalada', grad:'ensalada',
+      titulo: fr.obj.siguiente ? 'Lo fresco de la semana que viene' : 'Lo fresco de lo que queda de semana',
+      desc:'Sale de los platos de tu menú de esos días, con tus cambios: ' + fr.items.length + (fr.items.length === 1 ? ' cosa.' : ' cosas.')
     },
     {
       accion:'addLista(\'despensa\')', ico:'tupper', grad:'legumbre',
@@ -3868,6 +3874,7 @@ function renderAtajos(){
       desc: tup.length + (tup.length === 1 ? ' comida para llevar: ' : ' comidas para llevar: ') + tup.map(t => nombreDiaAli(t.dia)).join(', ') + '. Solo sus ingredientes.'
     });
   }
+  if(!fr.items.length) bloques.shift();
   cont.innerHTML = bloques.map(b =>
     '<button class="opt" onclick="' + b.accion + '">' +
       '<span class="opt-ico" style="background:' + degradado(b.grad) + '">' + ico(b.ico) + '</span>' +
@@ -3985,7 +3992,7 @@ const weeksData = [
   {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con pimiento y cebolla asados", kcal:1830,p:116,c:166,f:67},
   {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
   {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
-  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Arroz con pollo, pimiento y cebolla (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada verde ligera", kcal:1900,p:126,c:161,f:74}
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Arroz con pollo, pimiento y cebolla (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1900,p:122,c:163,f:76}
 ]},
 { n:2, avg:1740, days:[
   {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y brócoli", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con pimiento y cebolla al horno", kcal:1830,p:120,c:161,f:69},
@@ -3996,8 +4003,8 @@ const weeksData = [
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Ternera a la plancha con espárragos trigueros y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos de pollo al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1840,p:116,c:158,f:74}
 ]},
-{ n:3, avg:1744, days:[
-  {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón al horno con brócoli", kcal:1830,p:106,c:186,f:63},
+{ n:3, avg:1727, days:[
+  {day:"Lunes 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Ensalada de lentejas con pimiento, tomate y atún", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1710,p:110,c:182,f:47},
   {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón a la plancha con arroz integral y brócoli", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con pimiento", kcal:1890,p:118,c:166,f:75},
   {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamar encebollado con patata", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con espárragos trigueros", kcal:1750,p:102,c:165,f:66},
   {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con judías verdes salteadas y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
@@ -4005,14 +4012,14 @@ const weeksData = [
   {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
   {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
 ]},
-{ n:4, avg:1744, days:[
+{ n:4, avg:1753, days:[
   {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y cebolla salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
   {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
   {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
   {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, zanahoria y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
   {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
-  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Salmón ahumado con ensalada", kcal:1900,p:126,c:161,f:74}
+  {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🫘 Ensalada de lentejas con pimiento, tomate y atún", kcal:1960,p:128,c:203,f:60}
 ]}
 ];
 
@@ -4172,6 +4179,7 @@ renderDespensaRescate();
 rellenarSugerenciasCompra();
 renderCheckin();
 renderCocinados();
+renderConsejos();
 renderHoy();
 pedirAlmacenamientoPersistente();
 badgeifyHeadings();
@@ -4464,10 +4472,12 @@ function platosConLoQueTengo(sel){
     .sort((a, b) => a.falta.length - b.falta.length || b.tengo.length - a.tengo.length || a.p.tiempo - b.p.tiempo)
     .slice(0, 8);
 }
-function abrirNevera(){
+function abrirNevera(desdeFrescos){
   if(!Array.isArray(window.neveraSel)) window.neveraSel = [];
+  const pre = (desdeFrescos || !window.neveraSel.length) ? preseleccionNevera() : [];
+  pre.forEach(p => { if(window.neveraSel.indexOf(p) === -1) window.neveraSel.push(p); });
   abrirSheet({ ico:'nevera', label:'Lo que tengo' }, '¿Qué tienes en casa?',
-    'Toca lo que tengas. Lo básico (aceite, sal, ajo, especias, limón) doy por hecho que está.',
+    (pre.length ? 'He marcado lo fresco que tienes apuntado. ' : '') + 'Toca lo que tengas. Lo básico (aceite, sal, ajo, especias, limón) doy por hecho que está.',
     '<div class="nevera-chips" id="neveraChips"></div><div id="neveraRes"></div>');
   pintarNevera();
 }
@@ -4582,10 +4592,13 @@ function apuntarCocinado(slug){
   dia.push(slug);
   c[hoy] = dia;
   setLS('planAlimentacionCocinados', JSON.stringify(c));
+  const frescosAntes = loadFrescos();
+  gastarFrescosDe(slug);
   renderCocinados();
   pintarCocinadoFicha(slug);
   const semana = cocinadosDesde(lunesClave());
   toast('Apuntado. Esta semana llevas ' + semana + (semana === 1 ? ' plato' : ' platos'), () => {
+    saveFrescos(frescosAntes);
     setLS('planAlimentacionCocinados', JSON.stringify(antes));
     renderCocinados();
     pintarCocinadoFicha(slug);
@@ -4865,76 +4878,129 @@ function favDesdeCocina(){
   if(el && fichaSlugActual === CO.slug) el.innerHTML = chipsFichaHTML(CO.slug);
 }
 
-/* ==================== USA ESTO PRIMERO ====================
-   Lo fresco que dura poco (pescado, carne, hojas verdes) se apunta al marcarlo
-   como cogido en la compra. Si se va a pasar antes del día que el menú lo
-   usa, Hoy lo dice con tiempo: congélalo o adelanta ese plato. Queda en este
-   móvil, que es donde se tacha la compra. */
+/* ==================== LO FRESCO QUE TIENES ====================
+   Lo que se estropea pronto se apunta solo al tacharlo en la compra, o a mano.
+   Cada cosa lleva lo normal que aguanta en la nevera, y la fecha se puede
+   cambiar si el envase dice otra. Hoy avisa con tiempo (congélalo, o adelanta
+   el plato que lo usa), y al cocinar un plato se quita la carne o el pescado
+   que llevaba. Queda en este móvil, que es donde se tacha la compra. Todo son
+   funciones: el arranque pinta antes de llegar aquí. */
 function perecederos(){
+  /* [qué, días en nevera, ¿se puede congelar?, ¿se gasta de una vez?] */
   return [
-    [/salmon|merluza|bacalao|lubina|dorada|sardina|caballa|boqueron|pescado/, 2],
-    [/calamar|sepia|gamba|langostino|mejillon/, 2],
-    [/pollo|pechuga|muslo|contramuslo|jamoncito|pavo|carne picada|hamburguesa/, 2],
-    [/ternera|cerdo|solomillo|bistec|lomo/, 3],
-    [/espinaca|ensalada|lechuga|rucula|canonig|brotes/, 4],
-    [/esparrago|brocoli|judias? verde/, 4],
-    [/fresa|frambuesa|arandano|mora/, 3]
+    [/salmon ahumado/, 7, true, true],
+    [/pulpo/, 5, true, true],
+    [/salmon|merluza|bacalao|lubina|dorada|sardina|caballa|boqueron|pescado/, 2, true, true],
+    [/calamar|sepia|gamba|langostino|mejillon/, 2, true, true],
+    [/taquitos? de (pavo|jamon)|pavo cocido|pavo en lonchas|fiambre|jamon|lonchas/, 5, false, false],
+    [/pollo|pechuga|muslo|contramuslo|jamoncito|carne picada|hamburguesa|pavo/, 2, true, true],
+    [/ternera|cerdo|solomillo|bistec|lomo/, 3, true, true],
+    [/hummus|gazpacho/, 5, false, false],
+    [/yogur|kefir|skyr|queso fresco|queso batido/, 10, false, false],
+    [/espinaca|ensalada|lechuga|rucula|canonig|brotes/, 4, false, false],
+    [/esparrago|brocoli|judias? verde/, 4, false, false],
+    [/fresa|frambuesa|arandano|mora/, 3, false, false],
+    [/tomate|pimiento|pepino|aguacate/, 6, false, false],
+    [/platano|pera|manzana|naranja|mandarina|kiwi|uva|fruta/, 6, false, false]
   ];
 }
+function formasFresco(){ return /ahumad|lata|bote|congelad|cocid/; }
 function perecederoDe(txt){
   const s = normalizeText(txt);
-  if(/congelad|ahumad|cocid|lata|bote|conserva|lonchead|taquito|fiambre|jamon|atun|hummus|gazpacho|seco|polvo/.test(s)) return null;
+  if(/congelad|lata|bote|conserva|seco|polvo|triturado|frito|zumo|brik|mermelada/.test(s)) return null;
   const r = perecederos().find(x => x[0].test(s));
+  if(!r) return null;
+  const forma = (s.match(formasFresco()) || [])[0] || '';
   /* Para buscar en qué plato se usa vale la palabra concreta (salmón), no la
      familia entera: si no, el bacalao del jueves «usaba» el salmón. */
-  return r ? { re: new RegExp(s.match(r[0])[0]), dias: r[1] } : null;
+  return { re: new RegExp(s.match(r[0])[0]), dias: r[1], congela: r[2], unaVez: r[3], forma: forma };
 }
 function loadFrescos(){
-  try{ const l = JSON.parse(localStorage.getItem('planAlimentacionFrescos')); return Array.isArray(l) ? l : []; }catch(e){ return []; }
+  try{ const l = JSON.parse(localStorage.getItem('planAlimentacionFrescos')); return Array.isArray(l) ? l.filter(x => x && x.txt && x.f) : []; }catch(e){ return []; }
+}
+function saveFrescos(l){ setRaw('planAlimentacionFrescos', JSON.stringify(l.slice(-40))); }
+function hoyCero(){ return fechaDeClave(calDateKeyLocal(new Date())); }
+function diasEntre(a, b){ return Math.round((b - a) / 86400000); }
+/* Días que le quedan: con fecha puesta a mano, esa; si no, lo normal desde que se compró. */
+function quedanFresco(x){
+  if(x.cad) return diasEntre(hoyCero(), fechaDeClave(x.cad));
+  const per = perecederoDe(x.txt);
+  return (per ? per.dias : 3) - diasEntre(fechaDeClave(x.f), hoyCero());
+}
+function aguantaTxt(q){
+  if(q < 0) return 'lleva ' + (-q === 1 ? 'un día' : -q + ' días') + ' pasado';
+  if(q === 0) return 'aguanta hasta hoy';
+  if(q === 1) return 'aguanta hasta mañana';
+  const f = new Date(); f.setDate(f.getDate() + q);
+  return q < 7 ? 'aguanta hasta el ' + nombreDiaAli(f.getDay()) : 'aguanta hasta el ' + fechaBonita(calDateKeyLocal(f));
 }
 function apuntarFresco(it){
   if(!it || !perecederoDe(it.txt)) return;
   const k = normalizeText(it.txt);
-  const l = loadFrescos().filter(x => x.k !== k);
+  const l = loadFrescos().filter(x => x.k !== k || x.cong);
   if(it.done) l.push({ k: k, txt: it.txt, f: calDateKeyLocal(new Date()) });
-  setRaw('planAlimentacionFrescos', JSON.stringify(l.slice(-20)));
+  saveFrescos(l);
 }
-function platoQueLoUsa(re){
+function ingredienteEsLaForma(per, nombreNorm){
+  const formaIng = (nombreNorm.match(formasFresco()) || [])[0] || '';
+  return per.forma ? nombreNorm.indexOf(per.forma) !== -1 : !formaIng;
+}
+function platoQueLoUsa(per){
   for(let i = 0; i <= 6; i++){
     const f = new Date(); f.setDate(f.getDate() + i);
     if(isVacationOn(f)) continue;
     const d = getDayForDate(f).d;
     const momentos = ['comida', 'cena'];
     for(let j = 0; j < momentos.length; j++){
+      if(momentos[j] === 'cena' && d.libre) continue;
       const slug = slugDePlato(d[momentos[j]]);
       const p = slug && PLATOS[slug];
-      if(p && (p.ingredientes || []).some(ing => { const n = normalizeText(ing.item); return re.test(n) && !/ahumad|lata|bote|congelad|cocid/.test(n); })) return { i: i, momento: momentos[j], slug: slug, fecha: f };
+      if(p && (p.ingredientes || []).some(ing => { const n = normalizeText(ing.item); return per.re.test(n) && ingredienteEsLaForma(per, n); })) return { i: i, momento: momentos[j], slug: slug, fecha: f };
     }
   }
   return null;
 }
-function usaPrimeroHTML(){
-  const hoy0 = fechaDeClave(calDateKeyLocal(new Date()));
-  const avisos = [];
-  loadFrescos().forEach((x, i) => {
+/* Al cocinar un plato, la carne o el pescado que llevaba ya no está en la nevera. */
+function gastarFrescosDe(slug){
+  const p = PLATOS[slug];
+  if(!p) return;
+  const antes = loadFrescos();
+  const ings = (p.ingredientes || []).map(i => normalizeText(i.item));
+  const l = antes.filter(x => {
+    if(x.cong) return true;
     const per = perecederoDe(x.txt);
-    if(!per) return;
-    const quedan = per.dias - Math.round((hoy0 - fechaDeClave(x.f)) / 86400000);
-    if(quedan > 1 || quedan < -1) return;
-    const uso = platoQueLoUsa(per.re);
-    if(uso && uso.i <= Math.max(0, quedan)) return;
-    avisos.push({ i: i, x: x, quedan: quedan, uso: uso });
+    return !(per && per.unaVez && ings.some(n => per.re.test(n) && ingredienteEsLaForma(per, n)));
   });
-  return avisos.slice(0, 2).map(a => {
+  if(l.length !== antes.length) saveFrescos(l);
+}
+function frescosPendientes(){
+  return loadFrescos().map((x, i) => ({ i: i, x: x, q: quedanFresco(x) })).filter(o => !o.x.cong).sort((a, b) => a.q - b.q);
+}
+function usaPrimeroHTML(){
+  const avisos = [];
+  frescosPendientes().forEach(o => {
+    if(o.q > 1 || o.q < -1) return;
+    const per = perecederoDe(o.x.txt);
+    const uso = per ? platoQueLoUsa(per) : null;
+    if(uso && uso.i <= Math.max(0, o.q)) return;
+    avisos.push({ i: o.i, x: o.x, q: o.q, uso: uso, congela: !!(per && per.congela) });
+  });
+  if(!avisos.length) return '';
+  const total = frescosPendientes().length;
+  return avisos.slice(0, 2).map((a, n) => {
     const nombre = a.x.txt.charAt(0).toUpperCase() + a.x.txt.slice(1);
-    const aguanta = a.quedan <= 0 ? 'hay que usarlo hoy' : 'solo aguanta hasta mañana';
-    const txt = a.uso
-      ? 'lo usas el ' + nombreDiaAli(a.uso.fecha.getDay()) + ', pero fresco ' + aguanta + '. Congélalo hoy, o pasa ese plato a hoy.'
-      : 'fresco ' + aguanta + '. Úsalo antes, o congélalo hoy y no se pierde.';
+    let txt;
+    if(a.q < 0) txt = aguantaTxt(a.q) + '. Si huele y se ve bien, úsalo hoy; si no, fuera y ya está.';
+    else if(a.uso && a.congela) txt = 'lo usas el ' + nombreDiaAli(a.uso.fecha.getDay()) + ', pero fresco ' + aguantaTxt(a.q) + '. Congélalo hoy, o pasa ese plato a hoy.';
+    else if(a.uso) txt = aguantaTxt(a.q) + ' y lo usas el ' + nombreDiaAli(a.uso.fecha.getDay()) + '. Mejor pasa ese plato a hoy.';
+    else if(a.congela) txt = 'fresco ' + aguantaTxt(a.q) + '. Úsalo antes, o congélalo hoy y no se pierde.';
+    else txt = aguantaTxt(a.q) + '. Úsalo hoy o mañana en lo que te apetezca.';
     return '<div class="tip aviso-fresco"><span>' + ico('alerta') + ' <b>' + esc(nombre) + ':</b> ' + esc(txt) + '</span><div class="sobra-botones">' +
-      (a.uso ? '<button class="btn-mini solid" onclick="frescoAccion(' + a.i + ',\'hoy\')">Pasarlo a hoy</button>' : '') +
-      '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'congelar\')">' + ico('nevera') + ' Lo congelo</button>' +
-      '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'listo\')">Ya está</button></div></div>';
+      (a.uso && a.q >= 0 ? '<button class="btn-mini solid" onclick="frescoAccion(' + a.i + ',\'hoy\')">Pasarlo a hoy</button>' : '') +
+      (a.congela && a.q >= 0 ? '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'congelar\')">' + ico('nevera') + ' Lo congelo</button>' : '') +
+      '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'listo\')">Ya está</button>' +
+      (n === 0 && total > 1 ? '<button class="btn-mini" onclick="abrirFrescos()">Ver las ' + total + '</button>' : '') +
+      '</div></div>';
   }).join('');
 }
 function frescoAccion(i, accion){
@@ -4942,19 +5008,333 @@ function frescoAccion(i, accion){
   const x = l[i];
   if(!x) return;
   if(accion === 'hoy'){
-    const per = perecederoDe(x.txt), uso = per && platoQueLoUsa(per.re), now = new Date();
+    const per = perecederoDe(x.txt), uso = per && platoQueLoUsa(per), now = new Date();
     if(uso){
       const finde = now.getDay() === 0 || now.getDay() === 6;
       const momento = (now.getHours() + now.getMinutes() / 60 < 16.5 && (finde || isWfhOn(now))) ? 'comida' : 'cena';
       if(momento === 'cena' && getDayForDate(now).d.libre){ toast('Esta noche es cena libre: mejor congélalo'); return; }
       elegirCambio(calDateKeyLocal(now), momento, uso.slug);
     }
+    l.splice(i, 1);
   } else if(accion === 'congelar'){
+    x.cong = calDateKeyLocal(new Date());
     toast('Al congelador en su bandeja o en una bolsa, plano. La noche antes de usarlo, a la nevera.');
+  } else {
+    l.splice(i, 1);
   }
-  l.splice(i, 1);
-  setRaw('planAlimentacionFrescos', JSON.stringify(l));
+  saveFrescos(l);
   renderHoy();
+  renderFrescosCompra();
+  if(document.getElementById('frescosCuerpo')) pintarFrescos();
+}
+function abrirFrescos(){
+  window.frescoFecha = null;
+  abrirSheet({ ico:'nevera', label:'Caducidades' }, 'Lo fresco que tienes',
+    'Se apunta solo al tachar en la compra. Las fechas son lo normal que aguanta cada cosa: si el envase dice otra, cámbiala.',
+    '<div id="frescosCuerpo"></div>');
+  pintarFrescos();
+}
+function pintarFrescos(){
+  const el = document.getElementById('frescosCuerpo');
+  if(!el) return;
+  const pend = frescosPendientes();
+  const cong = loadFrescos().map((x, i) => ({ i: i, x: x })).filter(o => o.x.cong).sort((a, b) => a.x.cong < b.x.cong ? -1 : 1);
+  const fila = o => {
+    const per = perecederoDe(o.x.txt);
+    const nombre = o.x.txt.charAt(0).toUpperCase() + o.x.txt.slice(1);
+    const abierta = window.frescoFecha === o.i;
+    return '<div class="opt congelado fresco-fila' + (o.q <= 1 ? ' pronto' : '') + '">' +
+      '<span class="opt-txt"><b>' + esc(nombre) + '</b><span>' + esc(aguantaTxt(o.q)) + ' · comprado el ' + esc(fechaBonita(o.x.f)) + (o.x.cad ? ' · fecha puesta a mano' : '') + '</span>' +
+      (abierta
+        ? '<span class="sobra-botones">' + [[0, 'Hoy'], [1, 'Mañana'], [2, '2 días'], [3, '3 días'], [5, '5 días'], [7, 'Una semana'], [14, 'Dos semanas']].map(d =>
+            '<button class="btn-mini" onclick="fechaFresco(' + o.i + ',' + d[0] + ')">' + d[1] + '</button>').join('') +
+          '<input type="date" class="fresco-fecha" aria-label="Fecha del envase" onchange="fechaFrescoExacta(' + o.i + ', this.value)"></span>'
+        : '<span class="sobra-botones">' +
+            '<button class="btn-mini" onclick="frescoAccion(' + o.i + ',\'listo\')">' + ico('check') + ' Gastado</button>' +
+            (per && per.congela && o.q >= 0 ? '<button class="btn-mini" onclick="frescoAccion(' + o.i + ',\'congelar\')">' + ico('nevera') + ' Congelado</button>' : '') +
+            '<button class="btn-mini" onclick="window.frescoFecha = ' + o.i + '; pintarFrescos()">' + ico('calendario') + ' Cambiar fecha</button>' +
+          '</span>') +
+      '</span></div>';
+  };
+  el.innerHTML =
+    (pend.length ? pend.map(fila).join('') : '<p class="nevera-vacio">Ahora mismo no hay nada apuntado. Al tachar carne, pescado, verdura, fruta o lácteos en la compra, se apuntan solos.</p>') +
+    '<div class="ficha-h" style="margin-top:18px;">' + ico('mas') + 'Apuntar algo que tienes</div>' +
+    '<div class="congelar-mano"><input id="frescoNuevo" type="text" autocomplete="off" placeholder="Yogur, pollo, espinacas…" aria-label="Producto" onkeydown="if(event.key===\'Enter\'){event.preventDefault();anadirFresco();}">' +
+      '<button class="btn-mini solid" onclick="anadirFresco()">Apuntar</button></div>' +
+    (cong.length
+      ? '<div class="ficha-h" style="margin-top:18px;">' + ico('nevera') + 'En el congelador, crudo</div>' +
+        cong.map(o => {
+          const dias = diasEntre(fechaDeClave(o.x.cong), hoyCero());
+          return '<div class="opt congelado"><span class="opt-txt"><b>' + esc(o.x.txt.charAt(0).toUpperCase() + o.x.txt.slice(1)) + '</b><span>desde el ' + esc(fechaBonita(o.x.cong)) + (dias > 90 ? ' · mejor usarlo ya' : ' · bien hasta unos 3 meses') + '</span>' +
+            '<span class="sobra-botones"><button class="btn-mini" onclick="frescoAccion(' + o.i + ',\'listo\')">Lo he sacado</button></span></span></div>';
+        }).join('')
+      : '') +
+    (pend.length ? '<button class="btn-mini solid" style="margin-top:16px;" onclick="cerrarSheet(); abrirNevera(true)">' + ico('nevera') + ' Qué hago con lo que tengo</button>' : '');
+}
+function fechaFresco(i, dias){
+  const f = new Date(); f.setDate(f.getDate() + dias);
+  fechaFrescoExacta(i, calDateKeyLocal(f));
+}
+function fechaFrescoExacta(i, clave){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(clave || '')) return;
+  const l = loadFrescos();
+  if(!l[i]) return;
+  l[i].cad = clave;
+  saveFrescos(l);
+  window.frescoFecha = null;
+  pintarFrescos();
+  renderFrescosCompra();
+  renderHoy();
+}
+function anadirFresco(){
+  const inp = document.getElementById('frescoNuevo');
+  const txt = inp ? inp.value.trim() : '';
+  if(!txt) return;
+  const k = normalizeText(txt);
+  const l = loadFrescos().filter(x => x.k !== k || x.cong);
+  const nuevo = { k: k, txt: txt, f: calDateKeyLocal(new Date()) };
+  if(!perecederoDe(txt)){ const f = new Date(); f.setDate(f.getDate() + 3); nuevo.cad = calDateKeyLocal(f); }
+  l.push(nuevo);
+  saveFrescos(l);
+  pintarFrescos();
+  renderFrescosCompra();
+  renderHoy();
+  toast(perecederoDe(txt) ? 'Apuntado' : 'Apuntado con 3 días: cambia la fecha si el envase dice otra');
+}
+function renderFrescosCompra(){
+  const el = document.getElementById('frescosCompra');
+  if(!el) return;
+  const pend = frescosPendientes();
+  const pronto = pend.filter(o => o.q <= 1).length;
+  el.innerHTML = '<button class="opt" onclick="abrirFrescos()">' +
+    '<span class="opt-ico" style="background:' + degradado('ensalada') + '">' + ico('nevera') + '</span>' +
+    '<span class="opt-txt"><b>Lo fresco que tienes en casa</b><span>' +
+      (pend.length ? pend.length + (pend.length === 1 ? ' cosa apuntada' : ' cosas apuntadas') + (pronto ? ' · ' + pronto + ' para usar ya' : ' · nada a punto de pasarse') : 'Se apunta solo al tachar en la lista. Así sabes qué usar primero.') +
+    '</span></span><span class="opt-min">' + ico('flecha') + '</span></button>';
+}
+/* «Qué hago con lo que tengo» empieza marcado con lo fresco que hay apuntado. */
+function preseleccionNevera(){
+  const sel = [];
+  const ings = neveraIngredientes();
+  frescosPendientes().filter(o => o.q >= -1).forEach(o => {
+    const n = normalizeText(o.x.txt);
+    const m = ings.find(x => x[1].test(n));
+    if(m && sel.indexOf(m[0]) === -1) sel.push(m[0]);
+  });
+  return sel;
+}
+
+/* ==================== LO FRESCO DE LA SEMANA ====================
+   Antes eran cuatro listas escritas a mano, una por semana del ciclo, que no
+   cuadraban con el menú (la semana 2 pedía calamar y no tenía). Ahora sale de
+   los platos de esos días de verdad: con tus cambios, sin el bowl del Ametller,
+   sin cenas libres ni lo que ya tienes hecho. Solo lo fresco: lo de la
+   despensa tiene su propio botón. */
+function compraCanon(){
+  return [
+    [/salmon ahumado/, 'Salmón ahumado'], [/salmon/, 'Salmón'], [/merluza/, 'Merluza'], [/bacalao/, 'Bacalao'],
+    [/caballa/, 'Caballa'], [/sardina/, 'Sardinas frescas'], [/pulpo/, 'Pulpo cocido'], [/calamar/, 'Calamar'],
+    [/muslit|jamoncito/, 'Muslitos de pollo'], [/contramuslo|pechuga|pollo/, 'Pechuga de pollo'],
+    [/taquitos de pavo/, 'Taquitos de pavo'], [/pavo/, 'Filetes de pavo'], [/taquitos de jamon/, 'Taquitos de jamón'],
+    [/jamon/, 'Jamón en lonchas'], [/solomillo/, 'Solomillo de cerdo'], [/ternera|bistec/, 'Filete de ternera'],
+    [/huevo/, 'Huevos'], [/kefir/, 'Kéfir natural'], [/yogur/, 'Yogur natural'], [/pan integral/, 'Pan integral'],
+    [/espinaca/, 'Espinacas'], [/ensalada/, 'Ensalada de bolsa'], [/esparrago/, 'Espárragos trigueros'],
+    [/brocoli/, 'Brócoli'], [/judias verdes/, 'Judías verdes'], [/pimiento/, 'Pimientos'], [/cebolleta/, 'Cebolleta'],
+    [/cebolla/, 'Cebolla'], [/tomate triturado|tomate frito/, null], [/tomates? cherry/, 'Tomates cherry'], [/tomate/, 'Tomates'],
+    [/patata/, 'Patatas'], [/zanahoria/, 'Zanahorias'], [/fruta/, 'Fruta']
+  ];
+}
+function noEsFresco(n){
+  return /arroz|pasta|quinoa|cocid[ao]s|atun|maiz|aceituna|curry|leche de coco|caldo|vino|cafe|chocolate|nueces|frutos secos|papel|palos|te apetezca|pizza|pan rallado/.test(n);
+}
+function nombreDiaCorto(i){ return ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'][i]; }
+function frescoDeSemana(){
+  const obj = semanaTupperObjetivo();
+  if(typeof PLATOS === 'undefined') return { items: [], obj: obj };
+  const f = new Date(obj.desde.getFullYear(), obj.desde.getMonth(), obj.desde.getDate());
+  const hoy0 = hoyCero();
+  const mapa = {}, orden = [];
+  let vueltas = 0;
+  do {
+    if(!isVacationOn(f)){
+      const r = getDayForDate(f);
+      ['desayuno', 'media', 'comida', 'merienda', 'cena'].forEach(m => {
+        if(m === 'comida' && (r.isTeamLunch || r.d.pizza || (isBowlOn(f) && !isWfhOn(f)))) return;
+        if(m === 'cena' && r.d.libre) return;
+        if((m === 'comida' || m === 'cena') && yaHechoEl(f, m)) return;
+        const slug = slugDePlato(r.d[m]);
+        const p = slug && PLATOS[slug];
+        if(!p) return;
+        const enEste = {};
+        (p.ingredientes || []).forEach(i => {
+          if(esBasico(i)) return;
+          const n = normalizeText(i.item);
+          const c = compraCanon().find(x => x[0].test(n));
+          let nombre;
+          if(c){ if(!c[1]) return; nombre = c[1]; }
+          else { if(noEsFresco(n) || seccionDe(i.item) === 'despensa') return; nombre = i.item.charAt(0).toUpperCase() + i.item.slice(1); }
+          const k = normalizeText(nombre);
+          if(enEste[k]) return;
+          enEste[k] = true;
+          if(!mapa[k]){ mapa[k] = { txt: nombre, veces: 0, dias: [], primero: new Date(f) }; orden.push(k); }
+          mapa[k].veces++;
+          const dn = nombreDiaCorto(f.getDay());
+          if(mapa[k].dias.indexOf(dn) === -1) mapa[k].dias.push(dn);
+        });
+      });
+    }
+    f.setDate(f.getDate() + 1);
+  } while(f.getDay() !== 1 && ++vueltas < 8);
+  const items = orden.map(k => {
+    const x = mapa[k];
+    const per = perecederoDe(x.txt);
+    let nota = x.dias.length === 7 ? 'todos los días' : x.dias.join(', ');
+    if(per && per.congela && diasEntre(hoy0, x.primero) > per.dias) nota += ' · cómpralo congelado o congélalo al llegar';
+    return { txt: x.txt, nota: nota };
+  });
+  return { items: items, obj: obj };
+}
+function addFrescoSemana(){
+  const r = frescoDeSemana();
+  const n = addItems(r.items, 'L:fresco');
+  toast(n ? 'Añadidas ' + n + ' cosas frescas' : 'Ya estaba todo en la lista');
+}
+
+/* ==================== SI ESTA SEMANA VAS JUSTO ====================
+   Cambios que no tocan el plan: el plato se hace igual y cuesta menos. Solo
+   se proponen si de verdad bajan el precio que la propia app calcula. */
+function cambiosBaratos(){
+  return [
+    [/salmon ahumado/, 'Caballa en lata al natural', 'El mismo pescado azul para el bowl o la ensalada, y aguanta meses en la despensa.'],
+    [/pulpo/, 'Calamar congelado', 'Se hace igual, a la gallega o a la plancha.'],
+    [/ternera|bistec/, 'Lomo de cerdo', 'Mismo tiempo de plancha y el mismo plato.'],
+    [/esparrago/, 'Judías verdes congeladas', 'La misma mitad verde del plato, y no se estropean.']
+  ];
+}
+function cambiosBaratosDe(lista){
+  const res = [];
+  lista.forEach(it => {
+    if(it.done) return;
+    const s = normalizeText(it.txt);
+    if(/congelad|lata/.test(s)) return;
+    const c = cambiosBaratos().find(x => x[0].test(s));
+    if(!c || noMeGustaEn(c[1]).length) return;
+    const a = precioDe(it.txt), b = precioDe(c[1]);
+    if(!a || !b || a.p - b.p < 0.5) return;
+    res.push({ id: it.id, de: it.txt, a: c[1], por: c[2], ahorro: a.p - b.p });
+  });
+  return res;
+}
+function abrirMasBarata(){
+  const cambios = cambiosBaratosDe(loadCompra());
+  const total = cambios.reduce((s, c) => s + c.ahorro, 0);
+  abrirSheet({ ico:'carrito', label:'Compra' }, 'Si esta semana vas justo',
+    'Cambios que no tocan el plan: el plato se hace igual.' + (cambios.length > 1 ? ' Todos juntos, unos <b>' + eurosAprox(total) + '</b> menos.' : ''),
+    cambios.map(c =>
+      '<button class="opt" onclick="aplicarMasBarata(\'' + c.id + '\')">' +
+        '<span class="opt-ico" style="background:' + degradado('ensalada') + '">' + ico('carrito') + '</span>' +
+        '<span class="opt-txt"><b>' + esc(c.de) + ' → ' + esc(c.a) + '</b><span>Unos ' + eurosAprox(c.ahorro) + ' menos. ' + esc(c.por) + '</span></span>' +
+        '<span class="opt-min">' + ico('flecha') + '</span></button>').join('') +
+    '<div class="tip" style="margin-top:14px;">Lo que más ahorra de verdad no está aquí: es no tirar comida. Tacha lo que compras y mira «Lo fresco que tienes» antes de volver a comprar. Y marca blanca en kéfir, yogur y legumbre: la mitad de precio y prácticamente lo mismo.</div>');
+}
+function aplicarMasBarata(id){
+  const antes = loadCompra();
+  const l = antes.map(i => Object.assign({}, i));
+  const it = l.find(i => i.id === id);
+  if(!it) return;
+  const c = cambiosBaratosDe([it])[0];
+  if(!c) return;
+  const de = it.txt;
+  it.txt = c.a;
+  it.nota = (it.nota ? it.nota + ' · ' : '') + 'en vez de ' + de.toLowerCase();
+  saveCompra(l);
+  renderCompra();
+  if(cambiosBaratosDe(l).length) abrirMasBarata(); else cerrarSheet();
+  toast('Cambiado por ' + c.a.toLowerCase(), () => { saveCompra(antes); renderCompra(); });
+}
+
+/* ==================== CONSEJOS ====================
+   Uno al día al final de Hoy, y todos en Inicio por temas. Cada uno dice lo
+   mismo que el resto de la app: si algo de aquí cambia, cambiarlo también allí. */
+function consejos(){
+  return [
+    ['Compra y dinero', [
+      'Antes de bajar al súper, mira la lista con «Por súper»: reparte cada cosa al que mejor sale de los que usas.',
+      'Marca blanca en kéfir, yogur y legumbre de bote: cuesta la mitad y es prácticamente lo mismo.',
+      'No vayas a comprar con hambre: es cuando acaba en el carro lo que no estaba en la lista.',
+      'El pescado congelado vale lo mismo que el fresco y no se tira. Si no lo vas a cocinar en 1-2 días, cómpralo congelado.',
+      'En el mercado (Ninot o Sants) puedes pedir la cantidad justa: dos filetes, 200 g. Lo que no se tira también es dinero.',
+      'Mejor dos compras pequeñas que una grande: el fin de semana lo que aguanta, y a mitad de semana lo fresco de los días que quedan.',
+      'Un menú del día fuera son 14-16 €. Con eso compras la proteína de media semana del plan.'
+    ]],
+    ['Que no se estropee', [
+      'Al llegar de la compra, cinco minutos: la carne y el pescado que no vayas a usar en 2 días, al congelador en raciones.',
+      'Lo viejo delante en la nevera y lo nuevo detrás. Parece una tontería y es lo que más comida salva.',
+      'Las espinacas y la ensalada de bolsa son lo primero que se pasa: úsalas los primeros días.',
+      'Tacha lo que compras en la lista: así se apunta en «Lo fresco que tienes» y la app te avisa antes de que se pase.',
+      'El plátano muy maduro no se tira: pelado y en trozos al congelador, y triturado con un chorrito de leche es un helado.',
+      'El pan de molde, al congelador nada más llegar: del congelador al tostador directo.'
+    ]],
+    ['Cocinar sin complicarte', [
+      'Saca todos los ingredientes antes de encender el fuego. Buscar el aceite con la sartén ya caliente es cuando se quema el ajo.',
+      'Si haces arroz o legumbre, haz para dos: la comida de mañana ya está hecha y no has tardado más.',
+      'Airfryer: agita la cesta a mitad de tiempo y no la llenes hasta arriba. Mejor dos tandas que una amontonada.',
+      'Sartén bien caliente antes de echar la carne: si no chisporrotea, se cuece en su jugo y queda gris.',
+      'Hervir seis huevos el domingo te resuelve varias cenas y desayunos. Con cáscara aguantan una semana en la nevera.',
+      'La verdura congelada vale igual que la fresca: cinco minutos de microondas y tienes la mitad del plato.'
+    ]],
+    ['El tupper', [
+      'Deja el tupper hecho la noche antes, cuando hay más calma que por la mañana.',
+      'El fin de semana, mira «La semana que viene te llevas»: los que aguantan 3 días puedes dejarlos hechos de una vez.',
+      'El aliño, aparte: la ensalada llega al mediodía entera y no aguada.',
+      'Si te olvidas el tupper no pasa nada: al lado del trabajo tienes el Ametller y el Bonpreu con opciones que son el plan.'
+    ]],
+    ['Comer fuera y días malos', [
+      'Si vas a comer fuera, decide qué pedir antes de entrar. La decisión mala casi nunca es ir, es llegar sin decidir.',
+      'Comer fuera no rompe nada. La siguiente comida es normal, sin compensar.',
+      'Ten en casa la despensa de rescate: diez cosas que no caducan y convierten «no tengo nada» en una cena en tres minutos.',
+      'Pedir poke un día que no puedes con nada es una buena decisión, no una recaída.'
+    ]],
+    ['Hambre y ansiedad', [
+      'Si llegas a la cena con mucha hambre, casi siempre es que la merienda se quedó corta. La respuesta es subirla, no aguantar.',
+      'Come sentado y sin pantalla. En 20 minutos el cuerpo avisa de que ya está; en 5, no le da tiempo.',
+      'Saca la ración a un plato y guarda la bolsa antes de sentarte. Comer de la bolsa no tiene freno para nadie.',
+      'Un día que comes de más no se arregla comiendo menos al siguiente. Se retoma en la siguiente comida y ya está.',
+      'Antes de picar por la noche, un minuto de respirar. Si después sigue el hambre, es hambre, y se come.',
+      'Cuando duermes poco, el cuerpo pide más dulce al día siguiente. No es falta de voluntad: es sueño.'
+    ]],
+    ['Con el gimnasio', [
+      'Si vas a entrenar y hace más de tres horas que comiste, una fruta o un yogur entre 30 y 60 minutos antes.',
+      'Al salir de entrenar, si la cena queda a más de dos horas, un yogur o un vaso de leche.',
+      'La proteína de cada comida del plan (pollo, pescado, huevo, legumbre) es la que hace que la fuerza se note. No hace falta batido.'
+    ]]
+  ];
+}
+function consejosPlanos(){
+  const l = [];
+  consejos().forEach(g => g[1].forEach(t => l.push({ tema: g[0], txt: t })));
+  return l;
+}
+function consejoDelDiaHTML(){
+  const l = consejosPlanos();
+  const dia = Math.floor(Date.UTC(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) / 86400000);
+  const i = ((dia * 7 + (window.consejoExtra || 0)) % l.length + l.length) % l.length;
+  const c = l[i];
+  return '<div class="tip consejo"><span class="consejo-h">' + ico('bombilla') + ' Un consejo · ' + esc(c.tema.toLowerCase()) + '</span>' +
+    '<span>' + esc(c.txt) + '</span>' +
+    '<button class="btn-mini" onclick="window.consejoExtra = (window.consejoExtra || 0) + 1; renderHoy();">Otro</button></div>';
+}
+function renderConsejos(){
+  const el = document.getElementById('consejosInicio');
+  if(!el) return;
+  el.innerHTML = consejos().map(g =>
+    '<details class="ref"><summary>' + ico('bombilla') + ' ' + esc(g[0]) + ' <span class="cambio-tag">' + g[1].length + '</span></summary>' +
+      '<div class="ref-cuerpo"><ul>' + g[1].map(t => '<li>' + esc(t) + '</li>').join('') + '</ul></div></details>'
+  ).join('');
+}
+function eurosAprox(n){
+  const r = Math.max(0.5, Math.round(n * 2) / 2);
+  return (r % 1 ? r.toFixed(2).replace('.', ',') : String(r)) + ' €';
 }
 
 /* ==================== HAMBRE POR LA NOCHE ====================
@@ -5343,7 +5723,9 @@ function precioCompraHTML(lista){
   if(pend.larga >= 1) notas.push(euros(pend.larga) + ' son despensa que dura semanas');
   if(pend.sin) notas.push(pend.sin + (pend.sin === 1 ? ' cosa sin precio' : ' cosas sin precio'));
   notas.push('precio medio de súper, aproximado');
-  return '<div class="cab-precio">' + linea + '<span>' + notas.join(' · ') + '</span></div>';
+  const baratos = enSuper ? [] : cambiosBaratosDe(lista);
+  return '<div class="cab-precio">' + linea + '<span>' + notas.join(' · ') + '</span>' +
+    (baratos.length ? '<button class="btn-mini cab-barata" onclick="abrirMasBarata()">' + ico('carrito') + ' Si esta semana vas justo</button>' : '') + '</div>';
 }
 function supersNombres(){
   if(typeof SUPERS === 'undefined') return [];
@@ -5563,8 +5945,17 @@ function posponerAvisoCopia(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-16'; }
+function novedadesId(){ return '2026-09-17'; }
 function novedadesNuevas(){
+  return [
+    '<b>Menú corregido:</b> ya no hay semanas con salmón tres veces (contando el bowl del jueves).',
+    '<b>Lo fresco de la semana</b> en Compra sale de tus platos de verdad, con tus cambios, y te dice qué comprar congelado.',
+    '<b>Lo que caduca:</b> lo fresco se apunta al tacharlo en la compra, puedes cambiar la fecha si el envase dice otra, y Hoy te avisa antes. En Compra y en Recetas.',
+    '<b>Si esta semana vas justo:</b> en Compra, cambios que abaratan la lista sin tocar el plan.',
+    '<b>Consejos:</b> uno al día al final de Hoy, y todos en Inicio.'
+  ];
+}
+function novedadesAntes48(){
   return [
     '<b>Airfryer primero:</b> la ficha te propone el airfryer cuando sale mejor, con tiempos. Un toque y vuelves a la de siempre.',
     '<b>¿Ha sobrado?</b> Al terminar de cocinar: para mañana o al congelador.',
@@ -5574,7 +5965,7 @@ function novedadesNuevas(){
   ];
 }
 function novedades(){
-  return [
+  return novedadesAntes48().concat([
     '<b>Lo que has cocinado:</b> se apunta solo al terminar el modo cocina. Lo ves en Progreso.',
     '<b>Recordatorio del tupper en el calendario del iPhone:</b> Ajustes → Que te avise el iPhone.',
     '<b>Hoy más ordenado:</b> «Cambiar la comida» sale arriba.',
@@ -5585,7 +5976,7 @@ function novedades(){
     '<b>Cosas que no me gustan</b> en Ajustes: marca los platos que lo llevan y dice con qué cambiarlo.',
     '<b>Lo que sueles comprar</b> aparece en Compra para meterlo de un toque.',
     '<b>Modo cocina:</b> ahora puede leerte los pasos en voz alta.'
-  ];
+  ]);
 }
 function novedadesHTML(){
   let vistas = '';
@@ -5723,7 +6114,7 @@ function renderHoy(){
     }
     /* Aquí iba "Método del plato en la comida…" todos los días igual: ya está
        en Inicio y en cada ficha, y en Hoy solo empujaba lo de hoy hacia abajo. */
-    contentHtml = dayCardHtml(d, 'all', true) + tupperesSemanaHTML();
+    contentHtml = dayCardHtml(d, 'all', true) + tupperesSemanaHTML() + consejoDelDiaHTML();
   }
 
   tipHtml += renderTomorrowCard() + hambreNocheHTML() + (enPausa ? '' : resumenSemanaAliHTML());

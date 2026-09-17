@@ -45,7 +45,7 @@ const SIN_COCINAR = [
     min: 2,
     items: ['1 sobre de salmón ahumado', '1 bolsa de ensalada', 'Limón o aceite'],
     como: 'Abre los dos, junta, limón por encima. Ya está.',
-    porQue: 'Es literalmente uno de los platos de tu menú (domingo cena). No es una versión de emergencia: es el plato.',
+    porQue: 'Es el mismo salmón de tu bowl de quinoa, sin la quinoa. No es una versión de emergencia: es una cena completa sin tocar la sartén.',
     esCena: true
   },
   {
@@ -131,7 +131,7 @@ const FUERA = [
     ],
     evita: ['Los platos de pasta con salsas cremosas, que parecen ligeros y no lo son.'],
     bebida: 'Agua. La botella de zumo natural tiene el azúcar de cuatro naranjas.',
-    truco: 'Ya tienes días de bowl marcados en Ajustes. Si un día cualquiera te agobias, este es el sitio: es la salida a comer fuera que no te desvía del plan absolutamente nada.',
+    truco: 'Si marcas días de bowl en Ajustes → Mi semana, Hoy te lo recuerda. Si un día cualquiera te agobias, este es el sitio: es la salida a comer fuera que no te desvía del plan absolutamente nada.',
     veredicto: 'Salir aquí no es romper el plan. Es el plan.'
   },
   {
@@ -261,7 +261,7 @@ const FUERA = [
     evita: ['Cerdo agridulce, pollo al limón y todo lo rebozado: es fritura con almíbar.'],
     bebida: 'Té o agua.',
     truco: 'Pide un plato de verdura salteada para compartir contigo mismo. Suena raro y funciona: llenas con eso.',
-    veredicto: 'Un salteado de pollo con verduras y arroz es casi tu comida del martes.'
+    veredicto: 'Un salteado de pollo con verduras y arroz es casi un plato de tu menú.'
   },
   {
     id: 'panaderia',
@@ -275,7 +275,7 @@ const FUERA = [
     ],
     evita: ['Croissant + napolitana + café con azúcar como comida: te deja con hambre en una hora y de peor humor.'],
     bebida: 'Café con leche normal.',
-    truco: 'Tu plan ya deja 1-2 días de bollería a la semana. Si hoy es uno, disfrútalo tranquilo. Si es el cuarto de la semana, esa es la señal, no el pastel en sí.',
+    truco: 'Tu plan ya cuenta con bollería algún día. Si hoy es uno, disfrútalo tranquilo. Si se ha vuelto cosa de cada día, esa es la señal, no el pastel en sí.',
     veredicto: 'La bollería no está prohibida en tu plan. Solo tiene una frecuencia, y esa frecuencia ya la conoces.'
   }
 ];
@@ -318,7 +318,7 @@ const ANTOJOS = [
     icono: 'capricho',
     min: 2,
     solucion: 'Yogur griego + plátano + una onza de chocolate negro derretida por encima. O plátano con crema de cacahuete.',
-    nota: 'Está en tu menú como merienda casi todos los días. No es un premio de consolación: es lo que tocaba.'
+    nota: 'Está en tu menú como merienda tres días a la semana. No es un premio de consolación: es lo que tocaba.'
   },
   {
     antojo: 'Picar algo salado',
@@ -355,7 +355,7 @@ const DESPENSA_RESCATE = [
   { item: 'Ensalada de bolsa y tomate', por: 'Lo único fresco de la lista. Convierte cualquier cosa en un plato.', precio: '~2,50 €' },
   { item: 'Verdura congelada', por: 'Microondas cinco minutos. Nunca se te caduca.', precio: '~1,50 €' },
   { item: 'Pechuga de pollo congelada en raciones', por: 'Sacas solo la de hoy. Cero desperdicio.', precio: '~6 €' },
-  { item: 'Salmón ahumado en sobre', por: 'Una cena de tu menú, sin cocinar nada.', precio: '~5,79 €' },
+  { item: 'Salmón ahumado en sobre', por: 'Una cena completa sin cocinar nada. Cerrado, aguanta hasta su fecha.', precio: '~5,79 €' },
   { item: 'Yogur griego o skyr', por: 'Cena ligera, merienda y antojo dulce, todo en uno.', precio: '~2 €' },
   { item: 'Frutos secos', por: 'Para picar con freno, y aguantan meses.', precio: '~4 €' }
 ];
@@ -438,7 +438,7 @@ const SUPERS = [
     nombre:'Consum', dir:'Av. de Roma 32-34', min:5, m:402, horario:'L-S 9:00-21:00 · domingo cerrado',
     tipo:'completa',
     para:'Alternativa a Mercadona si vas por Roma. Marca propia decente y precios parecidos.',
-    nota:'Ojo: cierra los domingos. Es el único de los cercanos que lo hace de forma fija.'
+    nota:'Cierra los domingos, como casi todos. El domingo tira de Condis, del 24 horas o del Aldi de Numància 88.'
   },
   {
     nombre:'Aldi', dir:'Carrer de Nicaragua 105-109', min:6, m:487, horario:'L-S 9:00-21:30',
