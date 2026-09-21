@@ -798,6 +798,12 @@
   .cocina-abrir > .ic-v{width:24px; height:24px; color:var(--accent); flex-shrink:0;}
   .cocina-abrir b{display:block; font-size:var(--t-base); color:var(--accent);}
   .cocina-abrir i{display:block; font-style:normal; font-size:var(--t-xs); color:var(--muted);}
+  .foto-plato:empty{display:none;}
+  .foto-plato{margin:0 0 16px;}
+  .foto-plato img{width:100%; max-height:320px; object-fit:cover; border-radius:var(--r-lg); display:block; background:var(--accent-soft);}
+  .foto-pie{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-top:8px; font-size:var(--t-xs); color:var(--muted);}
+  .foto-pie .botones{display:flex; gap:8px;}
+  .foto-espera{font-size:var(--t-sm); color:var(--muted); background:var(--accent-soft); border-radius:var(--r-lg); padding:12px 14px;}
 
   /* ==================== FICHA DEL PLATO ==================== */
   .ficha-back{
@@ -1082,6 +1088,7 @@
   <symbol id="i-rayo" viewBox="0 0 24 24"><path d="M13.4 2.6 4.6 13.6h6.4l-1.4 7.8 8.8-11h-6.4l1.4-7.8Z"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.2 6.2 17.8 17.8M17.8 6.2 6.2 17.8"/></symbol>
   <symbol id="i-flecha" viewBox="0 0 24 24"><path d="M9.2 5.4 15.8 12l-6.6 6.6"/></symbol>
+  <symbol id="i-camara" viewBox="0 0 24 24"><path d="M3.5 8.2c0-1 .8-1.8 1.8-1.8h2.4l1.5-2.2h5.6l1.5 2.2h2.4c1 0 1.8.8 1.8 1.8v9.6c0 1-.8 1.8-1.8 1.8H5.3c-1 0-1.8-.8-1.8-1.8Z"/><circle cx="12" cy="12.8" r="3.6"/></symbol>
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 11v5.4"/><circle cx="12" cy="7.9" r=".95" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.6 12.6 9.4 17.4 19.4 6.6"/></symbol>
   <symbol id="i-mas" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -2142,6 +2149,7 @@ function abrirFicha(slug, momento){
           '<i>Letra grande, un paso cada vez, temporizadores y la pantalla no se apaga</i></span></button>'
         : '') +
       cocinadoFichaHTML(slug) +
+      fotoFichaHTML(slug) +
       (nmgFicha.length ? '<div class="ficha-nota ojo"><b>Lleva ' + esc(nmgFicha.join(' y ')) + ' (está en tu lista de «no me gusta»)</b>' +
         esc(nmgFicha.map(sustitutoNMG).join(' ')) + '</div>' : '') +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('lista') + 'Lo que necesitas' + racionesBtnHTML(p) + '</div>' +
@@ -2805,11 +2813,12 @@ const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
           'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales', 'planAlimentacionCocinados',
-          'planAlimentacionCongelador', 'planAlimentacionMisSupers', 'planAlimentacionSinAirfryer'],
+          'planAlimentacionCongelador', 'planAlimentacionMisSupers', 'planAlimentacionSinAirfryer', 'planAlimentacionFotos'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
     planAlimentacionCheckins: { campo:'fecha', orden:'desc' },
-    planAlimentacionCongelador: { campo:'id', orden:'asc' }
+    planAlimentacionCongelador: { campo:'id', orden:'asc' },
+    planAlimentacionFotos: { campo:'slug', orden:'asc' }
   }
 };
 const KS = {
@@ -3036,6 +3045,7 @@ async function sincronizar(motivo){
       setRaw(KS.syncOk, String(Date.now()));
       setRaw(KS.syncError, '');
       if(cambiaLocal) rerenderAfterSync();
+      sincronizarFotos();
     }catch(e){
       if(e.status === 401 || e.status === 403) setRaw(KS.syncError, 'token');
       else if(e.status === 404){ try{ localStorage.removeItem(KS.gistId); }catch(_){} setRaw(KS.syncError, 'gist'); }
@@ -3060,7 +3070,7 @@ async function conectarSync(tokenDado){
   const t = (tokenDado || (inp ? inp.value : '') || '').trim();
   if(!t){ toast('Pega primero el token'); return; }
   setRaw(KS.ghToken, t);
-  try{ localStorage.removeItem(KS.gistId); }catch(e){}
+  try{ localStorage.removeItem(KS.gistId); localStorage.removeItem(FOTOS.gist); }catch(e){}
   setRaw(KS.syncError, '');
   renderSyncEstado('conectando');
   await sincronizar('conectar');
@@ -3081,7 +3091,7 @@ async function conectarSync(tokenDado){
 function tokenDeEjercicio(){ try{ return localStorage.getItem(KS.tokenEjercicio) || ''; }catch(e){ return ''; } }
 function desconectarSync(){
   if(!confirm('¿Dejar de sincronizar este dispositivo? Tus datos se quedan aquí igual.')) return;
-  [KS.ghToken, KS.gistId, KS.syncOk, KS.syncError].forEach(k => { try{ localStorage.removeItem(k); }catch(e){} });
+  [KS.ghToken, KS.gistId, KS.syncOk, KS.syncError, FOTOS.gist].forEach(k => { try{ localStorage.removeItem(k); }catch(e){} });
   renderSyncEstado();
 }
 async function sincronizarAhora(){
@@ -3207,6 +3217,7 @@ function rerenderAfterSync(){
   renderRecetas();
   renderCheckin();
   renderHoy();
+  if(fichaSlugActual && document.getElementById('fotoFicha')) pintarFotoFicha(fichaSlugActual);
 }
 
 
@@ -5955,12 +5966,218 @@ function posponerAvisoCopia(){
   renderAvisosHoy();
 }
 
+/* ==================== FOTO DE MI PLATO ====================
+   Una foto por plato, la última que hagas. La ficha no tiene fotos de
+   internet a propósito: no se parecerían a lo que te sale a ti. Esta sí.
+
+   Dónde vive cada cosa:
+   - La imagen, en IndexedDB de este dispositivo (en localStorage no caben:
+     el límite es de unos 5 MB para toda la app).
+   - Qué platos tienen foto y cuándo se hizo, en planAlimentacionFotos, que
+     viaja con la sincronización normal y se funde plato a plato (si borras
+     una foto en el móvil, desaparece también del ordenador).
+   - La imagen en sí, en un gist secreto APARTE, un archivo por foto. Aparte
+     porque GitHub devuelve el contenido de todos los archivos en cada
+     lectura: si fueran en el gist de siempre, cada sincronización bajaría
+     todas las fotos. Así solo se lee cuando falta alguna. */
+const FOTOS = { indice:'planAlimentacionFotos', borrar:'planAlimentacionFotosBorrar', gist:'planAlimentacionFotosGistId',
+                archivo:'plan-alimentacion-fotos.json', db:'planAlimentacionFotos' };
+let fotosDBp = null, fotosEnCurso = false, fotosPendiente = false;
+function fotosDB(){
+  if(!fotosDBp){
+    fotosDBp = new Promise((ok, ko) => {
+      if(!window.indexedDB){ ko(new Error('sin IndexedDB')); return; }
+      const r = indexedDB.open(FOTOS.db, 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('fotos', { keyPath:'slug' });
+      r.onsuccess = () => ok(r.result);
+      r.onerror = () => ko(r.error);
+    });
+    fotosDBp.catch(() => { fotosDBp = null; });
+  }
+  return fotosDBp;
+}
+async function fotoIDB(modo, arg){
+  const db = await fotosDB();
+  return new Promise((ok, ko) => {
+    const tx = db.transaction('fotos', (modo === 'get' || modo === 'all') ? 'readonly' : 'readwrite');
+    const st = tx.objectStore('fotos');
+    const r = modo === 'get' ? st.get(arg) : modo === 'all' ? st.getAll() : modo === 'put' ? st.put(arg) : st.delete(arg);
+    r.onsuccess = () => ok(r.result);
+    r.onerror = () => ko(r.error);
+  });
+}
+function fotosIndice(){
+  let raw = null;
+  try{ raw = localStorage.getItem(FOTOS.indice); }catch(e){}
+  const a = parsearSeguro(raw, []);
+  return Array.isArray(a) ? a.filter(x => x && x.slug) : [];
+}
+function fotoEnIndice(slug){ return fotosIndice().find(x => x.slug === slug) || null; }
+/* Mismo formato que escribe la fusión (ordenado por plato), para que no
+   parezca un cambio cada vez que se sincroniza. */
+function guardarIndiceFotos(arr){
+  const mapa = {};
+  arr.forEach(x => { mapa[x.slug] = x; });
+  setLS(FOTOS.indice, jsonEstable(mapaALista(mapa, 'asc')));
+}
+function fotosPorBorrar(){ try{ const a = JSON.parse(localStorage.getItem(FOTOS.borrar)); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+function archivoFoto(slug){ return 'foto-' + slug + '.json'; }
+
+/* La foto del iPhone pesa 3-5 MB. Se reduce a 900 px por el lado largo, que
+   en la pantalla del móvil se ve igual y ocupa unos 100 KB. */
+function comprimirFoto(file){
+  return new Promise((ok, ko) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const k = Math.min(1, 900 / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(img.naturalWidth * k));
+      c.height = Math.max(1, Math.round(img.naturalHeight * k));
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      ok(c.toDataURL('image/jpeg', 0.72));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); ko(new Error('imagen')); };
+    img.src = url;
+  });
+}
+
+function fotoFichaHTML(slug){
+  setTimeout(() => pintarFotoFicha(slug), 0);
+  return '<div class="foto-plato" id="fotoFicha"></div>';
+}
+async function pintarFotoFicha(slug){
+  const el = document.getElementById('fotoFicha');
+  if(!el || fichaSlugActual !== slug) return;
+  let rec = null;
+  try{ rec = await fotoIDB('get', slug); }catch(e){}
+  if(fichaSlugActual !== slug) return;
+  const p = PLATOS[slug] || {};
+  const idx = fotoEnIndice(slug);
+  const input = '<input type="file" accept="image/*" id="fotoInput" hidden onchange="fotoElegida(this, \'' + slug + '\')">';
+  const elegir = 'document.getElementById(\'fotoInput\').click()';
+  if(idx && rec && rec.data){
+    el.innerHTML = '<img src="' + rec.data + '" alt="Tu foto de ' + esc(p.nombre || 'este plato') + '">' +
+      '<div class="foto-pie"><span>Tu plato, el ' + fechaBonita(idx.fecha) + '</span><span class="botones">' +
+        '<button class="btn-mini" onclick="' + elegir + '">' + ico('camara') + 'Otra</button>' +
+        '<button class="btn-mini" onclick="quitarFoto(\'' + slug + '\')">Quitar</button></span></div>' + input;
+  } else if(idx){
+    el.innerHTML = '<div class="foto-espera">Tu foto de este plato está en el otro dispositivo. Llega sola al sincronizar.</div>';
+  } else {
+    el.innerHTML = '<button class="cocina-abrir" onclick="' + elegir + '">' + ico('camara') +
+      '<span><b>Foto de mi plato</b><i>Hazle una foto cuando lo tengas servido: la próxima vez verás cómo te quedó.</i></span></button>' + input;
+  }
+}
+async function fotoElegida(input, slug){
+  const f = input.files && input.files[0];
+  input.value = '';
+  if(!f) return;
+  let data;
+  try{ data = await comprimirFoto(f); }catch(e){ toast('No he podido leer esa imagen'); return; }
+  const t = Date.now();
+  try{ await fotoIDB('put', { slug: slug, t: t, data: data, subir: true }); }
+  catch(e){ toast('No se ha podido guardar la foto en este dispositivo'); return; }
+  guardarIndiceFotos(fotosIndice().filter(x => x.slug !== slug).concat([{ slug: slug, t: t, fecha: calDateKeyLocal(new Date()) }]));
+  setRaw(FOTOS.borrar, JSON.stringify(fotosPorBorrar().filter(s => s !== slug)));
+  pintarFotoFicha(slug);
+  toast('Foto guardada');
+}
+async function quitarFoto(slug){
+  if(!confirm('¿Quitar la foto de este plato?')) return;
+  try{ await fotoIDB('del', slug); }catch(e){}
+  guardarIndiceFotos(fotosIndice().filter(x => x.slug !== slug));
+  const b = fotosPorBorrar();
+  if(b.indexOf(slug) === -1) b.push(slug);
+  setRaw(FOTOS.borrar, JSON.stringify(b));
+  pintarFotoFicha(slug);
+}
+
+async function gistFotos(){
+  let id = null;
+  try{ id = localStorage.getItem(FOTOS.gist); }catch(e){}
+  if(id) return id;
+  for(let pagina = 1; pagina <= 5 && !id; pagina++){
+    const lista = await gh('/gists?per_page=100&page=' + pagina);
+    const g = (lista || []).find(x => x.files && x.files[FOTOS.archivo]);
+    if(g) id = g.id;
+    if(!lista || lista.length < 100) break;
+  }
+  if(!id){
+    const g = await gh('/gists', { method:'POST', body: JSON.stringify({
+      description:'Plan de Alimentación · fotos de tus platos',
+      public:false,
+      files:{ [FOTOS.archivo]: { content: JSON.stringify({ app:'plan-alimentacion', que:'Fotos de tus platos, una por archivo' }) } }
+    }) });
+    id = g.id;
+  }
+  setRaw(FOTOS.gist, id);
+  return id;
+}
+/* Después de cada sincronización normal: baja las fotos que faltan, sube
+   las hechas aquí y borra del gist las que has quitado. Si algo falla, se
+   reintenta en la siguiente; no molesta con avisos. */
+async function sincronizarFotos(){
+  try{ if(!localStorage.getItem(KS.ghToken)) return; }catch(e){ return; }
+  if(fotosEnCurso){ fotosPendiente = true; return; }
+  fotosEnCurso = true;
+  try{
+    let locales = [];
+    try{ locales = await fotoIDB('all'); }catch(e){ return; }
+    /* El índice se lee DESPUÉS de IndexedDB: una foto recién hecha entra
+       antes en IndexedDB que en el índice, así nunca parece "borrada". */
+    const idx = {};
+    fotosIndice().forEach(x => { idx[x.slug] = x; });
+    const loc = {};
+    for(const r of locales){
+      if(!idx[r.slug]){ try{ await fotoIDB('del', r.slug); }catch(e){} continue; }
+      loc[r.slug] = r;
+    }
+    const aSubir = Object.keys(loc).map(s => loc[s]).filter(r => r.subir && idx[r.slug].t === r.t);
+    const aBajar = Object.keys(idx).filter(s => !loc[s] || loc[s].t < idx[s].t);
+    const aBorrar = fotosPorBorrar().filter(s => !idx[s]);
+    if(!aSubir.length && !aBajar.length && !aBorrar.length) return;
+    const id = await gistFotos();
+
+    let bajadas = 0;
+    if(aBajar.length){
+      const g = await gh('/gists/' + id);
+      for(const s of aBajar){
+        const f = g && g.files && g.files[archivoFoto(s)];
+        if(!f) continue;
+        let txt = f.content;
+        if(f.truncated && f.raw_url) txt = await (await fetch(f.raw_url, { cache:'no-store' })).text();
+        const d = parsearSeguro(txt, null);
+        /* Si el otro aún no ha subido la versión nueva, se espera a la siguiente. */
+        if(d && d.data && d.t >= idx[s].t){ await fotoIDB('put', { slug: s, t: d.t, data: d.data }); bajadas++; }
+      }
+    }
+    for(const r of aSubir){
+      await gh('/gists/' + id, { method:'PATCH', body: JSON.stringify({ files:{ [archivoFoto(r.slug)]: { content: JSON.stringify({ t: r.t, data: r.data }) } } }) });
+      const ahora = await fotoIDB('get', r.slug);
+      if(ahora && ahora.t === r.t){ ahora.subir = false; await fotoIDB('put', ahora); }
+    }
+    for(const s of aBorrar){
+      try{ await gh('/gists/' + id, { method:'PATCH', body: JSON.stringify({ files:{ [archivoFoto(s)]: null } }) }); }
+      catch(e){ if(e.status !== 404 && e.status !== 422) throw e; }
+      setRaw(FOTOS.borrar, JSON.stringify(fotosPorBorrar().filter(x => x !== s)));
+    }
+    if(bajadas && fichaSlugActual) pintarFotoFicha(fichaSlugActual);
+  }catch(e){
+    if(e && e.status === 404){ try{ localStorage.removeItem(FOTOS.gist); }catch(_){} }
+  }finally{
+    fotosEnCurso = false;
+    if(fotosPendiente){ fotosPendiente = false; sincronizarFotos(); }
+  }
+}
+
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-21'; }
+function novedadesId(){ return '2026-09-21b'; }
 function novedadesNuevas(){
   return [
+    '<b>Foto de mi plato:</b> en cada ficha, debajo de «Lo he cocinado hoy». La próxima vez que lo abras, ves cómo te quedó. Con la sincronización conectada, llega también al ordenador.',
     '<b>La ensalada ya dice qué es:</b> hojas (lechuga o mezclum), un tomate y medio pepino, con cantidades y cómo se monta. En todas las fichas que la llevan.',
     '<b>El plato dibujado de las cenas:</b> la proteína es un cuarto y el otro cuarto se ve. Es hidrato si llegas con hambre, o más verdura si no.',
     '<b>Merluza con su verdura</b> (calabacín al horno o judías verdes), y el salmón con espárragos de la comida lleva patata.'
