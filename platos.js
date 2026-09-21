@@ -165,32 +165,35 @@ const PLATOS = {
 /* ============================ PESCADO ============================ */
 
 'salmon-airfryer-esparragos': {
-  nombre:'Salmón al airfryer con espárragos',
+  nombre:'Salmón al airfryer con espárragos y patata',
   icono:'pescado', tiempo:12, donde:'Airfryer', tupper:'Bueno — cómelo en 2 días',
   porQue:'El salmón es pescado azul: sus grasas omega-3 son de las pocas cosas que la evidencia respalda de verdad para mejorar el perfil de colesterol. Deberías comer pescado azul dos o tres veces por semana, y este es el más fácil de todos.',
   ingredientes:[
     {q:'1 lomo', item:'salmón fresco', nota:'150-180 g, con piel o sin ella, da igual'},
     {q:'1 manojo', item:'espárragos verdes', nota:'Trigueros'},
+    {q:'1', item:'patata mediana', nota:'Unos 200 g. Es el cuarto de hidrato del plato.'},
     {q:'1/2', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva, sal y pimienta'}
   ],
   compra:'El salmón en la pescadería o en bandeja ya cortado, que es más cómodo. Si te da apuro pedir en la pescadería, la bandeja del lineal vale exactamente igual. Los espárragos trigueros vienen en manojo con una goma.',
   pasos:[
+    'Lava la patata, pínchala con un tenedor por varios sitios y al microondas 6-7 minutos, hasta que entre el cuchillo sin resistencia. Mientras se hace, lo demás.',
     'Precalienta el airfryer a 180°C, 3 minutos. Si el tuyo no tiene precalentado, no pasa nada.',
     'Corta el extremo duro de los espárragos: cógelos por los dos extremos y dóblalos, se parten solos por donde toca.',
     'Salpimienta el salmón y ponle un chorrito de aceite y unas gotas de limón.',
     'Espárragos con aceite y sal en la cesta. 5 minutos a 180°C.',
     'Abre, pon el salmón encima, 8 minutos más a 180°C.',
-    'Está hecho cuando al apretarlo con un tenedor se abre en láminas. Si se resiste, 2 minutos más.'
+    'Está hecho cuando al apretarlo con un tenedor se abre en láminas. Si se resiste, 2 minutos más.',
+    'La patata, partida por la mitad con un chorrito de aceite y sal, al plato con el salmón y los espárragos.'
   ],
   trucos:[
     'No lo pases: el salmón seco es la razón número uno por la que la gente cree que no le gusta el pescado. Mejor quedarse corto que pasarse — por dentro puede quedar ligeramente más oscuro y está perfecto.',
     'Papel de horno en la cesta y no friegas nada.'
   ],
-  diaMalo:'Salmón a la sartén, 3 minutos por cada lado, y una bolsa de ensalada al lado.',
+  diaMalo:'Salmón a la sartén, 3 minutos por cada lado, y hojas de bolsa con un tomate al lado.',
   conservar:'2 días en nevera. El pescado no aguanta tanto como la legumbre.',
   ojo:'Si tu airfryer es pequeño, haz primero los espárragos y luego el salmón por separado. Amontonado no se hace bien.',
-  kcal:560, p:40, c:18, f:36
+  kcal:710, p:44, c:52, f:36
 },
 
 'salmon-horno-esparragos-patata': {
@@ -241,7 +244,7 @@ const PLATOS = {
     'Sirve el salmón al lado.'
   ],
   trucos:['Cuece el doble de patata y guarda la mitad: te sirve para otra ensalada en dos días sin volver a cocer nada.'],
-  diaMalo:'Salmón al airfryer y una bolsa de ensalada. La patata te la saltas y no pasa nada.',
+  diaMalo:'Salmón al airfryer y hojas de bolsa con un tomate. La patata te la saltas y no pasa nada.',
   conservar:'2 días el salmón, 3 la ensalada de patata.',
   ojo:'Las patatas se cuecen enteras y con piel. Si las cortas antes, se llenan de agua.',
   kcal:640, p:40, c:52, f:30
@@ -303,6 +306,7 @@ const PLATOS = {
   porQue:'Pescado blanco: mucha proteína, muy poca grasa y muy fácil de digerir. Es la cena perfecta para los días que entrenas de noche o te acuestas pronto, porque no te deja pesado.',
   ingredientes:[
     {q:'1-2 lomos', item:'merluza', nota:'Fresca o congelada, da igual'},
+    {q:'1', item:'calabacín', nota:'Va en la misma fuente que la merluza'},
     {q:'2 dientes', item:'ajo'},
     {q:'1 puñado', item:'perejil fresco', nota:'O limón, según el día'},
     {q:'1', item:'limón'},
@@ -312,7 +316,8 @@ const PLATOS = {
   pasos:[
     'Si es congelada, descongélala la noche antes en la nevera. Si se te ha olvidado, bajo el grifo de agua fría dentro de una bolsa cerrada, 20 minutos.',
     'Horno a 200°C.',
-    'Pon los lomos en una fuente con sal, aceite y el zumo de medio limón.',
+    'Corta el calabacín en rodajas de medio dedo, a la fuente con aceite y sal, y al horno 10 minutos solo: tarda más que la merluza.',
+    'Saca la fuente, haz hueco entre el calabacín y pon los lomos con sal, aceite y el zumo de medio limón.',
     'Lamina los ajos y repártelos por encima. Si usas perejil, pícalo y échalo también.',
     '12-15 minutos, según el grosor.',
     'Está lista cuando la carne pasa de transparente a blanca opaca y se separa en láminas.'
@@ -330,11 +335,13 @@ const PLATOS = {
   porQue:'Diez minutos, una sartén y ya tienes cena. Es de las opciones más rápidas del menú y de las más ligeras.',
   ingredientes:[
     {q:'1-2 lomos', item:'merluza'},
+    {q:'200 g', item:'judías verdes', nota:'Congeladas, que ya vienen cortadas'},
     {q:'1', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva y sal'}
   ],
   compra:'Lomos congelados, ya te sirven.',
   pasos:[
+    'Primero las judías: en un plato con un chorrito de agua, tapadas, 5 minutos al microondas. Escúrrelas y un poco de aceite y sal.',
     'Seca bien el pescado con papel de cocina. Es lo que separa una plancha buena de una mala.',
     'Sartén bien caliente con poco aceite.',
     'Merluza con sal, 3-4 minutos sin tocarla.',
@@ -407,7 +414,9 @@ const PLATOS = {
   porQue:'Junto con la caballa, el pescado azul más barato y con más omega-3 del mercado. Además llevan calcio si te comes la espina pequeña. Es probablemente la mejor relación calidad-precio-salud de todo tu menú.',
   ingredientes:[
     {q:'6-8', item:'sardinas frescas'},
-    {q:'1 bolsa', item:'ensalada variada'},
+    {q:'2 puñados', item:'lechuga o mezcla de hojas', nota:'Iceberg, romana o una bolsa de mezclum, la que haya. Una bolsa da para 2-3 cenas.'},
+    {q:'1', item:'tomate'},
+    {q:'1/2', item:'pepino', nota:'O una zanahoria rallada, lo que tengas'},
     {q:'1', item:'limón'},
     {q:'Al gusto', item:'aceite de oliva, sal gorda y vinagre'}
   ],
@@ -416,7 +425,7 @@ const PLATOS = {
     'Horno a 200°C.',
     'Coloca las sardinas en la bandeja, sin amontonarlas. Sal gorda por encima y un chorro de aceite.',
     '10-12 minutos. No más.',
-    'Mientras, aliña la ensalada con aceite, vinagre y sal.',
+    'Mientras, la ensalada: hojas en el plato, el tomate en gajos y el pepino en rodajas finas por encima. Aceite, vinagre y sal.',
     'Limón sobre las sardinas al servir.'
   ],
   trucos:['Papel de horno debajo, o pasarás media hora fregando la bandeja.'],
@@ -432,13 +441,14 @@ const PLATOS = {
   porQue:'Cena de cinco minutos sin encender nada, con la proteína y el omega-3 resueltos. Es la cena que salva los domingos por la noche cuando no quieres ni ver la cocina.',
   ingredientes:[
     {q:'100 g', item:'salmón ahumado', nota:'Un paquete pequeño'},
-    {q:'1 bolsa', item:'ensalada verde'},
-    {q:'Opcional', item:'tomate cherry, aguacate o cebolleta'},
+    {q:'2 puñados', item:'lechuga o mezcla de hojas', nota:'Iceberg, romana o una bolsa de mezclum, la que haya. Una bolsa da para 2-3 cenas.'},
+    {q:'6', item:'tomates cherry'},
+    {q:'Opcional', item:'aguacate o cebolleta'},
     {q:'Al gusto', item:'aceite de oliva, limón y sal'}
   ],
   compra:'El salmón ahumado en lonchas está en la nevera. Ojo: lleva bastante sal, así que no le eches casi nada más de sal al plato.',
   pasos:[
-    'Ensalada en el plato.',
+    'Las hojas en el plato y los tomates cherry partidos por la mitad.',
     'Salmón ahumado por encima.',
     'Aceite, limón, y muy poca sal.',
     'Ya está.'
@@ -461,13 +471,16 @@ Object.assign(PLATOS, {
   porQue:'Muchísima proteína y prácticamente nada de grasa. Como cena es de las más ligeras que puedes hacerte, y se hace en cinco minutos de fuego.',
   ingredientes:[
     {q:'250 g', item:'calamar limpio', nota:'En anillas o entero'},
-    {q:'1 bolsa', item:'ensalada verde'},
+    {q:'2 puñados', item:'lechuga o mezcla de hojas', nota:'Iceberg, romana o una bolsa de mezclum, la que haya. Una bolsa da para 2-3 cenas.'},
+    {q:'1', item:'tomate'},
+    {q:'1/2', item:'pepino', nota:'O una zanahoria rallada, lo que tengas'},
     {q:'1 diente', item:'ajo'},
     {q:'1', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva y sal'}
   ],
   compra:'Pide en la pescadería "calamar limpio" y te lo dan listo. También lo hay congelado en anillas, que va perfecto y es más barato.',
   pasos:[
+    'Antes de encender el fuego, la ensalada, que el calamar va muy rápido y no te deja: hojas en el plato, el tomate en gajos y el pepino en rodajas finas por encima. Aceite, vinagre y sal.',
     'Seca muy bien el calamar con papel de cocina. Suelta mucha agua y es lo que impide que se dore.',
     'Sartén a fuego fuerte con poco aceite. Tiene que estar muy caliente.',
     'Echa el calamar en una sola capa. No lo amontones.',
@@ -475,7 +488,7 @@ Object.assign(PLATOS, {
     'Ajo picado y perejil al final, fuera del fuego. Limón al servir.'
   ],
   trucos:['El calamar tiene dos puntos buenos: menos de 3 minutos, o más de 30. Entre medias se pone como una goma. Aquí vamos a la plancha, así que cronometra y sé estricto.'],
-  diaMalo:'Anillas de calamar congeladas al airfryer, 8 minutos, y ensalada de bolsa.',
+  diaMalo:'Anillas de calamar congeladas al airfryer, 8 minutos, y hojas de bolsa con un tomate.',
   conservar:'Mejor el día. Recalentado se endurece.',
   ojo:'Fuego fuerte y poco tiempo. Es el error más típico y no tiene arreglo una vez hecho.',
   kcal:360, p:36, c:12, f:16
@@ -650,14 +663,16 @@ Object.assign(PLATOS, {
   porQue:'Cena rápida, ligerísima y con mucha proteína. Diez minutos de principio a fin.',
   ingredientes:[
     {q:'150 g', item:'filetes de pavo'},
-    {q:'1 bolsa', item:'ensalada'},
+    {q:'2 puñados', item:'lechuga o mezcla de hojas', nota:'Iceberg, romana o una bolsa de mezclum, la que haya. Una bolsa da para 2-3 cenas.'},
+    {q:'1', item:'tomate'},
+    {q:'1/2', item:'pepino', nota:'O una zanahoria rallada, lo que tengas'},
     {q:'Al gusto', item:'aceite de oliva, vinagre y sal'}
   ],
   compra:'Nada especial.',
   pasos:[
     'Sartén caliente con poco aceite.',
     'Pavo salpimentado, 2-3 minutos por lado.',
-    'Ensalada aliñada al lado.'
+    'Al lado, la ensalada: hojas en el plato, el tomate en gajos y el pepino en rodajas finas por encima. Aceite, vinagre y sal.'
   ],
   trucos:['Un poco de ajo en polvo y pimentón sobre el pavo antes de la plancha cambia bastante y no cuesta nada.'],
   diaMalo:'Ya lo es.',
@@ -685,7 +700,7 @@ Object.assign(PLATOS, {
     '7-8 minutos más a 190°C.'
   ],
   trucos:['Sacudir la cesta a mitad es lo que hace que se dore todo por igual. Si no, la parte de abajo se hace y la de arriba no.'],
-  diaMalo:'Solo el pavo al airfryer y una bolsa de ensalada.',
+  diaMalo:'Solo el pavo al airfryer y hojas de bolsa con un tomate.',
   conservar:'2 días.',
   ojo:'No llenes la cesta hasta arriba: si va muy apretado, se cuece en vez de asarse.',
   kcal:440, p:46, c:18, f:20
@@ -736,6 +751,7 @@ Object.assign(PLATOS, {
     'Echa la leche de coco y sal, y deja 5 minutos a fuego suave.',
     'Comprueba que el pollo está hecho por dentro.'
   ],
+  carboCena:'medio vasito de arroz (unos 50 g en crudo), que con la salsa del curry es lo que pega',
   trucos:['Si usas yogur en vez de leche de coco, échalo con el fuego apagado o se corta.'],
   diaMalo:'Pollo al airfryer con curry en polvo espolvoreado. Sin salsa, pero con el mismo sabor.',
   conservar:'3 días, y al día siguiente está mejor.',
@@ -836,7 +852,7 @@ Object.assign(PLATOS, {
     'El reposo de 5 minutos no es opcional: si lo cortas nada más sacarlo, todo el jugo se queda en la tabla y la carne sale seca.',
     'El solomillo puede quedar ligeramente rosado por dentro y está perfecto. No hay que hacerlo hasta que esté gris.'
   ],
-  diaMalo:'Solomillo en medallones a la sartén, 3 minutos por lado, y ensalada de bolsa.',
+  diaMalo:'Solomillo en medallones a la sartén, 3 minutos por lado, y hojas de bolsa con un tomate.',
   conservar:'2-3 días. Frío en ensalada está muy bueno.',
   ojo:'Pasado de horno queda como una suela. Es carne muy magra y perdona poco.',
   kcal:620, p:48, c:52, f:24
@@ -863,7 +879,7 @@ Object.assign(PLATOS, {
     'Deja reposar 3 minutos antes de comerlo.'
   ],
   trucos:['Carne fría de nevera directa a la sartén = por fuera quemada y por dentro fría. Sácala antes, siempre.'],
-  diaMalo:'Bistec a la plancha y ensalada de bolsa. Sin patata.',
+  diaMalo:'Bistec a la plancha y hojas de bolsa con un tomate. Sin patata.',
   conservar:'2 días, pero recalentada pierde mucho.',
   ojo:'No la sales con mucha antelación: saca el jugo y se queda seca.',
   kcal:640, p:46, c:50, f:28
@@ -932,7 +948,9 @@ Object.assign(PLATOS, {
     {q:'3', item:'huevos'},
     {q:'2 puñados', item:'espinacas'},
     {q:'1 diente', item:'ajo'},
-    {q:'1 bolsa', item:'ensalada'},
+    {q:'2 puñados', item:'lechuga o mezcla de hojas', nota:'Iceberg, romana o una bolsa de mezclum, la que haya. Una bolsa da para 2-3 cenas.'},
+    {q:'1', item:'tomate'},
+    {q:'1/2', item:'pepino', nota:'O una zanahoria rallada, lo que tengas'},
     {q:'Al gusto', item:'aceite de oliva y sal'}
   ],
   compra:'Espinacas frescas en bolsa o congeladas, las dos van bien.',
@@ -942,7 +960,7 @@ Object.assign(PLATOS, {
     'Bate los huevos con sal y échalos sobre las espinacas.',
     'Fuego medio-bajo. Cuando los bordes cuajen, dale la vuelta con la ayuda de un plato.',
     '2 minutos más y fuera.',
-    'Ensalada aliñada al lado.'
+    'Al lado, la ensalada: hojas en el plato, el tomate en gajos y el pepino en rodajas finas por encima. Aceite, vinagre y sal.'
   ],
   trucos:['Escurre bien las espinacas antes de echar el huevo: si sueltan agua dentro, la tortilla no cuaja bien.'],
   diaMalo:'Revuelto en vez de tortilla: mismo sabor, sin darle la vuelta, imposible que salga mal.',
@@ -1468,6 +1486,7 @@ const MENU_A_PLATO = {
   'Alubias con pimiento, zanahoria y jamón':'alubias-pimiento-champinon-jamon',
   'Garbanzos con espinacas (comida familiar)':'garbanzos-espinacas',
   'Salmón al airfryer con espárragos':'salmon-airfryer-esparragos',
+  'Salmón al airfryer con espárragos y patata':'salmon-airfryer-esparragos',
   'Salmón al horno con espárragos y patata':'salmon-horno-esparragos-patata',
   'Salmón al airfryer con limón y ensalada de patata':'salmon-airfryer-limon-patata',
   'Salmón a la plancha con arroz integral y brócoli':'salmon-plancha-arroz-brocoli',
@@ -1627,7 +1646,7 @@ const AIRFRYER = {
     pasos:[
       'Las sardinas limpias, en la cesta sin amontonar, con sal gorda y un hilo de aceite.',
       '7-8 minutos a 200°C.',
-      'Mientras, aliña la ensalada con aceite, vinagre y sal.',
+      'Mientras, la ensalada: hojas en el plato, el tomate en gajos y el pepino en rodajas finas por encima. Aceite, vinagre y sal.',
       'Limón sobre las sardinas al servir.'
     ],
     nota:'Con el cajón cerrado huele bastante menos que con el horno abierto. Friega la cesta en cuanto se enfríe.'
@@ -1669,7 +1688,7 @@ const AIRFRYER = {
     pasos:[
       'El pavo con sal, ajo en polvo y pimentón, a la cesta.',
       '8-10 minutos a 190°C, dándole la vuelta a mitad.',
-      'La ensalada aliñada al lado.'
+      'Al lado, la ensalada: hojas en el plato, el tomate en gajos y el pepino en rodajas finas por encima. Aceite, vinagre y sal.'
     ],
     nota:'Mismo tiempo que en la sartén, pero sin estar de pie delante.'
   },

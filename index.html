@@ -1894,6 +1894,10 @@ const PARTES_PLATO = {
     label:'Carbohidrato', colorVar:'--plato-carbo',
     texto:'El otro cuarto. No sobra ni es el enemigo: es lo que te quita el hambre de las seis de la tarde.'
   },
+  carboOpc:{
+    label:'Hidrato, si hay hambre', colorVar:'--plato-carbo', opcional:true,
+    texto:'El último cuarto. En la cena tu pauta lo deja a tu elección: si llegas con hambre de verdad, ponlo sin pensarlo; si no, ese hueco es más verdura. Las dos cosas están bien, ninguna es hacerlo peor.'
+  },
   legumbre:{
     label:'Legumbre', colorVar:'--plato-legumbre',
     texto:'Media plato ella sola, porque la legumbre hace de proteína y de carbohidrato a la vez. Por eso un plato de lentejas no necesita arroz al lado.'
@@ -1902,7 +1906,7 @@ const PARTES_PLATO = {
 
 /* "pimiento" sí, "pimienta" no: si no se distingue, "aceite, sal y pimienta"
    acaba dibujado como si fuera media ración de verdura. */
-const RE_VERDURA  = /espinac|pimiento|champi|ceboll|tomate|brocoli|brócoli|calabac|berenjen|esparrag|espárrag|ensalada|lechuga|canonig|canònig|rucula|rúcula|zanahori|judia verde|judía verde|puerro|\bcol\b|coliflor|alcachof|pepino|verdura|menestra|setas|gazpacho|calabaza|acelga|guisantes|pisto|crema de verdura|hortaliza|germinad|remolacha|apio/i;
+const RE_VERDURA  = /espinac|pimiento|champi|ceboll|tomate|brocoli|brócoli|calabac|berenjen|esparrag|espárrag|ensalada|lechuga|canonig|canònig|rucula|rúcula|zanahori|judias? verdes?|judías? verdes?|puerro|\bcol\b|coliflor|alcachof|pepino|verdura|menestra|setas|gazpacho|calabaza|acelga|guisantes|pisto|crema de verdura|hortaliza|germinad|remolacha|apio/i;
 const RE_LEGUMBRE = /garbanz|lentej|alubi|judias blancas|judías blancas|legumbre|hummus|soja texturizada/i;
 const RE_PROTEINA = /pollo|pavo|pechuga|muslo|contramuslo|ternera|cerdo|solomillo|\blomo\b|jamon|jamón|fiambre|salmon|salmón|merluza|bacalao|atun|atún|sardina|caballa|calamar|pulpo|melva|bonito|langostin|gamba|huevo|clara|queso|requeson|requesón|skyr|yogur|kefir|kéfir|tofu|seitan|seitán|taquitos|carne|hamburgues|pescado|marisco|anchoa|mejillon|mejillón|pavo cocido|fuet|chorizo|salchich/i;
 const RE_CARBO    = /arroz|pasta|macarron|espagueti|espagueti|fideo|patata|boniato|quinoa|cuscus|cuscús|\bpan\b|tostada|molde|avena|tortilla de trigo|tortilla mexicana|wrap|pita|picos|regañ|maiz|maíz|noodle|bulgur|mijo|pure de patata|puré de patata|galleta|cereales|granola|biscote/i;
@@ -1942,7 +1946,13 @@ function repartoPlato(c){
   } else if(hayPro && hayCar){
     trozos.push({ parte:'proteina', frac:0.25 });
     trozos.push({ parte:'carbo', frac:0.25 });
-  } else if(hayPro) trozos.push({ parte:'proteina', frac:0.5 });
+  } else if(hayPro){
+    /* Cena sin hidrato: la proteína sigue siendo un cuarto. Antes se dibujaba
+       como media plato y el texto decía "un cuarto", y no se sabía qué era
+       el otro. */
+    trozos.push({ parte:'proteina', frac:0.25 });
+    trozos.push({ parte:'carboOpc', frac:0.25 });
+  }
   else if(hayCar)   trozos.push({ parte:'carbo', frac:0.5 });
   return trozos;
 }
@@ -1966,7 +1976,7 @@ function platoSVG(trozos){
       d = 'M' + CX + ',' + CY + ' L' + x1.toFixed(1) + ',' + y1.toFixed(1) +
           ' A' + R + ',' + R + ' 0 ' + grande + ' 1 ' + x2.toFixed(1) + ',' + y2.toFixed(1) + ' Z';
     }
-    return '<path class="porcion" data-parte="' + t.parte + '" d="' + d + '" fill="' + col + '"' +
+    return '<path class="porcion" data-parte="' + t.parte + '" d="' + d + '" fill="' + col + '"' + (PARTES_PLATO[t.parte].opcional ? ' fill-opacity=".4" stroke="' + col + '" stroke-dasharray="5 4" stroke-width="1.5"' : '') +
            ' onclick="seleccionarParte(\'' + t.parte + '\')" role="button" tabindex="0"' +
            ' aria-label="' + PARTES_PLATO[t.parte].label + '"/>';
   }).join('');
@@ -1989,6 +1999,7 @@ function platoVisualHTML(p){
   const trozos = repartoPlato(c);
   if(trozos.length < 2) return '';
   platoComposicion = c;
+  platoFicha = p;
   const chips = trozos.map(t =>
     '<button class="plato-parte" data-parte="' + t.parte + '" onclick="seleccionarParte(\'' + t.parte + '\')"' +
       ' style="color:var(' + PARTES_PLATO[t.parte].colorVar + ');">' +
@@ -1997,8 +2008,8 @@ function platoVisualHTML(p){
   ).join('');
   const falta = !c.verdura.length
     ? '<p style="font-size:var(--t-xs); color:var(--muted); text-align:center; margin:8px 0 0;">' +
-      'Este plato no trae verdura propia: la mitad verde la pones tú con lo que tengas (ensalada de bolsa, ' +
-      'espinacas al microondas, un tomate). Vale cualquiera.</p>'
+      'Este plato no trae verdura propia: la mitad verde la pones tú. Lo más fácil: 2 puñados de hojas de bolsa ' +
+      'con un tomate en gajos, o 200 g de judías verdes congeladas, 5 minutos al microondas.</p>'
     : '';
   return '<div class="plato-vis" id="platoVis">' + platoSVG(trozos) + '</div>' +
     '<div class="plato-partes">' + chips + '</div>' +
@@ -2007,6 +2018,7 @@ function platoVisualHTML(p){
 }
 
 let platoComposicion = null;
+let platoFicha = null;
 
 function seleccionarParte(parte){
   const vis = document.getElementById('platoVis');
@@ -2026,7 +2038,8 @@ function seleccionarParte(parte){
   const items = (platoComposicion && platoComposicion[parte]) || [];
   det.className = 'plato-detalle';
   det.innerHTML = '<b style="color:var(' + info.colorVar + ')">' + info.label + '</b>' + esc(info.texto) +
-    (items.length ? '<div class="lista-parte">Aquí, en este plato: ' + esc(items.join(', ')) + '.</div>' : '');
+    (items.length ? '<div class="lista-parte">Aquí, en este plato: ' + esc(items.join(', ')) + '.</div>' : '') +
+    (parte === 'carboOpc' ? '<div class="lista-parte">Si lo pones: ' + esc((platoFicha && platoFicha.carboCena) || 'una rebanada de pan integral, o una patata pequeña pinchada con un tenedor y 5 minutos al microondas') + '.</div>' : '');
 }
 
 /* ==================== FICHA DEL PLATO ==================== */
@@ -3562,7 +3575,7 @@ function seccionDe(txt){
   /* Las especias van antes que la verdura: "ajo en polvo" es despensa,
      no la seccion de fruta y verdura donde esta el ajo fresco. */
   if(/en polvo|especia|pimenton|oregano|curry|canela|comino|laurel|azafran|colorante/.test(s)) return 'despensa';
-  if(/fruta|manzana|platano|pera|naranja|tomate|pimiento|cebolla|\bajo\b|patata|espinaca|lechuga|ensalada|brocoli|champin|esparrago|calabacin|zanahoria|verdura|limon|aguacate|maiz/.test(s)) return 'fruta';
+  if(/fruta|manzana|platano|pera|naranja|tomate|pimiento|cebolla|\bajo\b|patata|espinaca|lechuga|ensalada|brocoli|champin|esparrago|calabacin|zanahoria|pepino|judias verdes|verdura|limon|aguacate|maiz/.test(s)) return 'fruta';
   if(/arroz|pasta|quinoa|avena|legumbre|garbanzo|lenteja|alubia|bote|lata|atun|aceite|vinagre|\bsal\b|especia|pimenton|oregano|curry|frutos secos|nueces|chocolate|cafe|caldo|conserva|conservas|miel|canela|mostaza/.test(s)) return 'despensa';
   return 'otros';
 }
@@ -4012,10 +4025,10 @@ const weeksData = [
   {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
   {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
 ]},
-{ n:4, avg:1753, days:[
+{ n:4, avg:1774, days:[
   {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y cebolla salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
   {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
-  {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:1860,p:120,c:162,f:73},
+  {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos y patata", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:2010,p:124,c:196,f:73},
   {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, zanahoria y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
   {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
@@ -5945,8 +5958,15 @@ function posponerAvisoCopia(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-17'; }
+function novedadesId(){ return '2026-09-21'; }
 function novedadesNuevas(){
+  return [
+    '<b>La ensalada ya dice qué es:</b> hojas (lechuga o mezclum), un tomate y medio pepino, con cantidades y cómo se monta. En todas las fichas que la llevan.',
+    '<b>El plato dibujado de las cenas:</b> la proteína es un cuarto y el otro cuarto se ve. Es hidrato si llegas con hambre, o más verdura si no.',
+    '<b>Merluza con su verdura</b> (calabacín al horno o judías verdes), y el salmón con espárragos de la comida lleva patata.'
+  ];
+}
+function novedadesAntes49(){
   return [
     '<b>Menú corregido:</b> ya no hay semanas con salmón tres veces (contando el bowl del jueves).',
     '<b>Lo fresco de la semana</b> en Compra sale de tus platos de verdad, con tus cambios, y te dice qué comprar congelado.',
@@ -5965,7 +5985,7 @@ function novedadesAntes48(){
   ];
 }
 function novedades(){
-  return novedadesAntes48().concat([
+  return novedadesAntes49().concat(novedadesAntes48(), [
     '<b>Lo que has cocinado:</b> se apunta solo al terminar el modo cocina. Lo ves en Progreso.',
     '<b>Recordatorio del tupper en el calendario del iPhone:</b> Ajustes → Que te avise el iPhone.',
     '<b>Hoy más ordenado:</b> «Cambiar la comida» sale arriba.',

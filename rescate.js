@@ -43,7 +43,7 @@ const SIN_COCINAR = [
     nombre: 'Salmón ahumado del sobre + ensalada de bolsa',
     icono: 'pescado',
     min: 2,
-    items: ['1 sobre de salmón ahumado', '1 bolsa de ensalada', 'Limón o aceite'],
+    items: ['1 sobre de salmón ahumado', '1 bolsa de hojas (lechuga o mezclum) y 1 tomate', 'Limón o aceite'],
     como: 'Abre los dos, junta, limón por encima. Ya está.',
     porQue: 'Es el mismo salmón de tu bowl de quinoa, sin la quinoa. No es una versión de emergencia: es una cena completa sin tocar la sartén.',
     esCena: true
@@ -237,7 +237,7 @@ const FUERA = [
     nivel: 'bien',
     resumen: 'La salida más rápida y casi nadie la usa.',
     pide: [
-      'Pollo asado del mostrador: media pechuga con una bolsa de ensalada es una cena completa por unos 5 €.',
+      'Pollo asado del mostrador: media pechuga con hojas de bolsa y un tomate es una cena completa por unos 5 €.',
       'Ensalada preparada + una lata de atún o un huevo duro.',
       'Sushi de la nevera, gazpacho, hummus, tortilla de patata fresca.',
       'Salmón ahumado y pan.'
