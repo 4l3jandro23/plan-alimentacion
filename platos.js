@@ -1086,7 +1086,7 @@ Object.assign(PLATOS, {
   ingredientes:[
     {q:'1-2 rebanadas', item:'pan integral'},
     {q:'2-3 lonchas', item:'jamón serrano o york'},
-    {q:'1', item:'pieza de fruta'},
+    {q:'1', item:'pieza de fruta', nota:'La que tengas: manzana, pera, plátano, naranja o dos mandarinas. Si son fresas o uvas, un puñado grande.'},
     {q:'Opcional', item:'tomate rallado y aceite de oliva'}
   ],
   compra:'Pan integral de verdad: mira que en los ingredientes la harina integral sea el primer ingrediente. Muchos panes "integrales" son harina blanca con salvado añadido.',
@@ -1110,7 +1110,7 @@ Object.assign(PLATOS, {
   ingredientes:[
     {q:'2', item:'huevos'},
     {q:'1-2 rebanadas', item:'pan integral'},
-    {q:'1', item:'pieza de fruta'},
+    {q:'1', item:'pieza de fruta', nota:'La que tengas: manzana, pera, plátano, naranja o dos mandarinas. Si son fresas o uvas, un puñado grande.'},
     {q:'Al gusto', item:'aceite de oliva y sal'}
   ],
   compra:'Nada especial.',
@@ -1194,7 +1194,7 @@ Object.assign(PLATOS, {
   porQue:'Merienda estándar. Su función no es nutrirte especialmente: es llegar a la cena sin hambre acumulada, que en tu caso marca la diferencia entre cenar bien y picotear hasta la una.',
   ingredientes:[
     {q:'1', item:'yogur natural'},
-    {q:'1', item:'pieza de fruta'}
+    {q:'1', item:'pieza de fruta', nota:'La que tengas: manzana, pera, plátano, naranja o dos mandarinas. Si son fresas o uvas, un puñado grande.'}
   ],
   compra:'Yogur natural. El griego tiene más proteína si quieres que llene más.',
   pasos:['Servir.'],
@@ -1211,7 +1211,7 @@ Object.assign(PLATOS, {
   porQue:'La onza de chocolate está en el plan a propósito, igual que la bollería. Un poco de dulce previsto y contado quita mucha más ansiedad que prohibirlo entero.',
   ingredientes:[
     {q:'1', item:'yogur natural'},
-    {q:'1', item:'pieza de fruta'},
+    {q:'1', item:'pieza de fruta', nota:'La que tengas: manzana, pera, plátano, naranja o dos mandarinas. Si son fresas o uvas, un puñado grande.'},
     {q:'1 onza', item:'chocolate negro', nota:'70% o más'}
   ],
   compra:'Chocolate negro del 70% o más. Cuanto más porcentaje, menos azúcar y más fácil parar en una onza.',
@@ -1505,6 +1505,7 @@ const MENU_A_PLATO = {
   'Muslitos de pollo al horno con patata (comida familiar)':'muslitos-horno-patata',
   'Muslitos al horno con patata (comida familiar)':'muslitos-horno-patata',
   'Solomillo de cerdo con patata al horno y ensalada':'solomillo-patata-pimientos',
+  'Solomillo de cerdo con patata al horno y pimientos':'solomillo-patata-pimientos',
   'Solomillo con patata y pimientos':'solomillo-patata-pimientos',
   'Bistec de ternera con ensalada de patata':'bistec-ternera-ensalada-patata',
   'Ternera a la plancha con espárragos trigueros y patata':'ternera-plancha-champinones-patata',

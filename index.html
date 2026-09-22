@@ -2011,7 +2011,7 @@ function platoVisualHTML(p){
     '<button class="plato-parte" data-parte="' + t.parte + '" onclick="seleccionarParte(\'' + t.parte + '\')"' +
       ' style="color:var(' + PARTES_PLATO[t.parte].colorVar + ');">' +
       '<span class="punto" style="background:var(' + PARTES_PLATO[t.parte].colorVar + ')"></span>' +
-      '<span style="color:var(--ink)">' + PARTES_PLATO[t.parte].label + '</span></button>'
+      '<span style="color:var(--ink)">' + (t.parte === 'carboOpc' && window.fichaMomento === 'comida' ? 'Hidrato, añádelo' : PARTES_PLATO[t.parte].label) + '</span></button>'
   ).join('');
   const falta = !c.verdura.length
     ? '<p style="font-size:var(--t-xs); color:var(--muted); text-align:center; margin:8px 0 0;">' +
@@ -2044,7 +2044,9 @@ function seleccionarParte(parte){
   const info = PARTES_PLATO[parte];
   const items = (platoComposicion && platoComposicion[parte]) || [];
   det.className = 'plato-detalle';
-  det.innerHTML = '<b style="color:var(' + info.colorVar + ')">' + info.label + '</b>' + esc(info.texto) +
+  const enComida = parte === 'carboOpc' && window.fichaMomento === 'comida';
+  det.innerHTML = '<b style="color:var(' + info.colorVar + ')">' + (enComida ? 'Hidrato, añádelo' : info.label) + '</b>' +
+    esc(enComida ? 'El último cuarto. En la comida sí va: es lo que te quita el hambre de las seis de la tarde. Este plato no lo trae, así que ponlo tú.' : info.texto) +
     (items.length ? '<div class="lista-parte">Aquí, en este plato: ' + esc(items.join(', ')) + '.</div>' : '') +
     (parte === 'carboOpc' ? '<div class="lista-parte">Si lo pones: ' + esc((platoFicha && platoFicha.carboCena) || 'una rebanada de pan integral, o una patata pequeña pinchada con un tenedor y 5 minutos al microondas') + '.</div>' : '');
 }
@@ -4014,7 +4016,7 @@ const weeksData = [
   {day:"Martes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con arroz integral y pimientos", merienda:"🍎 Yogur + manzana", cena:"🥚 Tortilla francesa con espinacas y tomate aliñado", kcal:1770,p:110,c:158,f:69},
   {day:"Miércoles 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos salteados con espinacas y taquitos de pavo", merienda:"🍎 Yogur + fruta", cena:"🦑 Calamar a la plancha con ensalada verde", kcal:1780,p:104,c:187,f:56},
   {day:"Jueves 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de pasta integral con atún, tomate y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pavo al airfryer con pimiento y cebolla asados", kcal:1830,p:116,c:166,f:67},
-  {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo de cerdo con patata al horno y ensalada", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
+  {day:"Viernes 🥩", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo de cerdo con patata al horno y pimientos", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1490,p:86,c:151,f:56, libre:true},
   {day:"Sábado 🦑", desayuno:"🍳 Huevos revueltos + tostada + plátano", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamares y pulpo a la gallega con patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1460,p:80,c:147,f:54, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Arroz con pollo, pimiento y cebolla (comida en familia)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1900,p:122,c:163,f:76}
 ]},
@@ -4040,7 +4042,7 @@ const weeksData = [
   {day:"Lunes 🍗", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pollo a la plancha con pimiento y cebolla salteados, y arroz", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla francesa con tomate", kcal:1770,p:110,c:158,f:69},
   {day:"Martes 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza al horno con ajo y perejil", kcal:1800,p:112,c:172,f:62},
   {day:"Miércoles 🐟", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con espárragos y patata", merienda:"🍎 Yogur + fruta", cena:"🍗 Pavo a la plancha con ensalada", kcal:2010,p:124,c:196,f:73},
-  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, zanahoria y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con pimientos", kcal:1810,p:102,c:191,f:58},
+  {day:"Jueves 🫘", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Alubias con pimiento, zanahoria y jamón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🦑 Calamar a la plancha con ensalada", kcal:1810,p:102,c:191,f:58},
   {day:"Viernes 🍕", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍕 Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1510,p:66,c:181,f:54, libre:true, pizza:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Solomillo con patata y pimientos", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🫘 Ensalada de lentejas con pimiento, tomate y atún", kcal:1960,p:128,c:203,f:60}
@@ -4623,6 +4625,7 @@ function apuntarCocinado(slug){
   const semana = cocinadosDesde(lunesClave());
   toast('Apuntado. Esta semana llevas ' + semana + (semana === 1 ? ' plato' : ' platos'), () => {
     saveFrescos(frescosAntes);
+    window.crudoPregunta = null;
     setLS('planAlimentacionCocinados', JSON.stringify(antes));
     renderCocinados();
     pintarCocinadoFicha(slug);
