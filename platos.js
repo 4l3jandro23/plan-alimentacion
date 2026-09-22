@@ -306,7 +306,7 @@ const PLATOS = {
   porQue:'Pescado blanco: mucha proteína, muy poca grasa y muy fácil de digerir. Es la cena perfecta para los días que entrenas de noche o te acuestas pronto, porque no te deja pesado.',
   ingredientes:[
     {q:'1-2 lomos', item:'merluza', nota:'Fresca o congelada, da igual'},
-    {q:'1', item:'calabacín', nota:'Va en la misma fuente que la merluza'},
+    {q:'1 manojo', item:'espárragos trigueros', nota:'Van en la misma fuente que la merluza'},
     {q:'2 dientes', item:'ajo'},
     {q:'1 puñado', item:'perejil fresco', nota:'O limón, según el día'},
     {q:'1', item:'limón'},
@@ -316,8 +316,8 @@ const PLATOS = {
   pasos:[
     'Si es congelada, descongélala la noche antes en la nevera. Si se te ha olvidado, bajo el grifo de agua fría dentro de una bolsa cerrada, 20 minutos.',
     'Horno a 200°C.',
-    'Corta el calabacín en rodajas de medio dedo, a la fuente con aceite y sal, y al horno 10 minutos solo: tarda más que la merluza.',
-    'Saca la fuente, haz hueco entre el calabacín y pon los lomos con sal, aceite y el zumo de medio limón.',
+    'Corta el extremo duro de los espárragos (dóblalos y se parten solos por donde toca) y ponlos en la fuente con aceite y sal.',
+    'Haz hueco entre los espárragos y pon los lomos con sal, aceite y el zumo de medio limón.',
     'Lamina los ajos y repártelos por encima. Si usas perejil, pícalo y échalo también.',
     '12-15 minutos, según el grosor.',
     'Está lista cuando la carne pasa de transparente a blanca opaca y se separa en láminas.'
@@ -1487,11 +1487,12 @@ Object.assign(PLATOS, {
 'ratatouille-garbanzos': {
   nombre:'Ratatouille con garbanzos',
   icono:'legumbre', tiempo:35, donde:'Airfryer', tupper:'Perfecto — y frío también está bueno', libro:true,
-  porQue:'Verdura y legumbre en el mismo plato, sin estar de pie delante del fuego: lo metes todo en el airfryer y te olvidas. El garbanzo hace de proteína y de hidrato a la vez, así que no le falta nada. La versión del libro lleva berenjena; esta va sin ella, con más calabacín.',
+  porQue:'Verdura y legumbre en el mismo plato, sin estar de pie delante del fuego: lo metes todo en el airfryer y te olvidas. El garbanzo hace de proteína y de hidrato a la vez, así que no le falta nada. Está adaptada a lo que te gusta: pimiento, cebolla, tomate y zanahoria.',
   ingredientes:[
     {q:'1/2 bote', item:'garbanzos cocidos', nota:'Unos 120 g escurridos. El otro medio bote, al tupper para mañana o para una ensalada.'},
-    {q:'1', item:'calabacín', nota:'Mediano, en dados de un dedo'},
-    {q:'1/2', item:'pimiento amarillo o rojo', nota:'En dados de un dedo'},
+    {q:'1', item:'pimiento rojo', nota:'En dados de un dedo'},
+    {q:'1/2', item:'pimiento verde o amarillo', nota:'En dados de un dedo'},
+    {q:'1', item:'zanahoria', nota:'En rodajas finas, que tarda más que lo demás'},
     {q:'1/2', item:'cebolla roja', nota:'O blanca, la que haya'},
     {q:'8', item:'tomates cherry', nota:'Partidos por la mitad'},
     {q:'1 cucharadita', item:'aceite de oliva'},
@@ -1502,11 +1503,11 @@ Object.assign(PLATOS, {
   compra:'Todo de cualquier súper. Lo único especial es el recipiente: necesitas un molde que quepa dentro de la cesta del airfryer (de silicona o de aluminio, de unos 18 cm). Cuesta 5-10 € en Lidl, Action, Ikea o Amazon, y te sirve para el arroz frito y más cosas.',
   pasos:[
     'Escurre los garbanzos y pásalos por agua del grifo.',
-    'Corta el calabacín, el pimiento y la cebolla en dados de un dedo, más o menos iguales. Los tomates cherry, por la mitad.',
+    'Corta los pimientos y la cebolla en dados de un dedo, más o menos iguales, y la zanahoria en rodajas finas. Los tomates cherry, por la mitad.',
     'En un bol, mézclalo todo con el aceite, el ajo, la guindilla si la usas y un poco de sal, hasta que brille.',
     'Pásalo al molde y el molde a la cesta.',
     'Airfryer a 190°C, 30 minutos. Cada 10 minutos, abre y remueve con una cuchara.',
-    'Está cuando el calabacín se deja partir con la cuchara y los tomates se han deshecho un poco.',
+    'Está cuando la zanahoria se deja partir con la cuchara y los tomates se han deshecho un poco.',
     'Perejil y albahaca por encima, pimienta, prueba de sal y listo.'
   ],
   trucos:[
@@ -1602,7 +1603,7 @@ Object.assign(PLATOS, {
     {q:'1', item:'pan de pita grande', nota:'Unos 20 cm. Si los tuyos son pequeños, dos.'},
     {q:'2 cucharadas', item:'pesto de albahaca', nota:'De bote. O tomate triturado con orégano si prefieres la clásica.'},
     {q:'1', item:'tomate', nota:'En rodajas finas'},
-    {q:'4-5', item:'corazones de alcachofa de bote', nota:'En cuartos. Si no te gustan: champiñón laminado o pimiento'},
+    {q:'4-5', item:'corazones de alcachofa de bote', nota:'En cuartos. Si no te gustan: pimiento en tiras o jamón york'},
     {q:'Unas', item:'aceitunas negras', nota:'En rodajitas'},
     {q:'50 g', item:'queso parmesano', nota:'En virutas. O mozzarella rallada'},
     {q:'1 puñado', item:'rúcula', nota:'Para el final'},
@@ -1629,7 +1630,7 @@ Object.assign(PLATOS, {
   porQue:'Una patata grande asada, abierta y cargada de cosas ricas. Es comida de sofá y peli, pero con lentejas, verdura y queso: más completa de lo que parece.',
   ingredientes:[
     {q:'1', item:'patata grande', nota:'Unos 300 g, de piel roja si hay'},
-    {q:'1 chorrito', item:'aceite de oliva'},
+    {q:'1 chorro', item:'aceite de oliva'},
     {q:'1/2', item:'tomate', nota:'Picado'},
     {q:'50 g', item:'lentejas cocidas', nota:'De bote, escurridas. El resto, a un tupper'},
     {q:'Unas', item:'aceitunas negras sin hueso', nota:'En rodajas'},
@@ -1665,7 +1666,7 @@ Object.assign(PLATOS, {
     {q:'1 cucharadita', item:'azúcar moreno'},
     {q:'Unas gotas', item:'esencia de vainilla', nota:'Opcional'},
     {q:'1 pizca', item:'sal'},
-    {q:'1 chorrito', item:'aceite en spray o de oliva', nota:'Para el molde'},
+    {q:'1 chorro', item:'aceite en spray o de oliva', nota:'Para el molde'},
     {q:'120 g', item:'mascarpone', nota:'Para la crema. Sale para 2-3 veces'},
     {q:'2 cucharadas', item:'sirope de arce o miel', nota:'Para la crema'},
     {q:'1/2 cucharadita', item:'canela molida', nota:'Para la crema. Y una pizca de clavo si tienes'}
@@ -1688,15 +1689,13 @@ Object.assign(PLATOS, {
 },
 
 'humus-hortalizas': {
-  nombre:'Humus de verduras asadas',
+  nombre:'Humus de pimiento asado',
   icono:'media', tiempo:30, donde:'Airfryer y batidora', tupper:'Perfecto', extra:true,
-  porQue:'Humus con verdura asada dentro, más suave y con más sabor que el de bote. Para picar con palitos de zanahoria o pepino, o como merienda con pan de pita. Sale para 4 días.',
+  porQue:'Humus con pimiento asado dentro, más suave y con más sabor que el de bote. Para picar con palitos de zanahoria o pepino, o como merienda con pan de pita. Sale para 4 días.',
   ingredientes:[
     {q:'1 bote', item:'garbanzos cocidos', nota:'400 g, escurridos y lavados'},
-    {q:'1', item:'calabacín', nota:'En dados de 1 cm'},
-    {q:'1', item:'pimiento rojo', nota:'En dados de 1 cm'},
+    {q:'2', item:'pimientos rojos', nota:'En dados de 1 cm'},
     {q:'1/2', item:'cebolla roja', nota:'En dados'},
-    {q:'1/2', item:'berenjena pequeña', nota:'Opcional: triturada casi no se nota. Si no te convence, otro medio calabacín'},
     {q:'2 dientes', item:'ajo', nota:'Picados'},
     {q:'1 cucharada', item:'aceite de oliva'},
     {q:'1/2', item:'limón', nota:'El zumo'},
@@ -1706,8 +1705,8 @@ Object.assign(PLATOS, {
   compra:'Todo de cualquier súper. Necesitas una batidora de mano o un robot de cocina para triturarlo.',
   pasos:[
     'Airfryer a 190°C, 3 minutos.',
-    'En un bol, mezcla el calabacín, el pimiento, la cebolla, la berenjena si la usas y el ajo con el aceite, y un poco de sal.',
-    'A la cesta, 10-15 minutos, removiendo una o dos veces, hasta que esté tierno y algo tostado por los bordes.',
+    'En un bol, mezcla el pimiento, la cebolla y el ajo con el aceite, y un poco de sal.',
+    'A la cesta, 10-15 minutos, removiendo una o dos veces, hasta que el pimiento esté tierno y algo tostado por los bordes.',
     'Pásalo al vaso de la batidora con su jugo, los garbanzos y el zumo de limón.',
     'Tritura hasta que quede fino. Si queda muy espeso, un chorrito de agua.',
     'Prueba de sal y pimienta, y a un tupper.'
