@@ -3556,7 +3556,7 @@ function renderRecetas(){
       '<div class="rec-body">' +
         '<div class="rec-nombre">' + esc(p.nombre) + '</div>' +
         '<div class="rec-meta">' + ico('reloj') + tiempoDe(k) + ' min · ' + esc(dondeDe(k)) + '</div>' +
-        (p.icono === 'capricho' ? '<div class="rec-meta">Viernes noche</div>' : '') +
+        (p.etiqueta || p.icono === 'capricho' ? '<div class="rec-meta">' + esc(p.etiqueta || 'Viernes noche') + '</div>' : '') +
       '</div></div>';
   };
   grid.innerHTML = slugs.map(tarjeta).join('');
@@ -5401,7 +5401,10 @@ function consejos(){
       'Airfryer: agita la cesta a mitad de tiempo y no la llenes hasta arriba. Mejor dos tandas que una amontonada.',
       'Sartén bien caliente antes de echar la carne: si no chisporrotea, se cuece en su jugo y queda gris.',
       'Hervir seis huevos el domingo te resuelve varias cenas y desayunos. Con cáscara aguantan una semana en la nevera.',
-      'La verdura congelada vale igual que la fresca: cinco minutos de microondas y tienes la mitad del plato.'
+      'La verdura congelada vale igual que la fresca: cinco minutos de microondas y tienes la mitad del plato.',
+      'Precalentar el airfryer 3 minutos hace que lo de fuera se dore antes de que se seque lo de dentro.',
+      'Una receta de horno en el airfryer: unos 10 grados menos y un 20 % menos de tiempo, y mira a mitad.',
+      'Un molde que quepa en la cesta te abre medio libro de recetas: arroz, verdura con tomate, torrijas.'
     ]],
     ['El tupper', [
       'Deja el tupper hecho la noche antes, cuando hay más calma que por la mañana.',
@@ -5422,6 +5425,48 @@ function consejos(){
       'Un día que comes de más no se arregla comiendo menos al siguiente. Se retoma en la siguiente comida y ya está.',
       'Antes de picar por la noche, un minuto de respirar. Si después sigue el hambre, es hambre, y se come.',
       'Cuando duermes poco, el cuerpo pide más dulce al día siguiente. No es falta de voluntad: es sueño.'
+    ]],
+    ['Tu colesterol', [
+      'El aceite de oliva es la grasa buena del plan: úsalo sin miedo, en crudo y con cuchara, no a chorro de botella.',
+      'La legumbre dos o tres veces por semana es de lo que más ayuda: su fibra arrastra parte del colesterol en el intestino.',
+      'Pescado azul dos veces por semana (salmón, caballa, sardinas, atún): sus grasas son de las pocas con efecto demostrado.',
+      'Un huevo al día es compatible con cuidar el colesterol. Lo que más lo sube es el embutido graso, la bollería y los fritos de bar.',
+      'Un puñado de nueces al día, lo que cabe en la mano cerrada, ayuda. Más cantidad ya no suma.',
+      'La avena del desayuno lleva el mismo tipo de fibra que la legumbre: también cuenta.',
+      'No hace falta quitar el embutido o la bollería: basta con que no sean de cada día.'
+    ]],
+    ['Llenarte sin contar', [
+      'Empieza el plato por la verdura: la sensación de estar lleno llega antes.',
+      'La proteína es lo que más sacia. Si una comida te deja con hambre a la hora, casi siempre le faltaba.',
+      'Fruta entera mejor que zumo: el zumo es el azúcar de tres naranjas sin la fibra que te llena.',
+      'Si repites, que sea de verdura: es lo único del plato en lo que no hace falta pensar.',
+      'Soltar los cubiertos entre bocado y bocado hace que comas más despacio sin tener que proponértelo.',
+      'Un plato más pequeño lleno sienta distinto que uno grande medio vacío, aunque sea lo mismo.'
+    ]],
+    ['Leer etiquetas', [
+      'Mira los ingredientes antes que las calorías: el primero es del que más lleva.',
+      'Pan integral de verdad: que el primer ingrediente sea harina integral. Si pone harina de trigo primero, es pan blanco con salvado.',
+      '«Light» o «0 %» no quiere decir sano: muchas veces quitan grasa y ponen azúcar.',
+      'Yogur natural mejor que de sabores: los de sabores llevan tres o cuatro terrones. Endúlzalo tú con fruta.',
+      'Más de 1,5 g de sal por cada 100 g es mucha. Pasa sobre todo en embutidos, salsas y platos preparados.'
+    ]],
+    ['Qué beber', [
+      'Agua como bebida de siempre. Si te apetece refresco, mejor zero; el normal, de vez en cuando.',
+      'Con hambre a media tarde, a veces es sed o sueño. Un vaso de agua primero; si sigue, a merendar.',
+      'El café está bien. Lo que suma es el azúcar y lo que se le añade, no el café.',
+      'El alcohol abre el apetito y quita el freno: si bebes, come algo antes y alterna con agua.'
+    ]],
+    ['Fines de semana', [
+      'La cena libre es parte del plan, no una excepción. Disfrútala entera y no compenses al día siguiente.',
+      'El fin de semana cambia el horario, no el plan: si desayunas tarde, junta el desayuno y la media mañana.',
+      'Un fin de semana de más no borra una semana buena. Lo que cuenta es lo que repites, no un día suelto.',
+      'Los extras del libro de airfryer están para esto: un capricho hecho en casa un viernes es un buen plan.'
+    ]],
+    ['Ánimo y comida', [
+      'Comer poco un día que estás mal no ayuda: el bajón de azúcar empeora el ánimo y la ansiedad.',
+      'Si un día solo puedes con un rescate o una cena de cinco minutos, eso ya es cuidarte.',
+      'Hay medicaciones que dan más hambre. Si lo notas, no es falta de voluntad: coméntalo en la consulta.',
+      'Comer bien no es comer perfecto. Es que la mayoría de días se parezcan al plan.'
     ]],
     ['Con el gimnasio', [
       'Si vas a entrenar y hace más de tres horas que comiste, una fruta o un yogur entre 30 y 60 minutos antes.',
@@ -6270,9 +6315,12 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-22c'; }
+function novedadesId(){ return '2026-09-23'; }
 function novedadesNuevas(){
   return [
+    '<b>Garbanzos crujientes picantes</b> en Recetas: para cuando te apetece picar algo salado.',
+    '<b>Más extras del libro:</b> chili con totopos, pimientos rellenos, sopa de tomate asado, latkes, salsa de maíz y antojitos. Al final de Recetas.',
+    '<b>Más consejos:</b> colesterol, llenarte sin contar, etiquetas, qué beber, fines de semana y ánimo. Uno al día en Hoy y todos en Inicio.',
     '<b>Sin calabacín otra vez:</b> se me había colado en la merluza al horno (ahora con espárragos), en la ratatouille y en el humus (ahora de pimiento asado). Perdona.',
     '<b>Recetas de tu libro de airfryer:</b> ratatouille con garbanzos (sin berenjena) y arroz frito con sésamo, en Recetas con las demás.',
     '<b>Extras del libro:</b> pizza de pan de pita, patata rellena, torrijas, humus de verduras y más, al final de Recetas. Por si un día te apetecen: no entran en el menú.',

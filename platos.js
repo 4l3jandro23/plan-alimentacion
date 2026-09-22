@@ -1657,7 +1657,7 @@ Object.assign(PLATOS, {
 
 'torrijas-mascarpone': {
   nombre:'Tronquitos de torrija con crema de mascarpone',
-  icono:'capricho', tiempo:20, donde:'Airfryer', tupper:'—', extra:true,
+  icono:'capricho', tiempo:20, donde:'Airfryer', tupper:'—', extra:true, etiqueta:'Desayuno de domingo',
   porQue:'Torrija doradita en trozos, para mojar en una crema de mascarpone con canela. Un desayuno de domingo o un postre de los que se recuerdan.',
   ingredientes:[
     {q:'2 rebanadas', item:'pan gordo', nota:'Brioche, pan de molde grueso o pan de barra del día anterior, cada rebanada en 3 trozos'},
@@ -1773,6 +1773,277 @@ Object.assign(PLATOS, {
   conservar:'Recién hechos. El tofu especiado sobrante, 2 días en la nevera.',
   ojo:'Si no escurres bien el tofu, en vez de crujiente queda blando.',
   kcal:690, p:38, c:45, f:38
+}
+
+});
+
+/* ====================== DEL LIBRO DE AIRFRYER (2ª tanda) ======================
+   Las que salen para varias raciones lo dicen en el primer ingrediente: el
+   chili, la sopa o los garbanzos se hacen de una vez y duran días. */
+Object.assign(PLATOS, {
+
+'garbanzos-fritos-picantes': {
+  nombre:'Garbanzos crujientes picantes',
+  icono:'media', tiempo:15, donde:'Airfryer', tupper:'Bueno — en bote cerrado, fuera de la nevera', libro:true,
+  porQue:'Para cuando te apetece picar algo salado y crujiente: hacen el mismo papel que una bolsa de patatas, pero son legumbre, con fibra y proteína. Un bote da para cuatro ratos de picoteo.',
+  ingredientes:[
+    {q:'1 bote', item:'garbanzos cocidos', nota:'400 g. Salen 4 raciones de picoteo'},
+    {q:'1 cucharada', item:'aceite de oliva', nota:'Y un poco más para untar la cesta'},
+    {q:'1 pizca', item:'sal'},
+    {q:'1/4 cucharadita', item:'harissa en polvo', nota:'O pimentón picante, o curry: la especia que te guste'},
+    {q:'1/4 cucharadita', item:'ajo en polvo'}
+  ],
+  compra:'Todo de cualquier súper. La harissa en polvo está en especias de algunos súper; si no la encuentras, el pimentón picante hace lo mismo.',
+  pasos:[
+    'Escurre los garbanzos, lávalos bajo el grifo y sécalos muy bien con papel de cocina. Si van húmedos no crujen.',
+    'En un bol, mézclalos con el aceite, la sal, la especia y el ajo en polvo.',
+    'Airfryer a 190°C, 3 minutos para que se caliente. Unta la cesta con un poco de aceite.',
+    'Los garbanzos en una sola capa, 12 minutos, sacudiendo la cesta a mitad.',
+    'Déjalos enfriar fuera: al enfriarse es cuando se ponen crujientes del todo.'
+  ],
+  trucos:[
+    'Si al enfriar no están crujientes, 3-4 minutos más la próxima vez. Cada airfryer es un poco distinto.',
+    'Saca tu ración a un cuenco y guarda el bote: igual que con cualquier cosa de picar.'
+  ],
+  diaMalo:'Un puñado de frutos secos o de garbanzos tostados de bolsa.',
+  conservar:'3 días en un bote bien cerrado, a temperatura ambiente. En la nevera se ablandan.',
+  ojo:'El error típico es no secarlos bien: quedan blandos por dentro y tostados por fuera.',
+  kcal:165, p:7, c:17, f:6
+},
+
+'chili-chipotle-cheddar': {
+  nombre:'Chili de alubias con cheddar y totopos',
+  icono:'capricho', tiempo:45, donde:'Airfryer', tupper:'Perfecto — y congela de maravilla', extra:true,
+  porQue:'Chili de sofá y peli: alubias, lentejas y verdura en salsa de tomate picantita, con queso fundido por encima y totopos para mojar. Parece de capricho y por dentro es legumbre y verdura. Sale para cuatro: uno hoy y tres al congelador.',
+  ingredientes:[
+    {q:'1 bote', item:'alubias rojas cocidas', nota:'Unos 250 g escurridos. Salen 4 raciones'},
+    {q:'1/2 bote', item:'lentejas cocidas', nota:'Unos 190 g escurridos'},
+    {q:'1 lata', item:'tomate troceado', nota:'400 g, con su jugo'},
+    {q:'1/2', item:'cebolla', nota:'Picada fina'},
+    {q:'1', item:'pimiento rojo pequeño', nota:'En daditos'},
+    {q:'1', item:'pimiento verde pequeño', nota:'En daditos'},
+    {q:'1/2', item:'jalapeño', nota:'De bote, picado. Opcional si no te va el picante'},
+    {q:'1 cucharadita', item:'ajo picado'},
+    {q:'1/2 cucharadita', item:'chipotle molido', nota:'Si no lo encuentras: pimentón picante ahumado'},
+    {q:'1/2 cucharadita', item:'comino molido'},
+    {q:'1 pizca', item:'cilantro molido y cayena', nota:'Opcional'},
+    {q:'60 g', item:'queso cheddar rallado', nota:'Para el final'},
+    {q:'1 bolsa', item:'totopos (nachos) para mojar'}
+  ],
+  compra:'Las legumbres y el tomate, de bote. El jalapeño, los totopos y el chipotle, en productos mexicanos. Necesitas el molde que cabe en la cesta y un trozo de papel de aluminio.',
+  pasos:[
+    'Escurre y lava las alubias y las lentejas.',
+    'En un bol grande, mézclalo todo menos el queso y los totopos: legumbres, tomate con su jugo, cebolla, pimientos, jalapeño, ajo y especias.',
+    'Al molde, y tápalo con papel de aluminio bien remetido por los bordes, que no se vuele.',
+    'Airfryer a 190°C, 30 minutos, destapando para remover cada 10 minutos. Está cuando el pimiento está tierno.',
+    'Quita el aluminio, echa el queso por encima y 5 minutos más, hasta que se funda.',
+    'Con los totopos para mojar.'
+  ],
+  trucos:[
+    'Lo que vayas a congelar, sin queso: se le pone al recalentar.',
+    'Una cucharada de yogur griego encima enfría el picante si te ha quedado fuerte.'
+  ],
+  diaMalo:'Una lata de alubias con tomate frito y comino, 5 minutos en la sartén, con queso rallado por encima.',
+  conservar:'3 días en la nevera o 3 meses en el congelador, en raciones.',
+  ojo:'Sin tapar los primeros 30 minutos, la parte de arriba se seca antes de que la verdura se haga.',
+  kcal:390, p:18, c:50, f:13
+},
+
+'pimientos-rellenos-arroz-coco': {
+  nombre:'Pimientos rellenos de arroz con coco',
+  icono:'ensalada', tiempo:50, donde:'Cazo y airfryer', tupper:'Bueno', extra:true,
+  porQue:'Pimientos rojos asados rellenos de un arroz meloso con leche de coco, zanahoria, lima y anacardos. Dulce, ácido y crujiente a la vez. Salen cuatro pimientos: uno o dos por comida.',
+  ingredientes:[
+    {q:'4', item:'pimientos rojos', nota:'Con la parte de arriba cortada y sin pepitas. Salen 2-4 raciones'},
+    {q:'1 cucharada', item:'aceite de oliva'},
+    {q:'1', item:'zanahoria grande', nota:'Rallada'},
+    {q:'1/2', item:'cebolla', nota:'Picada fina'},
+    {q:'1 cucharadita', item:'ajo picado'},
+    {q:'1/2 cucharadita', item:'jengibre rallado'},
+    {q:'Un poco', item:'jalapeño picado', nota:'Opcional'},
+    {q:'290 g', item:'arroz blanco', nota:'En crudo, unos 2 vasos pequeños'},
+    {q:'1 brik', item:'leche de coco ligera', nota:'Unos 400-475 ml. La ligera: la normal tiene mucha grasa saturada y no le va a tu colesterol'},
+    {q:'1 vaso', item:'agua', nota:'Unos 235 ml'},
+    {q:'1 cucharada', item:'azúcar moreno'},
+    {q:'35 g', item:'anacardos', nota:'Picados'},
+    {q:'1', item:'lima o limón', nota:'El zumo'},
+    {q:'Al gusto', item:'sal y cilantro fresco'}
+  ],
+  compra:'La leche de coco ligera, en la sección internacional. Los anacardos, en frutos secos (naturales, no fritos).',
+  pasos:[
+    'En un cazo, el aceite a fuego medio-alto. Echa la zanahoria, la cebolla, el ajo, el jengibre y el jalapeño, y remueve 3 minutos hasta que se ablanden.',
+    'Añade el arroz, la leche de coco, el agua, el azúcar y una pizca de sal. Cuando hierva, fuego bajo, tapa y 20 minutos, hasta que el arroz se haya bebido el líquido.',
+    'Fuera del fuego, mezcla los anacardos, el zumo de lima y el cilantro.',
+    'Airfryer a 180°C, 3 minutos para calentar.',
+    'Rellena los pimientos con el arroz, apretando un poco, y a la cesta de pie.',
+    '12-15 minutos, hasta que los pimientos estén tiernos.'
+  ],
+  trucos:['Si no caben de pie, córtalos por la mitad a lo largo y rellénalos como barquitas: se hacen igual y antes.'],
+  diaMalo:'Arroz de microondas con un chorrito de leche de coco y pimiento asado de bote.',
+  conservar:'3 días en la nevera. Se recalientan bien en el airfryer, 8 minutos.',
+  ojo:'Remueve el arroz alguna vez mientras se hace: con la leche de coco se pega al fondo.',
+  kcal:500, p:9, c:80, f:15
+},
+
+'pure-patata-chucrut': {
+  nombre:'Puré de patata gratinado con chucrut',
+  icono:'ensalada', tiempo:40, donde:'Cazo y airfryer', tupper:'Bueno', extra:true,
+  porQue:'Puré de patata con cebolla dorada y chucrut (col fermentada, ácida y suave), gratinado por arriba. Un plato de abuela irlandesa, reconfortante. La foto de esta página salía borrosa, así que los pasos son míos con la misma idea.',
+  ingredientes:[
+    {q:'2', item:'patatas grandes', nota:'Peladas y en dados de 2 cm. Salen 2 raciones'},
+    {q:'1/2', item:'cebolla', nota:'En rodajas finas'},
+    {q:'1 cucharada', item:'aceite de oliva'},
+    {q:'2 cucharaditas', item:'ajo picado'},
+    {q:'60 ml', item:'leche'},
+    {q:'1 bote', item:'chucrut', nota:'Unos 290 g, escurrido'},
+    {q:'Al gusto', item:'sal, pimienta y perejil fresco picado'}
+  ],
+  compra:'El chucrut, en bote, en Lidl casi siempre (sección alemana) y en algunos súper en conservas. Necesitas el molde que cabe en la cesta.',
+  pasos:[
+    'Las patatas en un cazo con agua fría y sal. Cuando hierva, 15 minutos, hasta que se deshagan al pincharlas. Escúrrelas.',
+    'Mientras, la cebolla y el ajo con el aceite en el molde, al airfryer a 180°C 10 minutos, removiendo a mitad, hasta que estén dorados.',
+    'Chafa las patatas con un tenedor y la leche caliente, con sal y pimienta.',
+    'Mezcla el puré con el chucrut escurrido y la mitad de la cebolla.',
+    'Al molde, el resto de la cebolla por encima, y 10 minutos a 200°C, hasta que la parte de arriba se dore.',
+    'Perejil por encima.'
+  ],
+  trucos:['Al lado de una salchicha de pollo o de pavo a la plancha queda un plato muy completo.'],
+  diaMalo:'Puré de patata de sobre con chucrut calentado al microondas.',
+  conservar:'3 días en la nevera.',
+  ojo:'Escurre bien el chucrut: con todo su líquido, el puré queda aguado.',
+  kcal:300, p:6, c:45, f:8
+},
+
+'salsa-elote-chips': {
+  nombre:'Salsa de maíz gratinada con chips de tortilla',
+  icono:'capricho', tiempo:40, donde:'Airfryer', tupper:'—', extra:true, etiqueta:'Para compartir',
+  porQue:'Maíz asado con jalapeño, lima y queso, en una salsa cremosa gratinada, para mojar con chips de tortilla hechos por ti. Es de las de poner en el centro de la mesa cuando viene alguien.',
+  ingredientes:[
+    {q:'6', item:'tortillas de maíz pequeñas', nota:'Para los chips. Sale para 4 personas'},
+    {q:'1 cucharada', item:'aceite de oliva'},
+    {q:'260 g', item:'maíz dulce', nota:'Congelado o de lata escurrido'},
+    {q:'1', item:'jalapeño', nota:'De bote, picado fino'},
+    {q:'75 g', item:'nata agria o yogur griego'},
+    {q:'2 cucharadas', item:'mayonesa'},
+    {q:'1', item:'lima', nota:'El zumo'},
+    {q:'1/2 cucharadita', item:'chile en polvo o pimentón picante'},
+    {q:'150 g', item:'queso feta', nota:'Desmenuzado. En el libro es queso cotija, que aquí no se encuentra: el feta es lo más parecido'}
+  ],
+  compra:'Las tortillas y el jalapeño, en productos mexicanos. El feta, en la nevera de quesos. Necesitas el molde que cabe en la cesta.',
+  pasos:[
+    'Pinta las tortillas con un poco del aceite y corta cada una en 8 triángulos.',
+    'Airfryer a 190°C, 3 minutos. Los triángulos en una capa, 5 minutos, dándoles la vuelta a mitad, hasta que crujan. Por tandas. Resérvalos.',
+    'El maíz y el jalapeño con el resto del aceite, al molde, 10 minutos removiendo a mitad, hasta que el maíz se tueste un poco.',
+    'Baja a 180°C. Mezcla en el molde la nata agria, la mayonesa, la lima, el chile y la mitad del queso con el maíz.',
+    'El resto del queso por encima y 10 minutos más, hasta que burbujee y se dore.',
+    'Al centro de la mesa, con los chips.'
+  ],
+  trucos:['Con una mazorca de maíz fresca asada 10 minutos en el airfryer y desgranada sabe todavía mejor.'],
+  diaMalo:'Totopos de bolsa con maíz de lata, queso rallado y salsa de bote, 5 minutos de airfryer.',
+  conservar:'Recién hecha. Los chips, 2 días en una bolsa cerrada.',
+  ojo:'Los chips pasan de dorados a quemados en un minuto: míralos a partir de los 4.',
+  kcal:370, p:11, c:32, f:22
+},
+
+'antojitos-queso': {
+  nombre:'Antojitos de queso y pimiento',
+  icono:'capricho', tiempo:45, donde:'Airfryer', tupper:'—', extra:true, etiqueta:'Para compartir',
+  porQue:'Tortillas enrolladas con queso crema, pimiento, jalapeño y cheddar, cortadas en rulitos y doradas hasta que crujen por fuera y se funden por dentro. De picoteo para compartir. La página salía girada y algo borrosa: las cantidades son las del libro, los pasos los he ordenado yo.',
+  ingredientes:[
+    {q:'225 g', item:'queso crema', nota:'Tipo Philadelphia, a temperatura ambiente. Salen unos 16 rulitos'},
+    {q:'60 g', item:'pimiento rojo', nota:'En daditos muy pequeños'},
+    {q:'1 cucharada', item:'jalapeño picado', nota:'De bote'},
+    {q:'1', item:'cebolleta', nota:'En rodajitas'},
+    {q:'Un poco', item:'cilantro fresco picado', nota:'Opcional'},
+    {q:'1 pizca', item:'cayena, sal y pimienta'},
+    {q:'2', item:'tortillas de trigo grandes'},
+    {q:'120 g', item:'queso cheddar rallado'},
+    {q:'Para servir', item:'nata agria o yogur griego'}
+  ],
+  compra:'Todo de cualquier súper. Hace falta film transparente.',
+  pasos:[
+    'En un bol, mezcla el queso crema con el pimiento, el jalapeño, la cebolleta, el cilantro, la cayena, sal y pimienta.',
+    'Unta la mezcla sobre las dos tortillas, hasta casi los bordes, y reparte el cheddar por encima.',
+    'Enróllalas bien apretadas, envuélvelas en film y a la nevera al menos 30 minutos: así se cortan sin deshacerse.',
+    'Quita el film, recorta las puntas y corta cada rulo en rodajas de 2-3 cm.',
+    'Airfryer a 190°C, 3 minutos. Un poco de aceite en la cesta, los rulitos tumbados sin que se toquen, 5-6 minutos, hasta que estén dorados. Por tandas.',
+    'Con nata agria o yogur griego para mojar.'
+  ],
+  trucos:['Se pueden dejar enrollados en la nevera desde el día antes y dorarlos justo cuando llegue la gente.'],
+  diaMalo:'Una quesadilla: tortilla con queso rallado doblada, 4 minutos de airfryer.',
+  conservar:'Recién hechos. Enrollados sin cortar, 2 días en la nevera.',
+  ojo:'Si el queso crema está frío, no se mezcla y rompe la tortilla al untar.',
+  kcal:410, p:12, c:18, f:32
+},
+
+'sopa-tomate-pimiento': {
+  nombre:'Sopa de tomate y pimiento asados',
+  icono:'ensalada', tiempo:40, donde:'Airfryer y batidora', tupper:'Perfecto — y congela bien', extra:true,
+  porQue:'El tomate y el pimiento asados se vuelven dulces y ahumados, y triturados dan una sopa con mucho más sabor que la de brik. De primero o de cena con un huevo o una tostada al lado. Salen cuatro cuencos.',
+  ingredientes:[
+    {q:'680 g', item:'tomates', nota:'En cuartos. Salen 4 raciones'},
+    {q:'1', item:'pimiento rojo', nota:'En cuartos, sin pepitas'},
+    {q:'2 ramas', item:'apio', nota:'En trozos de 2 cm'},
+    {q:'1/2', item:'cebolla', nota:'En trozos de 2 cm'},
+    {q:'3 dientes', item:'ajo', nota:'Pelados'},
+    {q:'2 cucharadas', item:'aceite de oliva'},
+    {q:'4 cucharadas', item:'vinagre balsámico'},
+    {q:'475 ml', item:'caldo de verduras bajo en sal', nota:'De brik'},
+    {q:'120 ml', item:'nata para cocinar ligera', nota:'O crema de coco. La pone cremosa; se puede quitar'},
+    {q:'Unas hojas', item:'albahaca fresca'},
+    {q:'Al gusto', item:'sal y pimienta'}
+  ],
+  compra:'Todo de cualquier súper. Necesitas batidora de mano o de vaso.',
+  pasos:[
+    'En un bol, mezcla el tomate, el pimiento, el apio, la cebolla y el ajo con el aceite y el vinagre.',
+    'A la cesta del airfryer, 190°C, 15 minutos, removiendo a mitad, hasta que esté blando y algo tostado.',
+    'Pásalo a la batidora con el caldo y tritura hasta que quede fino.',
+    'A una cazuela a fuego medio, y cuando hierva, 5 minutos.',
+    'Apaga, añade la nata y la albahaca picada, y prueba de sal y pimienta.'
+  ],
+  trucos:[
+    'Batir algo muy caliente en una batidora de vaso cerrada puede hacer saltar la tapa. Quita el tapón pequeño de arriba, tápalo con un trapo doblado sujeto con la mano, y empieza a poca velocidad.',
+    'Con un huevo duro picado por encima o una tostada con queso al lado, es una cena completa.'
+  ],
+  diaMalo:'Gazpacho o crema de tomate de brik, caliente o fría, con un huevo duro.',
+  conservar:'4 días en la nevera o 3 meses en el congelador, sin la nata.',
+  ojo:'Si la metes amontonada en la cesta se cuece en vez de asarse: si no cabe, en dos tandas.',
+  kcal:230, p:3, c:15, f:18
+},
+
+'latkes-manzana': {
+  nombre:'Latkes crujientes con nata agria y manzana',
+  icono:'capricho', tiempo:50, donde:'Airfryer y cazo', tupper:'—', extra:true, etiqueta:'Desayuno de domingo',
+  porQue:'Tortitas de patata rallada muy crujientes por fuera y tiernas por dentro, con nata agria y manzana caliente con canela. Un brunch de domingo. La página salía girada: las cantidades son las del libro y los pasos, míos con la misma idea.',
+  ingredientes:[
+    {q:'3', item:'patatas grandes', nota:'De las harinosas (para cocer o para puré). Salen 2 raciones'},
+    {q:'1/2', item:'cebolla', nota:'Rallada'},
+    {q:'2 cucharadas', item:'pan rallado'},
+    {q:'1 cucharada', item:'harina'},
+    {q:'1', item:'huevo'},
+    {q:'1/2 cucharadita', item:'ajo en polvo'},
+    {q:'Al gusto', item:'sal y pimienta'},
+    {q:'1 chorro', item:'aceite en spray o de oliva'},
+    {q:'2', item:'manzanas', nota:'Peladas y en dados, para la compota'},
+    {q:'1 cucharada', item:'mantequilla', nota:'Para la compota'},
+    {q:'1/2 cucharadita', item:'canela molida', nota:'Para la compota'},
+    {q:'115 g', item:'nata agria o yogur griego'}
+  ],
+  compra:'Todo de cualquier súper. Hace falta un trapo limpio para escurrir la patata.',
+  pasos:[
+    'Ralla las patatas con la piel bien lavada y la cebolla, por el lado gordo del rallador.',
+    'Ponlo todo en un trapo limpio, cierra y retuerce con fuerza encima del fregadero hasta que no salga más agua. Es lo que hace que crujan.',
+    'En un bol, mézclalo con el pan rallado, la harina, el huevo, el ajo, sal y pimienta.',
+    'Airfryer a 190°C, 3 minutos. Aceite en la cesta.',
+    'Coge bolitas de la mezcla, aplástalas en tortitas de unos 7 cm y ponlas sin que se toquen. Un poco de aceite por encima. 10-12 minutos, dándoles la vuelta a mitad. Por tandas.',
+    'Mientras, la manzana en un cazo con la mantequilla y la canela, a fuego medio, 8-10 minutos, hasta que esté blanda.',
+    'Los latkes calientes, con la nata agria y la manzana por encima.'
+  ],
+  trucos:['Ralla la patata justo antes de hacerlos: si espera, se pone gris (no pasa nada, pero queda feo).'],
+  diaMalo:'Tortitas de patata congeladas al airfryer, con yogur y manzana.',
+  conservar:'Recién hechos. La compota de manzana, 4 días en la nevera.',
+  ojo:'Si no escurres la patata a fondo, se deshacen y quedan blandos.',
+  kcal:580, p:13, c:75, f:25
 }
 
 });
