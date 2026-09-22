@@ -548,6 +548,12 @@
     font-family:inherit; font-size:var(--t-base); padding:12px 0;
   }
   .rec-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(154px,1fr)); gap:10px;}
+  .rec-extras{margin:18px 0 0; border:1px solid var(--border); border-radius:var(--r-lg); padding:12px 14px; background:var(--card);}
+  .rec-extras > summary{cursor:pointer; list-style:none; display:flex; flex-direction:column; gap:3px;}
+  .rec-extras > summary::-webkit-details-marker{display:none;}
+  .rec-extras > summary b{font-size:var(--t-base);}
+  .rec-extras > summary span{font-size:var(--t-xs); color:var(--muted);}
+  .rec-extras[open] > summary{margin-bottom:12px;}
   .rec-card{
     background:var(--pane); border:1px solid var(--border); border-radius:var(--r-md);
     box-shadow:inset 0 1px 0 var(--glass-hl), var(--sh-1); overflow:hidden;
@@ -1469,7 +1475,7 @@
     <span class="pill">Pollo/pavo</span><span class="pill">Cerdo</span><span class="pill">Ternera</span>
     <span class="pill">Salmón</span><span class="pill">Atún</span><span class="pill">Calamar</span><span class="pill">Pulpo</span>
     <span class="pill">Huevo</span><span class="pill">Legumbres</span>
-    <p style="margin-top:12px;"><b>Evitamos:</b> <span class="pill no">Gambas/langostinos</span><span class="pill no">Coles de Bruselas</span><span class="pill no">Melón</span><span class="pill no">Horchata</span></p>
+    <p style="margin-top:12px;"><b>Evitamos:</b> <span class="pill no">Gambas/langostinos</span><span class="pill no">Coles de Bruselas</span><span class="pill no">Melón</span><span class="pill no">Horchata</span><span class="pill no">Calabaza</span></p>
     <p><b>Bacalao y merluza:</b> no te convencen tal cual — probamos al horno con ajo y limón o crujientes en airfryer. Si sigue sin gustarte, cambia por salmón, atún, pollo o pavo sin más.</p>
   </div>
 
@@ -1545,6 +1551,7 @@
   </div>
 
   <div class="rec-grid" id="recGrid"></div>
+  <div id="recExtras"></div>
   <p class="vacio" id="recVacio" style="display:none;">Nada coincide con eso. Prueba con otra palabra o quita algún filtro.</p>
 
   <h2>🔥 Técnicas que valen para todo</h2>
@@ -1934,6 +1941,8 @@ function composicionPlato(p){
   const c = { verdura:[], proteina:[], carbo:[], legumbre:[] };
   (p.ingredientes || []).forEach(i => {
     const parte = parteDeIngrediente(i.item);
+    /* La cebolla de una tortilla de patata no es medio plato de verdura. */
+    if(parte === 'verdura' && p.verduraAparte) return;
     if(parte && c[parte].length < 4) c[parte].push(i.item);
   });
   return c;
@@ -3500,8 +3509,14 @@ function setRecFiltro(id){
    libre) no pintan nada en una rejilla de recetas. Siguen accesibles desde
    su comida del menú. */
 function platosCocinables(){
-  return Object.keys(PLATOS).filter(k => PLATOS[k].tiempo > 0);
+  return Object.keys(PLATOS).filter(k => PLATOS[k].tiempo > 0 && !PLATOS[k].extra);
 }
+/* Los «por si un día me apetece» del libro. Lo pidió así: que estén, pero no
+   como rutina. No entran en el menú, ni en Sorpréndeme, ni en la nevera. */
+function platosExtra(){
+  return Object.keys(PLATOS).filter(k => PLATOS[k].tiempo > 0 && PLATOS[k].extra);
+}
+let recExtrasAbierto = false;
 
 const PALABRAS_VACIAS = ['con','y','de','del','la','el','los','las','en','a','al','un','una','o'];
 function renderRecetas(){
@@ -3531,7 +3546,7 @@ function renderRecetas(){
 
   document.getElementById('recVacio').style.display = slugs.length ? 'none' : 'block';
 
-  grid.innerHTML = slugs.map(k => {
+  const tarjeta = k => {
     const p = PLATOS[k];
     const fav = favs.includes(k);
     return '<div class="rec-card" role="button" tabindex="0" onclick="abrirFicha(\'' + k + '\',\'comida\')">' +
@@ -3541,8 +3556,25 @@ function renderRecetas(){
       '<div class="rec-body">' +
         '<div class="rec-nombre">' + esc(p.nombre) + '</div>' +
         '<div class="rec-meta">' + ico('reloj') + tiempoDe(k) + ' min · ' + esc(dondeDe(k)) + '</div>' +
+        (p.icono === 'capricho' ? '<div class="rec-meta">Viernes noche</div>' : '') +
       '</div></div>';
-  }).join('');
+  };
+  grid.innerHTML = slugs.map(tarjeta).join('');
+
+  const ex = document.getElementById('recExtras');
+  if(ex){
+    const extras = platosExtra().filter(k => {
+      if(!q) return true;
+      const p = PLATOS[k];
+      const texto = normalizeText(p.nombre + ' ' + p.donde + ' ' + p.ingredientes.map(i => i.item).join(' '));
+      return q.split(/[\s,]+/).filter(t => t && PALABRAS_VACIAS.indexOf(t) === -1).every(t => texto.includes(t));
+    }).sort((a, b) => PLATOS[a].nombre.localeCompare(PLATOS[b].nombre, 'es'));
+    ex.innerHTML = extras.length
+      ? '<details class="rec-extras"' + (recExtrasAbierto || q ? ' open' : '') + ' ontoggle="recExtrasAbierto = this.open">' +
+          '<summary><b>Extras del libro de airfryer</b><span>Por si un día te apetecen. No entran en el menú y no te los recuerda nada.</span></summary>' +
+          '<div class="rec-grid">' + extras.map(tarjeta).join('') + '</div></details>'
+      : '';
+  }
 }
 
 function renderRecFiltros(){
@@ -3583,7 +3615,7 @@ function seccionDe(txt){
      se compra en panadería, aunque en casa acabe en el congelador. */
   if(/\bpan\b|molde|tostada|bolleria|empanadilla/.test(s)) return 'pan';
   if(/congelad/.test(s)) return 'congelado';
-  if(/ahumado|yogur|kefir|leche|queso|huevo|skyr|hummus|gazpacho|mantequilla|nata/.test(s)) return 'nevera';
+  if(/ahumado|yogur|kefir|leche|queso|huevo|skyr|hummus|gazpacho|mantequilla|nata|mascarpone|tofu|pesto/.test(s)) return 'nevera';
   if(/pollo|pavo|pechuga|muslo|contramuslo|ternera|cerdo|solomillo|bistec|hamburguesa|salmon|merluza|bacalao|calamar|pulpo|sardina|caballa|pescado|jamon|fiambre|lomo|carne/.test(s)) return 'carne';
   /* Las especias van antes que la verdura: "ajo en polvo" es despensa,
      no la seccion de fruta y verdura donde esta el ajo fresco. */
@@ -6238,9 +6270,12 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-22'; }
+function novedadesId(){ return '2026-09-22b'; }
 function novedadesNuevas(){
   return [
+    '<b>Recetas de tu libro de airfryer:</b> ratatouille con garbanzos (sin berenjena) y arroz frito con sésamo, en Recetas con las demás.',
+    '<b>Extras del libro:</b> pizza de pan de pita, patata rellena, torrijas, humus de verduras y más, al final de Recetas. Por si un día te apetecen: no entran en el menú.',
+    '<b>Tortilla de patata</b> con cebolla, paso a paso, para cuando quieras hacerla.',
     '<b>Lo que sobra sin cocinar:</b> al terminar un plato te pregunta si te queda carne o pescado del paquete. Si queda, Hoy te dice dónde usarlo (si es pavo, también en un plato de pollo) o que lo congeles.',
     '<b>Foto de mi plato:</b> en cada ficha, debajo de «Lo he cocinado hoy». La próxima vez que lo abras, ves cómo te quedó. Con la sincronización conectada, llega también al ordenador.',
     '<b>La ensalada ya dice qué es:</b> hojas (lechuga o mezclum), un tomate y medio pepino, con cantidades y cómo se monta. En todas las fichas que la llevan.',

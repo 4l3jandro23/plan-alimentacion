@@ -1474,6 +1474,310 @@ Object.assign(PLATOS, {
 
 });
 
+/* ============================ DEL LIBRO DE AIRFRYER ============================
+   Recetas sacadas de su libro («Recetas vegetarianas para la freidora de aire»),
+   reescritas para una persona, para alguien que no ha cocinado nunca y
+   adaptadas a lo que le gusta: sin calabaza y con la berenjena fuera de
+   protagonista. Las dos primeras son fichas normales. Las marcadas con
+   extra:true son de «por si un día me apetece»: no entran en el menú, ni en
+   Sorpréndeme, ni en «Qué hago con lo que tengo». Salen aparte, en Recetas.
+   ============================================================================ */
+Object.assign(PLATOS, {
+
+'ratatouille-garbanzos': {
+  nombre:'Ratatouille con garbanzos',
+  icono:'legumbre', tiempo:35, donde:'Airfryer', tupper:'Perfecto — y frío también está bueno', libro:true,
+  porQue:'Verdura y legumbre en el mismo plato, sin estar de pie delante del fuego: lo metes todo en el airfryer y te olvidas. El garbanzo hace de proteína y de hidrato a la vez, así que no le falta nada. La versión del libro lleva berenjena; esta va sin ella, con más calabacín.',
+  ingredientes:[
+    {q:'1/2 bote', item:'garbanzos cocidos', nota:'Unos 120 g escurridos. El otro medio bote, al tupper para mañana o para una ensalada.'},
+    {q:'1', item:'calabacín', nota:'Mediano, en dados de un dedo'},
+    {q:'1/2', item:'pimiento amarillo o rojo', nota:'En dados de un dedo'},
+    {q:'1/2', item:'cebolla roja', nota:'O blanca, la que haya'},
+    {q:'8', item:'tomates cherry', nota:'Partidos por la mitad'},
+    {q:'1 cucharadita', item:'aceite de oliva'},
+    {q:'1/2 cucharadita', item:'ajo picado', nota:'O ajo en polvo'},
+    {q:'1 pizca', item:'guindilla en copos', nota:'Opcional, si te gusta que pique un poco'},
+    {q:'Al gusto', item:'sal, pimienta, perejil y albahaca', nota:'Frescos o secos, lo que tengas'}
+  ],
+  compra:'Todo de cualquier súper. Lo único especial es el recipiente: necesitas un molde que quepa dentro de la cesta del airfryer (de silicona o de aluminio, de unos 18 cm). Cuesta 5-10 € en Lidl, Action, Ikea o Amazon, y te sirve para el arroz frito y más cosas.',
+  pasos:[
+    'Escurre los garbanzos y pásalos por agua del grifo.',
+    'Corta el calabacín, el pimiento y la cebolla en dados de un dedo, más o menos iguales. Los tomates cherry, por la mitad.',
+    'En un bol, mézclalo todo con el aceite, el ajo, la guindilla si la usas y un poco de sal, hasta que brille.',
+    'Pásalo al molde y el molde a la cesta.',
+    'Airfryer a 190°C, 30 minutos. Cada 10 minutos, abre y remueve con una cuchara.',
+    'Está cuando el calabacín se deja partir con la cuchara y los tomates se han deshecho un poco.',
+    'Perejil y albahaca por encima, pimienta, prueba de sal y listo.'
+  ],
+  trucos:[
+    'Si haces el doble (botón ×2), la mitad es el tupper de mañana. Está incluso mejor al día siguiente.',
+    'Sin molde también se puede: todo directo en la cesta, pero pon los tomates cherry solo los últimos 10 minutos, que si no gotean.',
+    'Con un huevo a la plancha encima, o un poco de queso fresco, queda más completa.'
+  ],
+  diaMalo:'Garbanzos de bote salteados 5 minutos en la sartén con una bolsa de verdura congelada para saltear y una pizca de pimentón.',
+  conservar:'3 días en la nevera. Se come caliente o fría.',
+  ojo:'Si amontonas mucho el molde, la verdura se cuece en vez de asarse. Mejor un poco de espacio que llenarlo hasta arriba.',
+  kcal:300, p:12, c:40, f:9
+},
+
+'arroz-frito-sesamo': {
+  nombre:'Arroz frito con sésamo y huevo',
+  icono:'huevo', tiempo:22, donde:'Airfryer', tupper:'Bueno', libro:true,
+  porQue:'El arroz tres delicias del chino, hecho en casa con el arroz que te sobra. Lleva su verdura y su huevo, y si le añades pollo o pavo en tacos, es la forma perfecta de gastar lo que te haya quedado de otro día.',
+  ingredientes:[
+    {q:'1 vasito', item:'arroz cocido', nota:'Unos 150 g. Mejor del día anterior y frío de la nevera: es lo que hace que quede suelto. Vale el vasito de arroz de microondas.'},
+    {q:'100 g', item:'verduras congeladas para saltear', nota:'La bolsa de verdura oriental o de salteado. Sin descongelar mucho: 1 minuto de microondas basta.'},
+    {q:'1', item:'huevo', nota:'Batido'},
+    {q:'1 cucharadita', item:'aceite de sésamo', nota:'Es el que le da el sabor a restaurante chino. Si no tienes, aceite de oliva'},
+    {q:'1 cucharadita', item:'salsa de soja', nota:'Mejor la baja en sal'},
+    {q:'1/2 cucharadita', item:'aceite de oliva'},
+    {q:'1 pizca', item:'ajo en polvo y jengibre', nota:'Jengibre fresco rallado o en polvo'},
+    {q:'1', item:'cebolleta', nota:'Solo la parte verde, picada'},
+    {q:'1 cucharadita', item:'semillas de sésamo'},
+    {q:'Opcional', item:'100 g de pollo o pavo cocinado en tacos', nota:'Lo que te haya sobrado de otro día'}
+  ],
+  compra:'El aceite de sésamo y las semillas, en la sección de productos asiáticos o internacionales de cualquier súper; los dos duran meses. Necesitas el mismo molde que para la ratatouille, uno que quepa en la cesta.',
+  pasos:[
+    'Airfryer a 180°C, 3 minutos para que se caliente.',
+    'En un bol, mezcla el arroz con el aceite de sésamo, la soja, el aceite de oliva, el ajo y el jengibre, deshaciendo los grumos con la cuchara.',
+    'Al molde, y el molde a la cesta. 10 minutos, removiendo a mitad, hasta que el arroz esté un poco tostado.',
+    'Echa el huevo batido por encima del arroz y deja 3 minutos sin tocarlo, hasta que cuaje.',
+    'Añade las verduras (y el pollo o el pavo si tienes), rompe el huevo con la cuchara mezclándolo todo, y 4-5 minutos más.',
+    'Cebolleta y sésamo por encima.'
+  ],
+  trucos:[
+    'Arroz recién hecho y caliente queda pastoso. Frío de la nevera, suelto. Cuando cuezas arroz, haz de más y guárdalo para esto.',
+    'Un chorrito más de soja al final si lo quieres con más sabor, pero pruébalo antes: sala mucho.'
+  ],
+  diaMalo:'Vasito de arroz de microondas + huevo revuelto + verdura congelada, todo a la sartén 5 minutos con un chorro de soja.',
+  conservar:'2 días en la nevera. El arroz cocinado no se deja fuera de la nevera: en cuanto se enfríe, a la nevera.',
+  ojo:'Si el arroz va en bloque, no se tuesta. Deshaz bien los grumos en el bol antes de meterlo.',
+  kcal:430, p:13, c:55, f:17
+},
+
+'tortilla-patata': {
+  nombre:'Tortilla de patata con cebolla',
+  icono:'huevo', tiempo:60, donde:'Sartén', tupper:'Muy bueno — fría está igual de rica', verduraAparte:true,
+  porQue:'La de toda la vida, hecha para que guste a casi todo el mundo: con cebolla pochada despacio, que la hace más dulce, y jugosa por dentro pero cuajada, que es el punto que menos gente rechaza. Un plato de huevo, patata y aceite de oliva: la verdura, al lado.',
+  ingredientes:[
+    {q:'1 kg', item:'patatas', nota:'Las que pongan «para freír» (tipo agria o monalisa). Salen unas 6 raciones.'},
+    {q:'1', item:'cebolla grande', nota:'Unos 250 g'},
+    {q:'7', item:'huevos grandes (L)', nota:'8 si son medianos'},
+    {q:'500 ml', item:'aceite de oliva suave', nota:'Para confitar las patatas. No se gasta: lo escurres y lo guardas para otras veces.'},
+    {q:'1 cucharadita', item:'sal', nota:'Más una pizca para el huevo'}
+  ],
+  compra:'Todo de cualquier súper. Hace falta una sartén antiadherente de 24-26 cm que no se pegue nada (es lo más importante de todo) y un plato llano más grande que la sartén para darle la vuelta.',
+  pasos:[
+    'Pela las patatas, lávalas y sécalas con un trapo.',
+    'Córtalas en láminas finas, de 2-3 mm: parte cada patata por la mitad a lo largo y luego en medias lunas. Que no sean perfectas no importa.',
+    'La cebolla, en tiras finas (juliana).',
+    'Sartén grande con el aceite a fuego medio-bajo. Echa la cebolla y déjala 10 minutos, removiendo de vez en cuando, hasta que esté blanda y empiece a dorarse. Este paso es lo que la hace dulce: sin prisa.',
+    'Añade las patatas y la sal. El aceite tiene que casi cubrirlas y burbujear suave, no freír fuerte: se trata de que se hagan tiernas, no de que queden crujientes.',
+    '20-25 minutos a fuego medio, dándoles la vuelta con cuidado cada 5 minutos. Están cuando se parten al apretar con la espátula.',
+    'Escúrrelo todo en un colador puesto sobre un bol: ese aceite se guarda. Prueba una patata: tiene que estar un poco salada, porque luego el huevo le quita sal.',
+    'En un bol grande, bate los huevos con una pizca de sal. Echa las patatas y la cebolla calientes, mezcla y chafa unas pocas con el tenedor.',
+    'Deja reposar la mezcla 10 minutos. Es el truco que más se nota: la patata chupa el huevo y la tortilla queda jugosa y compacta.',
+    'Sartén antiadherente de 24-26 cm con 1 cucharada del aceite, a fuego medio-alto hasta que esté bien caliente. Echa la mezcla, remueve el centro 10 segundos como si fuera un revuelto y baja a fuego medio.',
+    'Con la espátula, mete los bordes hacia dentro para que quede redonda. 3 minutos.',
+    'La vuelta: plato llano encima de la sartén, una mano plana sobre el plato, y gira todo de golpe y sin dudar, encima del fregadero. Una gota de aceite en la sartén y desliza la tortilla de vuelta.',
+    'Vuelve a meter los bordes y 2 minutos más. Al plato, y deja que repose 5 minutos antes de cortarla.'
+  ],
+  trucos:[
+    'La vuelta sale bien si se hace con decisión. Dudar a medias es cuando se rompe. Si se rompe, se recoloca con la espátula y no se nota.',
+    'Si la tortilla se pega al moverla, es que la sartén no estaba bastante caliente o no es antiadherente de verdad.',
+    'Para que salga más jugosa, 2 minutos por el primer lado en vez de 3. Para más cuajada, 1 minuto más por cada lado.',
+    'Versión con menos aceite: la patata y la cebolla en el airfryer, 25 minutos a 180°C con 1 cucharada de aceite, removiendo cada 5 minutos, y a partir de ahí igual. Queda un poco menos melosa, pero muy buena.'
+  ],
+  diaMalo:'Tortilla de patata de la nevera del súper (la de cebolla), 1 minuto de microondas, con hojas y un tomate al lado.',
+  conservar:'2-3 días en la nevera, tapada con film. Sácala media hora antes: fría de la nevera pierde mucho.',
+  ojo:'El error típico es freír la patata a fuego fuerte: se dora por fuera y queda dura por dentro. Fuego medio y paciencia.',
+  kcal:300, p:10, c:22, f:19
+},
+
+'pizza-pan-pita': {
+  nombre:'Pizza de pan de pita',
+  icono:'capricho', tiempo:12, donde:'Airfryer', tupper:'—', extra:true,
+  porQue:'Pizza de viernes en diez minutos, con el pan de pita haciendo de base. Crujiente por abajo y con el queso fundido: sabe a pizza de verdad sin esperar a nadie.',
+  ingredientes:[
+    {q:'1', item:'pan de pita grande', nota:'Unos 20 cm. Si los tuyos son pequeños, dos.'},
+    {q:'2 cucharadas', item:'pesto de albahaca', nota:'De bote. O tomate triturado con orégano si prefieres la clásica.'},
+    {q:'1', item:'tomate', nota:'En rodajas finas'},
+    {q:'4-5', item:'corazones de alcachofa de bote', nota:'En cuartos. Si no te gustan: champiñón laminado o pimiento'},
+    {q:'Unas', item:'aceitunas negras', nota:'En rodajitas'},
+    {q:'50 g', item:'queso parmesano', nota:'En virutas. O mozzarella rallada'},
+    {q:'1 puñado', item:'rúcula', nota:'Para el final'},
+    {q:'1 pizca', item:'guindilla en copos', nota:'Opcional'}
+  ],
+  compra:'El pan de pita, en la zona del pan de molde o de productos internacionales. Las alcachofas y las aceitunas, de bote, en conservas. Si te apetece, unas lonchas de jamón serrano al sacarla quedan muy bien.',
+  pasos:[
+    'Airfryer a 190°C, 3 minutos para que se caliente.',
+    'Unta el pesto por todo el pan de pita, hasta los bordes.',
+    'Encima, las rodajas de tomate, la alcachofa y las aceitunas. La guindilla si quieres y el queso por encima de todo.',
+    'A la cesta, 6-7 minutos, hasta que el borde esté crujiente y el queso fundido.',
+    'La rúcula por encima al sacarla, y córtala en cuartos.'
+  ],
+  trucos:['Si tu airfryer es pequeño y no cabe entera, parte el pan de pita por la mitad antes y hazla en dos tandas de 5 minutos.'],
+  diaMalo:'Pan de pita con tomate triturado y queso rallado, 6 minutos. Sin más.',
+  conservar:'Recién hecha. Recalentada pierde lo crujiente.',
+  ojo:'No la cargues demasiado: con mucho encima, el centro queda blando.',
+  kcal:710, p:30, c:60, f:38
+},
+
+'patatas-rellenas-kumpir': {
+  nombre:'Patata rellena a la turca (kumpir)',
+  icono:'capricho', tiempo:45, donde:'Airfryer', tupper:'—', extra:true,
+  porQue:'Una patata grande asada, abierta y cargada de cosas ricas. Es comida de sofá y peli, pero con lentejas, verdura y queso: más completa de lo que parece.',
+  ingredientes:[
+    {q:'1', item:'patata grande', nota:'Unos 300 g, de piel roja si hay'},
+    {q:'1 chorrito', item:'aceite de oliva'},
+    {q:'1/2', item:'tomate', nota:'Picado'},
+    {q:'50 g', item:'lentejas cocidas', nota:'De bote, escurridas. El resto, a un tupper'},
+    {q:'Unas', item:'aceitunas negras sin hueso', nota:'En rodajas'},
+    {q:'1 cucharada', item:'pepinillos o encurtidos', nota:'Picados'},
+    {q:'15 g', item:'queso cheddar rallado', nota:'Un puñadito'},
+    {q:'1', item:'cebolleta', nota:'Picada, la parte blanca y la verde'},
+    {q:'1 cucharada', item:'nata agria', nota:'O yogur griego, que es casi igual'},
+    {q:'Al gusto', item:'sal y pimienta'}
+  ],
+  compra:'Todo de cualquier súper. Los encurtidos (pepinillos, cebollitas) en conservas. La nata agria no siempre la hay: el yogur griego la sustituye perfecto.',
+  pasos:[
+    'Lava la patata, sécala, úntala con un poco de aceite y pínchala varias veces con un tenedor.',
+    'A la cesta, 200°C, 40 minutos. A mitad, vuelve a pincharla. Está cuando el tenedor entra sin nada de resistencia.',
+    'Córtala a lo largo por arriba, sin llegar al fondo, y ábrela apretando desde los extremos.',
+    'Chafa la carne de dentro con un tenedor, sin romper la piel, y ponle sal.',
+    'Rellena: el tomate, las lentejas, las aceitunas, los encurtidos, el queso, la cebolleta y la nata agria encima de todo. Pimienta y listo.'
+  ],
+  trucos:['Para ir más rápido: 7 minutos de microondas con la patata pinchada, y luego 15 minutos de airfryer a 200°C para que la piel quede crujiente.'],
+  diaMalo:'Patata al microondas, abierta, con queso rallado y un poco de yogur.',
+  conservar:'Recién hecha. La patata asada sola aguanta 2 días en la nevera.',
+  ojo:'Si la sacas antes de tiempo, el centro queda duro. Mejor 5 minutos de más que de menos.',
+  kcal:460, p:16, c:60, f:17
+},
+
+'torrijas-mascarpone': {
+  nombre:'Tronquitos de torrija con crema de mascarpone',
+  icono:'capricho', tiempo:20, donde:'Airfryer', tupper:'—', extra:true,
+  porQue:'Torrija doradita en trozos, para mojar en una crema de mascarpone con canela. Un desayuno de domingo o un postre de los que se recuerdan.',
+  ingredientes:[
+    {q:'2 rebanadas', item:'pan gordo', nota:'Brioche, pan de molde grueso o pan de barra del día anterior, cada rebanada en 3 trozos'},
+    {q:'60 ml', item:'leche'},
+    {q:'1', item:'huevo'},
+    {q:'1 cucharadita', item:'azúcar moreno'},
+    {q:'Unas gotas', item:'esencia de vainilla', nota:'Opcional'},
+    {q:'1 pizca', item:'sal'},
+    {q:'1 chorrito', item:'aceite en spray o de oliva', nota:'Para el molde'},
+    {q:'120 g', item:'mascarpone', nota:'Para la crema. Sale para 2-3 veces'},
+    {q:'2 cucharadas', item:'sirope de arce o miel', nota:'Para la crema'},
+    {q:'1/2 cucharadita', item:'canela molida', nota:'Para la crema. Y una pizca de clavo si tienes'}
+  ],
+  compra:'El mascarpone, en la nevera de los quesos o de los postres. El sirope de arce, junto a la miel (la miel vale igual). Necesitas el molde que cabe en la cesta.',
+  pasos:[
+    'Saca el mascarpone de la nevera un rato antes: frío no se mezcla bien.',
+    'En un bol, bate la leche con el huevo, el azúcar, la vainilla y la sal.',
+    'Airfryer a 190°C, 3 minutos. Unta el molde con un poco de aceite.',
+    'Moja los trozos de pan en la mezcla, dándoles la vuelta, hasta que estén empapados.',
+    'Sacúdelos para que escurran lo que sobra (es lo que hace que se doren parejos) y ponlos en el molde en una sola capa. Un poco de aceite por encima.',
+    '4 minutos, dales la vuelta, otro poco de aceite y 2-3 minutos más, hasta que estén bien dorados.',
+    'Mientras, mezcla el mascarpone con el sirope, la canela y el clavo. Sirve los tronquitos calientes con la crema para mojar.'
+  ],
+  trucos:['Sin crema también: recién salidos, rebózalos en azúcar con canela.'],
+  diaMalo:'Una tostada de pan de molde con mantequilla, azúcar y canela.',
+  conservar:'Los tronquitos, recién hechos. La crema, 5 días en la nevera tapada.',
+  ojo:'Si el pan es muy tierno se deshace al mojarlo: mejor del día anterior.',
+  kcal:640, p:16, c:60, f:36
+},
+
+'humus-hortalizas': {
+  nombre:'Humus de verduras asadas',
+  icono:'media', tiempo:30, donde:'Airfryer y batidora', tupper:'Perfecto', extra:true,
+  porQue:'Humus con verdura asada dentro, más suave y con más sabor que el de bote. Para picar con palitos de zanahoria o pepino, o como merienda con pan de pita. Sale para 4 días.',
+  ingredientes:[
+    {q:'1 bote', item:'garbanzos cocidos', nota:'400 g, escurridos y lavados'},
+    {q:'1', item:'calabacín', nota:'En dados de 1 cm'},
+    {q:'1', item:'pimiento rojo', nota:'En dados de 1 cm'},
+    {q:'1/2', item:'cebolla roja', nota:'En dados'},
+    {q:'1/2', item:'berenjena pequeña', nota:'Opcional: triturada casi no se nota. Si no te convence, otro medio calabacín'},
+    {q:'2 dientes', item:'ajo', nota:'Picados'},
+    {q:'1 cucharada', item:'aceite de oliva'},
+    {q:'1/2', item:'limón', nota:'El zumo'},
+    {q:'Al gusto', item:'sal y pimienta'},
+    {q:'Para mojar', item:'pan de pita, zanahoria o pepino en palitos'}
+  ],
+  compra:'Todo de cualquier súper. Necesitas una batidora de mano o un robot de cocina para triturarlo.',
+  pasos:[
+    'Airfryer a 190°C, 3 minutos.',
+    'En un bol, mezcla el calabacín, el pimiento, la cebolla, la berenjena si la usas y el ajo con el aceite, y un poco de sal.',
+    'A la cesta, 10-15 minutos, removiendo una o dos veces, hasta que esté tierno y algo tostado por los bordes.',
+    'Pásalo al vaso de la batidora con su jugo, los garbanzos y el zumo de limón.',
+    'Tritura hasta que quede fino. Si queda muy espeso, un chorrito de agua.',
+    'Prueba de sal y pimienta, y a un tupper.'
+  ],
+  trucos:['Un poco de comino o de pimentón por encima al servir le va muy bien.'],
+  diaMalo:'Humus de bote con zanahoria en palitos.',
+  conservar:'4 días en la nevera, en un tupper cerrado.',
+  ojo:'Deja que la verdura se enfríe un poco antes de batir: muy caliente, la batidora salpica.',
+  kcal:200, p:8, c:25, f:6
+},
+
+'apionabo-arce': {
+  nombre:'Apionabo caramelizado con arce',
+  icono:'ensalada', tiempo:25, donde:'Airfryer', tupper:'Bueno', extra:true,
+  porQue:'Una guarnición dulce y tostada, distinta a todo lo demás. El apionabo es la raíz del apio: sabe suave, a medio camino entre patata y apio. Va muy bien al lado de pollo o de cerdo.',
+  ingredientes:[
+    {q:'1', item:'apionabo pequeño', nota:'Pelado y en dados de 2 cm. Salen 2 raciones.'},
+    {q:'1 cucharadita', item:'aceite de oliva'},
+    {q:'1 cucharada', item:'sirope de arce', nota:'O miel'},
+    {q:'1 pizca', item:'canela y nuez moscada'},
+    {q:'Al gusto', item:'sal y pimienta'}
+  ],
+  compra:'El apionabo no está en todos los súper: búscalo en Ametller Origen, en el mercado (el Ninot) o en fruterías grandes, sobre todo en otoño e invierno. Si no lo encuentras, con zanahoria o chirivía sale igual de bien.',
+  pasos:[
+    'Pela el apionabo con un cuchillo (la piel es gorda y rugosa) y córtalo en dados de 2 cm.',
+    'En un bol, mézclalo con el aceite, el sirope, la canela y la nuez moscada.',
+    'Airfryer a 190°C, 3 minutos para calentar.',
+    'Al molde, 20 minutos, removiendo a mitad, hasta que esté tierno y caramelizado.',
+    'Sal y pimienta al gusto.'
+  ],
+  trucos:['En versión salada: sin sirope ni canela, con ajo en polvo y pimentón. Sale como unas patatas asadas pero más ligeras.'],
+  diaMalo:'Zanahoria en rodajas al airfryer con aceite y sal, 15 minutos.',
+  conservar:'3 días en la nevera.',
+  ojo:'Con el sirope se quema rápido en los bordes: si a los 15 minutos ya está muy oscuro, sácalo.',
+  kcal:150, p:3, c:25, f:5
+},
+
+'rancheros-tofu': {
+  nombre:'Tacos rancheros con tofu picante',
+  icono:'huevo', tiempo:60, donde:'Airfryer', tupper:'—', extra:true,
+  porQue:'Tortillas calientes con tofu especiado y crujiente, queso, salsa mexicana y aguacate. Es la versión del libro de los huevos rancheros: el tofu hace de revuelto. Si el tofu no te convence, con huevos revueltos sale el plato de verdad.',
+  ingredientes:[
+    {q:'200 g', item:'tofu firme', nota:'Medio bloque. El resto aguanta 3-4 días en la nevera cubierto de agua'},
+    {q:'1 cucharadita', item:'aceite de oliva'},
+    {q:'1/2 cucharadita', item:'comino molido, pimentón y ajo en polvo', nota:'Una pizca generosa de cada'},
+    {q:'1 pizca', item:'cebolla en polvo y sal'},
+    {q:'2', item:'tortillas de maíz o de trigo'},
+    {q:'30 g', item:'queso cheddar rallado'},
+    {q:'3 cucharadas', item:'salsa mexicana', nota:'De bote, tipo pico de gallo o salsa roja'},
+    {q:'1/4', item:'aguacate', nota:'En dados'},
+    {q:'Opcional', item:'cilantro, alubias negras, cebolla encurtida o lima'}
+  ],
+  compra:'El tofu firme, en la nevera de productos vegetales. Las tortillas y la salsa, en productos mexicanos o internacionales.',
+  pasos:[
+    'Envuelve el tofu en un trapo limpio, ponlo en un plato y algo que pese encima (una sartén, un bote grande). 30 minutos: así suelta el agua y luego queda crujiente.',
+    'Córtalo en dados de 1 cm y mézclalo en un bol con el aceite, las especias y la sal. Déjalo 30 minutos (o hasta 3 horas en la nevera).',
+    'Airfryer a 190°C, 3 minutos. Un poco de aceite en la cesta.',
+    'El tofu en una sola capa, 14 minutos, removiendo cada 5, hasta que esté dorado.',
+    'En los últimos minutos, calienta las tortillas envueltas en un trapo, 30 segundos de microondas.',
+    'Monta: tofu, queso, salsa, aguacate y lo que quieras de lo opcional. Dobla y a comer.'
+  ],
+  trucos:['Con huevos revueltos en vez de tofu te ahorras la hora de espera: revuelto con comino y pimentón, y se monta igual.'],
+  diaMalo:'Tortillas con huevo revuelto, queso y salsa de bote.',
+  conservar:'Recién hechos. El tofu especiado sobrante, 2 días en la nevera.',
+  ojo:'Si no escurres bien el tofu, en vez de crujiente queda blando.',
+  kcal:690, p:38, c:45, f:38
+}
+
+});
+
 /* ==========================================================================
    Cada texto del menú apunta a su ficha. Se hace con un mapa explícito y no
    adivinando por palabras sueltas: es más largo de escribir, pero no falla.
