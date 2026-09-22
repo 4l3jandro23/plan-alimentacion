@@ -4774,6 +4774,9 @@ function sobraYaTxt(slug){
   return partes.length ? 'Apuntado: ' + partes.join(' y ') + '.' : '';
 }
 function sobraHTML(slug){
+  return crudoHTML(slug) + sobraBaseHTML(slug);
+}
+function sobraBaseHTML(slug){
   const p = PLATOS[slug];
   if(!p || !(p.tiempo > 0)) return '';
   const ops = /^\s*malo/i.test(p.tupper || '') ? [] : mananaOpciones();
@@ -4969,7 +4972,20 @@ function ingredienteEsLaForma(per, nombreNorm){
   const formaIng = (nombreNorm.match(formasFresco()) || [])[0] || '';
   return per.forma ? nombreNorm.indexOf(per.forma) !== -1 : !formaIng;
 }
-function platoQueLoUsa(per){
+/* Carne o pescado que en un plato se cambia por el otro sin tocar nada más.
+   El pavo que sobra del lunes cabe en el pollo al curry del martes; buscar
+   solo "pavo" en el menú decía que no había dónde usarlo. */
+function equivalentes(){
+  return [
+    [/pavo/, /pollo|pechuga/, 'pollo'],
+    [/pollo|pechuga/, /pavo/, 'pavo'],
+    [/merluza/, /bacalao/, 'bacalao'],
+    [/bacalao/, /merluza/, 'merluza']
+  ];
+}
+function platoQueLoUsa(per, q){
+  const exactos = [], parecidos = [];
+  const eq = (per.unaVez && per.congela) ? equivalentes().find(e => e[0].test(per.re.source)) : null;
   for(let i = 0; i <= 6; i++){
     const f = new Date(); f.setDate(f.getDate() + i);
     if(isVacationOn(f)) continue;
@@ -4979,23 +4995,63 @@ function platoQueLoUsa(per){
       if(momentos[j] === 'cena' && d.libre) continue;
       const slug = slugDePlato(d[momentos[j]]);
       const p = slug && PLATOS[slug];
-      if(p && (p.ingredientes || []).some(ing => { const n = normalizeText(ing.item); return per.re.test(n) && ingredienteEsLaForma(per, n); })) return { i: i, momento: momentos[j], slug: slug, fecha: f };
+      if(!p) continue;
+      const ings = (p.ingredientes || []).map(ing => normalizeText(ing.item));
+      if(ings.some(n => per.re.test(n) && ingredienteEsLaForma(per, n))) exactos.push({ i: i, momento: momentos[j], slug: slug, fecha: f });
+      else if(eq && ings.some(n => eq[1].test(n) && !formasFresco().test(n))) parecidos.push({ i: i, momento: momentos[j], slug: slug, fecha: f, sust: eq[2] });
     }
   }
-  return null;
+  /* Antes de que se pase: lo exacto, si no lo equivalente. Si no llega a
+     tiempo ninguno, el primero exacto (para proponer congelarlo). */
+  const lim = Math.max(0, q == null ? 99 : q);
+  return exactos.find(u => u.i <= lim) || parecidos.find(u => u.i <= lim) || exactos[0] || null;
 }
+function cuandoTxt(u){ return u.i === 0 ? 'hoy' : u.i === 1 ? 'mañana' : 'el ' + nombreDiaAli(u.fecha.getDay()); }
 /* Al cocinar un plato, la carne o el pescado que llevaba ya no está en la nevera. */
 function gastarFrescosDe(slug){
   const p = PLATOS[slug];
   if(!p) return;
   const antes = loadFrescos();
   const ings = (p.ingredientes || []).map(i => normalizeText(i.item));
+  const gastados = [];
   const l = antes.filter(x => {
     if(x.cong) return true;
     const per = perecederoDe(x.txt);
-    return !(per && per.unaVez && ings.some(n => per.re.test(n) && ingredienteEsLaForma(per, n)));
+    const gasta = !!(per && per.unaVez && ings.some(n => per.re.test(n) && ingredienteEsLaForma(per, n)));
+    if(gasta) gastados.push(x);
+    return !gasta;
   });
   if(l.length !== antes.length) saveFrescos(l);
+  /* El paquete de pavo es de 400-500 g y el plato lleva 150: darlo por gastado
+     entero hacía que la mitad que queda se caducara sin ningún aviso. Se
+     pregunta al terminar, en el mismo sitio que «¿Ha sobrado?». */
+  window.crudoPregunta = gastados.length ? { slug: slug, items: gastados } : null;
+}
+function crudoHTML(slug){
+  const q = window.crudoPregunta;
+  if(!q || q.slug !== slug || !q.items.length) return '';
+  const nombres = q.items.map(x => x.txt.toLowerCase());
+  const txt = nombres.length === 1 ? nombres[0] : nombres.slice(0, -1).join(', ') + ' o ' + nombres[nombres.length - 1];
+  const verbo = /s$/.test(nombres[0].split(' ')[0]) || nombres.length > 1 ? 'quedan' : 'queda';
+  return '<div class="sobra"><b>¿Te ' + verbo + ' ' + esc(txt) + ' sin cocinar?</b>' +
+    '<span class="sobra-ya">Los paquetes suelen traer más de lo que lleva el plato. Si queda, te aviso en Hoy de cuándo usarlo o de congelarlo.</span>' +
+    '<div class="sobra-botones">' +
+      '<button class="btn-mini" onclick="crudoQueda(\'' + slug + '\', true)">Sí, queda</button>' +
+      '<button class="btn-mini" onclick="crudoQueda(\'' + slug + '\', false)">No, se acabó</button>' +
+    '</div></div>';
+}
+function crudoQueda(slug, queda){
+  const q = window.crudoPregunta;
+  window.crudoPregunta = null;
+  if(queda && q && q.items.length){
+    const l = loadFrescos();
+    q.items.forEach(x => { if(!l.some(y => y.k === x.k && !y.cong)) l.push(x); });
+    saveFrescos(l);
+    toast('Apuntado. En Hoy te digo si toca usarlo o congelarlo');
+    renderHoy();
+    renderFrescosCompra();
+  }
+  pintarSobra(slug);
 }
 function frescosPendientes(){
   return loadFrescos().map((x, i) => ({ i: i, x: x, q: quedanFresco(x) })).filter(o => !o.x.cong).sort((a, b) => a.q - b.q);
@@ -5005,8 +5061,8 @@ function usaPrimeroHTML(){
   frescosPendientes().forEach(o => {
     if(o.q > 1 || o.q < -1) return;
     const per = perecederoDe(o.x.txt);
-    const uso = per ? platoQueLoUsa(per) : null;
-    if(uso && uso.i <= Math.max(0, o.q)) return;
+    const uso = per ? platoQueLoUsa(per, o.q) : null;
+    if(uso && !uso.sust && uso.i <= Math.max(0, o.q)) return;
     avisos.push({ i: o.i, x: o.x, q: o.q, uso: uso, congela: !!(per && per.congela) });
   });
   if(!avisos.length) return '';
@@ -5015,12 +5071,17 @@ function usaPrimeroHTML(){
     const nombre = a.x.txt.charAt(0).toUpperCase() + a.x.txt.slice(1);
     let txt;
     if(a.q < 0) txt = aguantaTxt(a.q) + '. Si huele y se ve bien, úsalo hoy; si no, fuera y ya está.';
+    else if(a.uso && a.uso.sust){
+      const cu = cuandoTxt(a.uso);
+      txt = aguantaTxt(a.q) + '. ' + cu.charAt(0).toUpperCase() + cu.slice(1) + ' toca ' + (PLATOS[a.uso.slug] ? PLATOS[a.uso.slug].nombre.toLowerCase() : 'un plato') + ', que lleva ' + a.uso.sust + ': hazlo con esto y lo gastas.' + (a.congela ? ' Si no, congélalo hoy.' : '');
+    }
     else if(a.uso && a.congela) txt = 'lo usas el ' + nombreDiaAli(a.uso.fecha.getDay()) + ', pero fresco ' + aguantaTxt(a.q) + '. Congélalo hoy, o pasa ese plato a hoy.';
     else if(a.uso) txt = aguantaTxt(a.q) + ' y lo usas el ' + nombreDiaAli(a.uso.fecha.getDay()) + '. Mejor pasa ese plato a hoy.';
     else if(a.congela) txt = 'fresco ' + aguantaTxt(a.q) + '. Úsalo antes, o congélalo hoy y no se pierde.';
     else txt = aguantaTxt(a.q) + '. Úsalo hoy o mañana en lo que te apetezca.';
     return '<div class="tip aviso-fresco"><span>' + ico('alerta') + ' <b>' + esc(nombre) + ':</b> ' + esc(txt) + '</span><div class="sobra-botones">' +
-      (a.uso && a.q >= 0 ? '<button class="btn-mini solid" onclick="frescoAccion(' + a.i + ',\'hoy\')">Pasarlo a hoy</button>' : '') +
+      (a.uso && a.uso.sust ? '<button class="btn-mini solid" onclick="frescoAccion(' + a.i + ',\'listo\')">Vale, lo uso ahí</button>' : '') +
+      (a.uso && !a.uso.sust && a.q >= 0 ? '<button class="btn-mini solid" onclick="frescoAccion(' + a.i + ',\'hoy\')">Pasarlo a hoy</button>' : '') +
       (a.congela && a.q >= 0 ? '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'congelar\')">' + ico('nevera') + ' Lo congelo</button>' : '') +
       '<button class="btn-mini" onclick="frescoAccion(' + a.i + ',\'listo\')">Ya está</button>' +
       (n === 0 && total > 1 ? '<button class="btn-mini" onclick="abrirFrescos()">Ver las ' + total + '</button>' : '') +
@@ -5033,7 +5094,7 @@ function frescoAccion(i, accion){
   if(!x) return;
   if(accion === 'hoy'){
     const per = perecederoDe(x.txt), uso = per && platoQueLoUsa(per), now = new Date();
-    if(uso){
+    if(uso && !uso.sust){
       const finde = now.getDay() === 0 || now.getDay() === 6;
       const momento = (now.getHours() + now.getMinutes() / 60 < 16.5 && (finde || isWfhOn(now))) ? 'comida' : 'cena';
       if(momento === 'cena' && getDayForDate(now).d.libre){ toast('Esta noche es cena libre: mejor congélalo'); return; }
@@ -6174,9 +6235,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-21b'; }
+function novedadesId(){ return '2026-09-22'; }
 function novedadesNuevas(){
   return [
+    '<b>Lo que sobra sin cocinar:</b> al terminar un plato te pregunta si te queda carne o pescado del paquete. Si queda, Hoy te dice dónde usarlo (si es pavo, también en un plato de pollo) o que lo congeles.',
     '<b>Foto de mi plato:</b> en cada ficha, debajo de «Lo he cocinado hoy». La próxima vez que lo abras, ves cómo te quedó. Con la sincronización conectada, llega también al ordenador.',
     '<b>La ensalada ya dice qué es:</b> hojas (lechuga o mezclum), un tomate y medio pepino, con cantidades y cómo se monta. En todas las fichas que la llevan.',
     '<b>El plato dibujado de las cenas:</b> la proteína es un cuarto y el otro cuarto se ve. Es hidrato si llegas con hambre, o más verdura si no.',
