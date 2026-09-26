@@ -515,8 +515,11 @@ Object.assign(PLATOS, {
     'Echa el vino y deja que hierva 2 minutos para que se evapore el alcohol.',
     'Añade las patatas en trozos y agua hasta casi cubrir. Tapa y 20 minutos a fuego suave, hasta que la patata esté tierna.'
   ],
-  trucos:['La patata no se corta: se "casca". Clava el cuchillo un poco y haz palanca hasta que se rompa sola. Así suelta almidón y la salsa espesa.'],
-  diaMalo:'No es plato de día malo. Déjalo para un domingo y ese día cambia por calamar a la plancha.',
+  trucos:[
+    'Te toca un miércoles, pero no es plato de entre semana: hazlo el domingo antes. Sale para dos raciones, está mejor recalentado y el miércoles solo es calentarlo.',
+    'La patata no se corta: se "casca". Clava el cuchillo un poco y haz palanca hasta que se rompa sola. Así suelta almidón y la salsa espesa.'
+  ],
+  diaMalo:'Si no lo dejaste hecho el domingo: calamar a la plancha con una patata al microondas, 15 minutos.',
   conservar:'3 días, y está mejor al día siguiente. Congela bien.',
   ojo:'No tengas prisa con la cebolla. Es literalmente el 80% del sabor del plato.',
   kcal:560, p:38, c:52, f:20
@@ -2071,6 +2074,7 @@ const MENU_A_PLATO = {
   'Pulpo con patata y pimentón':'pulpo-gallega-patata',
   'Calamares y pulpo a la gallega con patata':'calamares-pulpo-gallega',
   'Calamar encebollado con patata':'calamar-encebollado-patata',
+  'Calamar encebollado con patata (hecho el domingo)':'calamar-encebollado-patata',
   'Pollo a la plancha con arroz integral y pimientos':'pollo-plancha-arroz-pimientos',
   'Pollo a la plancha con pimiento y cebolla salteados, y arroz':'pollo-plancha-arroz-pimientos',
   'Pechuga a la plancha con quinoa y brócoli':'pechuga-quinoa-brocoli',
