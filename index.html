@@ -4498,12 +4498,15 @@ function tupperesSemanaHTML(){
       ? '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(\'' + t.slug + '\',\'comida\')">' + cuerpo + '<span class="flecha">' + ico('flecha') + '</span></div>'
       : '<div class="meal">' + cuerpo + '</div>';
   }).join('');
-  const aguantan = lista.filter(t => aguanta3Dias(t.slug)).length;
+  const aguantan = lista.filter(t => aguanta3Dias(t.slug) && t.dia >= 1 && t.dia <= 3).length;
+  const delDomingo = lista.find(t => aguanta3Dias(t.slug) && t.dia >= 1 && t.dia <= 3);
   return '<div class="daycard tupper-semana" style="margin-top:14px;">' +
     '<div class="daycard-header"><span class="dayname">' + ico('tupper') + 'La semana que viene te llevas</span></div>' + filas +
     '<p class="tupper-nota">' + (aguantan >= 2
       ? 'Los que dicen «aguanta 3 días» puedes dejarlos hechos de una vez el domingo: esos días llegas a casa con la comida del día siguiente ya resuelta.'
-      : 'Deja hecho el del ' + nombreDiaAli(lista[0].dia) + (lista[0].dia === 1 ? ' el domingo por la noche' : ' la noche antes') + ' y ese día no tienes que pensar nada.') + '</p>' +
+      : delDomingo
+        ? 'El del ' + nombreDiaAli(delDomingo.dia) + ' aguanta 3 días: déjalo hecho el domingo y ese día solo es sacarlo de la nevera.'
+        : 'Deja hecho el del ' + nombreDiaAli(lista[0].dia) + (lista[0].dia === 1 ? ' el domingo por la noche' : ' la noche antes') + ' y ese día no tienes que pensar nada.') + '</p>' +
     '<button class="btn-mini solid" onclick="addTupperesSemana()">' + ico('carrito') + ' Añadir sus ingredientes a la compra</button>' +
   '</div>';
 }
@@ -6337,9 +6340,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-27b'; }
+function novedadesId(){ return '2026-09-27c'; }
 function novedadesFechadas(){
   return [
+    { id:'2026-09-27c', t:'<b>Tuppers de la semana:</b> si uno aguanta 3 días (como el calamar encebollado), te dice que lo dejes hecho el domingo, igual que el menú.' },
     { id:'2026-09-27b', t:'<b>Calabaza</b> apuntada en «No me gusta» (Ajustes), con los champiñones y el calabacín. Lo que no te gusta y se había quedado en la lista de la compra de antes, fuera.' },
     { id:'2026-09-27b', t:'<b>Tuppers de la semana:</b> ya no te dice que dejes hecho el del lunes si el lunes es de bowl.' },
     { id:'2026-09-27b', t:'<b>Qué hay de nuevo</b> ya solo enseña lo que no has visto.' },
