@@ -2118,6 +2118,7 @@ const MENU_A_PLATO = {
   'Kéfir + pera + nueces':'kefir-fruta-nueces',
   'Kéfir + plátano + nueces':'kefir-fruta-nueces',
   'Bollería o empanadilla (capricho controlado)':'bolleria-capricho',
+  'Bollería o empanadilla (tu capricho)':'bolleria-capricho',
   'Café con leche + yogur o fruta':'cafe-yogur-fruta',
   'Yogur + fruta':'yogur-fruta',
   'Yogur + manzana':'yogur-fruta',

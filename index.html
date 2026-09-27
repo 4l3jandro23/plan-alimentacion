@@ -2497,7 +2497,7 @@ function toggleTheme(){
    qué cambiarlo y los atajos de la compra no lo meten. Viene con esos dos
    puestos para que se vea para qué sirve. */
 const NMG_KEY = 'planAlimentacionNoMeGusta';
-const NMG_DEFECTO = ['champiñones', 'calabacín'];
+const NMG_DEFECTO = ['champiñones', 'calabacín', 'calabaza'];
 function loadNoMeGusta(){
   try{
     const raw = localStorage.getItem(NMG_KEY);
@@ -2521,6 +2521,27 @@ function nmgCoincide(texto, palabra){
   return new RegExp('(^|[^a-z])' + seguro).test(normNMG(texto));
 }
 function noMeGustaEn(texto){ return loadNoMeGusta().filter(x => nmgCoincide(texto, x)); }
+/* Lo que no le gusta y entró en la lista por un atajo o una ficha (no lo
+   que escribió él) se quita. Lo ya tachado se deja. */
+function purgarCompraNMG(){
+  try{
+    const lista = loadCompra();
+    const queda = lista.filter(i => i.done || i.src === 'm' || !noMeGustaEn(i.txt).length);
+    if(queda.length !== lista.length) saveCompra(queda);
+    return lista.length - queda.length;
+  }catch(e){ return 0; }
+}
+function arregloNMG(){
+  try{
+    if(localStorage.getItem('planAlimentacionArregloNMG')) return;
+    const raw = localStorage.getItem(NMG_KEY);
+    if(raw !== null){
+      const l = loadNoMeGusta();
+      if(!l.some(x => normNMG(x) === 'calabaza')){ l.push('calabaza'); setLS(NMG_KEY, JSON.stringify(l)); }
+    }
+    localStorage.setItem('planAlimentacionArregloNMG', '1');
+  }catch(e){}
+}
 function textoDePlato(slug, texto){
   const p = slug && typeof PLATOS !== 'undefined' ? PLATOS[slug] : null;
   return p ? [p.nombre].concat(p.ingredientes.map(i => i.item)).join(' · ') : (texto || '');
@@ -2560,6 +2581,7 @@ function renderNoMeGusta(){
 }
 function guardarNoMeGusta(l){
   setLS(NMG_KEY, JSON.stringify(l));
+  purgarCompraNMG();
   renderNoMeGusta();
   renderWeeks();
   renderHoy();
@@ -4056,7 +4078,7 @@ const weeksData = [
   {day:"Lunes 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pechuga a la plancha con quinoa y brócoli", merienda:"🍎 Yogur + fruta", cena:"🐟 Caballa al papillote con pimiento y cebolla al horno", kcal:1830,p:120,c:161,f:69},
   {day:"Martes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón al airfryer con limón y ensalada de patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🥚 Huevo escalfado con tomate y espinacas", kcal:1870,p:106,c:172,f:78},
   {day:"Miércoles 🫘", desayuno:"🥣 Kéfir + pera + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Lentejas estofadas con pimiento y zanahoria", merienda:"🍎 Yogur + fruta", cena:"🍗 Brochetas de pavo con pimiento", kcal:1790,p:108,c:177,f:60},
-  {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
+  {day:"Jueves 🥐", desayuno:"🥐 Bollería o empanadilla (tu capricho)", media:"☕ Café con leche + yogur o fruta", comida:"🐙 Pulpo a la gallega con patata y pimentón", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Bacalao crujiente al horno con ajo", kcal:1870,p:102,c:177,f:72},
   {day:"Viernes 🐟", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y pimiento", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1420,p:82,c:156,f:46, libre:true},
   {day:"Sábado 🥩", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Ternera a la plancha con espárragos trigueros y patata", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1560,p:88,c:145,f:66, libre:true},
   {day:"Domingo 🍗", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Muslitos de pollo al horno con patata (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🥚 Tortilla de espinacas con ensalada", kcal:1840,p:116,c:158,f:74}
@@ -4066,7 +4088,7 @@ const weeksData = [
   {day:"Martes 🐟", desayuno:"🥣 Kéfir + plátano + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Salmón a la plancha con arroz integral y brócoli", merienda:"🍫 Yogur + fruta + chocolate", cena:"🍗 Pollo al curry ligero con pimiento", kcal:1890,p:118,c:166,f:75},
   {day:"Miércoles 🦑", desayuno:"🍞 Tostada integral con jamón + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🦑 Calamar encebollado con patata (hecho el domingo)", merienda:"🍎 Yogur + fruta", cena:"🥚 Revuelto de huevo con espárragos trigueros", kcal:1750,p:102,c:165,f:66},
   {day:"Jueves 🍗", desayuno:"🥣 Kéfir + manzana + nueces", media:"☕ Café con leche + yogur o fruta", comida:"🍗 Pavo con judías verdes salteadas y arroz", merienda:"🍫 Yogur + fruta + chocolate", cena:"🐟 Merluza a la plancha con limón", kcal:1820,p:120,c:165,f:65},
-  {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (capricho controlado)", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
+  {day:"Viernes 🥐", desayuno:"🥐 Bollería o empanadilla (tu capricho)", media:"☕ Café con leche + yogur o fruta", comida:"🥩 Bistec de ternera con ensalada de patata", merienda:"🍎 Yogur + fruta", cena:"🎉 Cena libre — disfruta sin culpa", kcal:1560,p:76,c:156,f:66, libre:true},
   {day:"Sábado 🐟", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🐟 Ensalada de arroz con atún, maíz y aceitunas", merienda:"🍫 Yogur + fruta + chocolate", cena:"🎉 Cena libre de finde — disfruta", kcal:1490,p:84,c:150,f:56, libre:true},
   {day:"Domingo 🫘", desayuno:"🍳 Huevos revueltos + tostada + fruta", media:"☕ Café con leche + yogur o fruta", comida:"🫘 Garbanzos con espinacas (comida familiar)", merienda:"🍎 Yogur + fruta", cena:"🐟 Sardinas al horno con ensalada", kcal:1870,p:110,c:176,f:71}
 ]},
@@ -4267,7 +4289,7 @@ document.addEventListener('visibilitychange', () => {
 window.addEventListener('online', () => sincronizar('red'));
 /* iOS suelta el "pantalla encendida" al bloquear: al volver, se pide otra vez. */
 document.addEventListener('visibilitychange', () => { if(!document.hidden && (enSuper || CO.abierta)) pantallaSuper(true); });
-document.addEventListener('DOMContentLoaded', () => { renderSyncEstado(); sincronizar('abrir'); });
+document.addEventListener('DOMContentLoaded', () => { arregloNMG(); if(purgarCompraNMG() && typeof renderCompra === 'function') renderCompra(); renderSyncEstado(); sincronizar('abrir'); });
 setInterval(renderHoy, 10 * 60 * 1000);
 
 // El círculo del método del plato también como separador entre secciones,
@@ -4480,8 +4502,8 @@ function tupperesSemanaHTML(){
   return '<div class="daycard tupper-semana" style="margin-top:14px;">' +
     '<div class="daycard-header"><span class="dayname">' + ico('tupper') + 'La semana que viene te llevas</span></div>' + filas +
     '<p class="tupper-nota">' + (aguantan >= 2
-      ? 'Los que aguantan 3 días puedes dejarlos hechos el domingo: el lunes y el martes llegas a casa con la comida del día siguiente ya resuelta.'
-      : 'Deja hecho el del lunes el domingo por la noche y empiezas la semana sin tener que pensar nada.') + '</p>' +
+      ? 'Los que dicen «aguanta 3 días» puedes dejarlos hechos de una vez el domingo: esos días llegas a casa con la comida del día siguiente ya resuelta.'
+      : 'Deja hecho el del ' + nombreDiaAli(lista[0].dia) + (lista[0].dia === 1 ? ' el domingo por la noche' : ' la noche antes') + ' y ese día no tienes que pensar nada.') + '</p>' +
     '<button class="btn-mini solid" onclick="addTupperesSemana()">' + ico('carrito') + ' Añadir sus ingredientes a la compra</button>' +
   '</div>';
 }
@@ -5734,7 +5756,7 @@ function dibujarMenuSemana(sem){
   const sans = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
   const MES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   const DIA = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-  const limpio = t => sinEmoji(String(t || '').replace(/🔁/g, '')).replace(/\s*\((comida en familia|comida familiar|capricho controlado)\)\s*$/i, '').replace(/\s*—.*$/, '').trim();
+  const limpio = t => sinEmoji(String(t || '').replace(/🔁/g, '')).replace(/\s*\((comida en familia|comida familiar|capricho controlado|tu capricho)\)\s*$/i, '').replace(/\s*—.*$/, '').trim();
   const c = document.createElement('canvas');
   let g = c.getContext('2d');
   const ancho = W - 2 * M - 2 * PAD - COL;
@@ -6315,24 +6337,28 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-09-27'; }
-function novedadesNuevas(){
+function novedadesId(){ return '2026-09-27b'; }
+function novedadesFechadas(){
   return [
-    '<b>Calamar encebollado</b> (semana 3, miércoles): son 40 minutos, así que el menú y la ficha te dicen que lo dejes hecho el domingo.',
-    '<b>Garbanzos crujientes picantes</b> en Recetas: para cuando te apetece picar algo salado.',
-    '<b>Más extras del libro:</b> chili con totopos, pimientos rellenos, sopa de tomate asado, latkes, salsa de maíz y antojitos. Al final de Recetas.',
-    '<b>Más consejos:</b> colesterol, llenarte sin contar, etiquetas, qué beber, fines de semana y ánimo. Uno al día en Hoy y todos en Inicio.',
-    '<b>Sin calabacín otra vez:</b> se me había colado en la merluza al horno (ahora con espárragos), en la ratatouille y en el humus (ahora de pimiento asado). Perdona.',
-    '<b>Recetas de tu libro de airfryer:</b> ratatouille con garbanzos (sin berenjena) y arroz frito con sésamo, en Recetas con las demás.',
-    '<b>Extras del libro:</b> pizza de pan de pita, patata rellena, torrijas, humus de verduras y más, al final de Recetas. Por si un día te apetecen: no entran en el menú.',
-    '<b>Tortilla de patata</b> con cebolla, paso a paso, para cuando quieras hacerla.',
-    '<b>Lo que sobra sin cocinar:</b> al terminar un plato te pregunta si te queda carne o pescado del paquete. Si queda, Hoy te dice dónde usarlo (si es pavo, también en un plato de pollo) o que lo congeles.',
-    '<b>Foto de mi plato:</b> en cada ficha, debajo de «Lo he cocinado hoy». La próxima vez que lo abras, ves cómo te quedó. Con la sincronización conectada, llega también al ordenador.',
-    '<b>La ensalada ya dice qué es:</b> hojas (lechuga o mezclum), un tomate y medio pepino, con cantidades y cómo se monta. En todas las fichas que la llevan.',
-    '<b>El plato dibujado de las cenas:</b> la proteína es un cuarto y el otro cuarto se ve. Es hidrato si llegas con hambre, o más verdura si no.',
-    '<b>Merluza con su verdura</b> (espárragos trigueros al horno o judías verdes), y el salmón con espárragos de la comida lleva patata.'
+    { id:'2026-09-27b', t:'<b>Calabaza</b> apuntada en «No me gusta» (Ajustes), con los champiñones y el calabacín. Lo que no te gusta y se había quedado en la lista de la compra de antes, fuera.' },
+    { id:'2026-09-27b', t:'<b>Tuppers de la semana:</b> ya no te dice que dejes hecho el del lunes si el lunes es de bowl.' },
+    { id:'2026-09-27b', t:'<b>Qué hay de nuevo</b> ya solo enseña lo que no has visto.' },
+    { id:'2026-09-27', t:'<b>Calamar encebollado</b> (semana 3, miércoles): son 40 minutos, así que el menú y la ficha te dicen que lo dejes hecho el domingo.' },
+    { id:'2026-09-25', t:'<b>Garbanzos crujientes picantes</b> en Recetas: para cuando te apetece picar algo salado.' },
+    { id:'2026-09-25', t:'<b>Más extras del libro:</b> chili con totopos, pimientos rellenos, sopa de tomate asado, latkes, salsa de maíz y antojitos. Al final de Recetas.' },
+    { id:'2026-09-25', t:'<b>Más consejos:</b> colesterol, llenarte sin contar, etiquetas, qué beber, fines de semana y ánimo. Uno al día en Hoy y todos en Inicio.' },
+    { id:'2026-09-24', t:'<b>Sin calabacín otra vez:</b> se me había colado en la merluza al horno (ahora con espárragos), en la ratatouille y en el humus (ahora de pimiento asado). Perdona.' },
+    { id:'2026-09-23', t:'<b>Recetas de tu libro de airfryer:</b> ratatouille con garbanzos (sin berenjena) y arroz frito con sésamo, en Recetas con las demás.' },
+    { id:'2026-09-23', t:'<b>Extras del libro:</b> pizza de pan de pita, patata rellena, torrijas, humus de verduras y más, al final de Recetas. Por si un día te apetecen: no entran en el menú.' },
+    { id:'2026-09-23', t:'<b>Tortilla de patata</b> con cebolla, paso a paso, para cuando quieras hacerla.' },
+    { id:'2026-09-22', t:'<b>Lo que sobra sin cocinar:</b> al terminar un plato te pregunta si te queda carne o pescado del paquete. Si queda, Hoy te dice dónde usarlo (si es pavo, también en un plato de pollo) o que lo congeles.' },
+    { id:'2026-09-21', t:'<b>Foto de mi plato:</b> en cada ficha, debajo de «Lo he cocinado hoy». La próxima vez que lo abras, ves cómo te quedó. Con la sincronización conectada, llega también al ordenador.' },
+    { id:'2026-09-20', t:'<b>La ensalada ya dice qué es:</b> hojas (lechuga o mezclum), un tomate y medio pepino, con cantidades y cómo se monta. En todas las fichas que la llevan.' },
+    { id:'2026-09-20', t:'<b>El plato dibujado de las cenas:</b> la proteína es un cuarto y el otro cuarto se ve. Es hidrato si llegas con hambre, o más verdura si no.' },
+    { id:'2026-09-20', t:'<b>Merluza con su verdura</b> (espárragos trigueros al horno o judías verdes), y el salmón con espárragos de la comida lleva patata.' }
   ];
 }
+function novedadesNuevas(){ return novedadesFechadas().filter(n => n.id === novedadesId()).map(n => n.t); }
 function novedadesAntes49(){
   return [
     '<b>Menú corregido:</b> ya no hay semanas con salmón tres veces (contando el bowl del jueves).',
@@ -6370,8 +6396,12 @@ function novedadesHTML(){
   try{ vistas = localStorage.getItem('planAlimentacionNovedades') || ''; }catch(e){}
   if(vistas === novedadesId()) return '';
   if(!hayDatosPropios()){ setRaw('planAlimentacionNovedades', novedadesId()); return ''; }
-  return '<div class="card aviso-hoy"><h3>Qué hay de nuevo</h3><ul>' + novedadesNuevas().map(n => '<li>' + n + '</li>').join('') + '</ul>' +
-    '<details class="novedades-antes"><summary>Y lo de estos días</summary><ul>' + novedades().map(n => '<li>' + n + '</li>').join('') + '</ul></details>' +
+  const todas = novedadesFechadas();
+  let nuevas = todas.filter(n => n.id > vistas);
+  if(!nuevas.length) nuevas = todas.filter(n => n.id === novedadesId());
+  const antes = todas.filter(n => nuevas.indexOf(n) === -1).map(n => n.t).concat(novedades());
+  return '<div class="card aviso-hoy"><h3>Qué hay de nuevo</h3><ul>' + nuevas.map(n => '<li>' + n.t + '</li>').join('') + '</ul>' +
+    '<details class="novedades-antes"><summary>Lo de antes</summary><ul>' + antes.map(n => '<li>' + n + '</li>').join('') + '</ul></details>' +
     '<button class="btn-mini solid" onclick="cerrarNovedades()">Entendido</button></div>';
 }
 function cerrarNovedades(){
