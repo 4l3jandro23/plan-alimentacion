@@ -425,7 +425,7 @@ const SUPERS = [
   {
     nombre:'Mercadona', dir:'Carrer de Berlín', min:5, m:301, horario:'L-S 9:00-21:00',
     tipo:'completa',
-    para:'La compra completa de una vez: pechuga de pollo, pulpo cocido en bolsa, congelados (salmón, merluza, calamar, verdura), atún, arroz, pasta.',
+    para:'La compra completa de una vez: pechuga de pollo, pulpo cocido en bolsa, congelados (salmón, calamar, verdura), atún, arroz, pasta.',
     nota:'El más equilibrado de todos para llenar el carro entero de golpe. Cinco minutos andando.'
   },
   {
@@ -461,7 +461,7 @@ const SUPERS = [
   {
     nombre:'Mercat del Ninot', dir:'Mallorca 133 · Casanova', min:12, m:1011, horario:'L-S mañanas · L-V también tardes',
     tipo:'mercado', destacado:true,
-    para:'Pescadería y frutería de verdad. Puedes pedir 200 g de merluza o dos filetes de salmón, sin bandejas de familia.',
+    para:'Pescadería y frutería de verdad. Puedes pedir una dorada en filetes o dos filetes de salmón, sin bandejas de familia.',
     nota:'Este resuelve tu problema real de que se te caduca la comida: aquí compras la cantidad exacta de una persona, que es justo lo que un súper no te deja hacer. Para el finde va perfecto.'
   },
   {

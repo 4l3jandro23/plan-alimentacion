@@ -300,65 +300,64 @@ const PLATOS = {
   kcal:520, p:40, c:16, f:34
 },
 
-'merluza-horno-ajo': {
-  nombre:'Merluza al horno con ajo',
+'dorada-horno-esparragos': {
+  nombre:'Dorada al horno con espárragos y limón',
   icono:'pescado', tiempo:20, donde:'Horno', tupper:'Regular — mejor comerla el día',
-  porQue:'Pescado blanco: mucha proteína, muy poca grasa y muy fácil de digerir. Es la cena perfecta para los días que entrenas de noche o te acuestas pronto, porque no te deja pesado.',
+  porQue:'Pescado blanco con sabor y la carne firme: no se deshace ni queda aguada. Mucha proteína, poca grasa y la poca que tiene es de la buena (omega 3). Cena ligera que no te deja pesado.',
   ingredientes:[
-    {q:'1-2 lomos', item:'merluza', nota:'Fresca o congelada, da igual'},
-    {q:'1 manojo', item:'espárragos trigueros', nota:'Van en la misma fuente que la merluza'},
+    {q:'2 filetes', item:'dorada', nota:'Una dorada en filetes, con piel. En la pescadería te la limpian y la abren gratis'},
+    {q:'1 manojo', item:'espárragos trigueros', nota:'Van en la misma fuente'},
     {q:'2 dientes', item:'ajo'},
-    {q:'1 puñado', item:'perejil fresco', nota:'O limón, según el día'},
     {q:'1', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva y sal'}
   ],
-  compra:'La merluza congelada en lomos es de las mejores compras que puedes hacer: es barata, no se estropea y sale igual de bien. Ten siempre una bolsa en el congelador.',
+  compra:'Pide en la pescadería «una dorada en filetes» (de ración, unos 400 g entera): salen los dos filetes justos para una cena. En el súper también vienen en bandeja o congelados.',
   pasos:[
-    'Si es congelada, descongélala la noche antes en la nevera. Si se te ha olvidado, bajo el grifo de agua fría dentro de una bolsa cerrada, 20 minutos.',
     'Horno a 200°C.',
-    'Corta el extremo duro de los espárragos (dóblalos y se parten solos por donde toca) y ponlos en la fuente con aceite y sal.',
-    'Haz hueco entre los espárragos y pon los lomos con sal, aceite y el zumo de medio limón.',
-    'Lamina los ajos y repártelos por encima. Si usas perejil, pícalo y échalo también.',
-    '12-15 minutos, según el grosor.',
-    'Está lista cuando la carne pasa de transparente a blanca opaca y se separa en láminas.'
+    'Corta el extremo duro de los espárragos (dóblalos y se parten solos por donde toca) y ponlos en la fuente con aceite y sal. 5 minutos solos en el horno.',
+    'Mientras, seca los filetes con papel de cocina y ponles sal.',
+    'Saca la fuente, haz hueco entre los espárragos y pon los filetes con la piel hacia arriba. Un hilo de aceite y el zumo de medio limón.',
+    'Lamina los ajos y repártelos por encima.',
+    '10-12 minutos, hasta que la carne esté blanca y se separe en láminas.',
+    'Limón por encima al servir.'
   ],
-  trucos:['Para que quede doradita, sube a gratinar los últimos 2 minutos, vigilándola.'],
-  diaMalo:'Merluza al microondas con limón, tapada, 4 minutos. No es gran cosa, pero es cena hecha.',
+  trucos:['Con la piel hacia arriba, la piel se queda crujiente y la carne jugosa. Los últimos 2 minutos a gratinar la dejan como de restaurante.'],
+  diaMalo:'Filetes de dorada al microondas, tapados, con limón y sal: 3-4 minutos. Con unos espárragos de bote y listo.',
   conservar:'1-2 días. El pescado blanco pierde mucho de un día para otro.',
-  ojo:'La merluza se seca muy rápido. En cuanto esté blanca, fuera del horno.',
-  kcal:380, p:38, c:8, f:20
+  ojo:'Si tiene alguna espina, está en la línea del centro del filete: se ve y se quita con los dedos antes de hornear.',
+  kcal:410, p:36, c:8, f:25
 },
 
-'merluza-plancha-limon': {
-  nombre:'Merluza a la plancha con limón',
-  icono:'pescado', tiempo:10, donde:'Sartén', tupper:'Mejor el mismo día',
-  porQue:'Diez minutos, una sartén y ya tienes cena. Es de las opciones más rápidas del menú y de las más ligeras.',
+'dorada-plancha-judias': {
+  nombre:'Dorada a la plancha con judías verdes',
+  icono:'pescado', tiempo:12, donde:'Sartén', tupper:'Mejor el mismo día',
+  porQue:'Diez minutos, una sartén y ya tienes cena. La dorada a la plancha con la piel crujiente es de los pescados que más gustan a quien dice que no le gusta el pescado blanco.',
   ingredientes:[
-    {q:'1-2 lomos', item:'merluza'},
+    {q:'2 filetes', item:'dorada', nota:'Con piel'},
     {q:'200 g', item:'judías verdes', nota:'Congeladas, que ya vienen cortadas'},
     {q:'1', item:'limón'},
     {q:'1 chorro', item:'aceite de oliva y sal'}
   ],
-  compra:'Lomos congelados, ya te sirven.',
+  compra:'Filetes de dorada con piel, frescos o congelados. Las judías, congeladas.',
   pasos:[
     'Primero las judías: en un plato con un chorrito de agua, tapadas, 5 minutos al microondas. Escúrrelas y un poco de aceite y sal.',
-    'Seca bien el pescado con papel de cocina. Es lo que separa una plancha buena de una mala.',
-    'Sartén bien caliente con poco aceite.',
-    'Merluza con sal, 3-4 minutos sin tocarla.',
-    'Vuelta con cuidado, 2-3 minutos.',
-    'Limón por encima al servir.'
+    'Seca muy bien los filetes con papel de cocina, sobre todo la piel. Sal por los dos lados.',
+    'Sartén bien caliente con un poco de aceite.',
+    'Filetes con la piel hacia abajo. Aprieta con la espátula 10 segundos para que no se curven.',
+    '3-4 minutos sin tocarlos, hasta que la carne esté blanca casi hasta arriba.',
+    'Vuelta, 1 minuto más y fuera. Limón por encima al servir.'
   ],
-  trucos:['Secar el pescado antes de la plancha es el truco de cocina más útil de toda esta app: si está húmedo, se cuece en vez de dorarse.'],
+  trucos:['Casi todo se hace por el lado de la piel: por eso queda crujiente por abajo y jugosa por arriba. Si le das muchas vueltas se rompe.'],
   diaMalo:'Es que ya es rapidísima.',
   conservar:'Mejor comerla hecha.',
-  ojo:'Si la sartén no está bien caliente, se pega y se rompe.',
-  kcal:340, p:38, c:4, f:18
+  ojo:'Si la sartén no está bien caliente, la piel se pega. Espera a que el aceite brille antes de ponerla.',
+  kcal:380, p:36, c:6, f:23
 },
 
 'bacalao-horno-ajo': {
   nombre:'Bacalao crujiente al horno con ajo',
   icono:'pescado', tiempo:20, donde:'Horno', tupper:'Regular',
-  porQue:'Pescado blanco con mucha proteína y poca grasa. El bacalao aguanta la cocción mejor que la merluza, así que es más difícil que te salga seco: buena opción mientras coges confianza.',
+  porQue:'Pescado blanco con mucha proteína y poca grasa. El bacalao aguanta bien la cocción, así que es difícil que te salga seco: buena opción mientras coges confianza.',
   ingredientes:[
     {q:'1-2 lomos', item:'bacalao fresco o desalado'},
     {q:'3 dientes', item:'ajo'},
@@ -2088,9 +2087,8 @@ const MENU_A_PLATO = {
   'Bistec de ternera con ensalada de patata':'bistec-ternera-ensalada-patata',
   'Ternera a la plancha con espárragos trigueros y patata':'ternera-plancha-champinones-patata',
   "Comida de equipo: pizza Papa John's, hamburguesa o milanesas del Chalito":'comida-equipo',
-  'Merluza al horno con ajo y limón':'merluza-horno-ajo',
-  'Merluza al horno con ajo y perejil':'merluza-horno-ajo',
-  'Merluza a la plancha con limón':'merluza-plancha-limon',
+  'Dorada al horno con espárragos y limón':'dorada-horno-esparragos',
+  'Dorada a la plancha con judías verdes':'dorada-plancha-judias',
   'Bacalao crujiente al horno con ajo':'bacalao-horno-ajo',
   'Caballa al papillote con pimiento y cebolla al horno':'caballa-papillote',
   'Sardinas al horno con ensalada':'sardinas-horno-ensalada',
@@ -2179,26 +2177,26 @@ const AIRFRYER = {
     ],
     nota:'Lo mismo que al horno, sin precalentar y en la mitad de tiempo.'
   },
-  'merluza-horno-ajo': {
-    tiempo:14,
+  'dorada-horno-esparragos': {
+    tiempo:15,
     pasos:[
-      'Si es congelada, descongélala la noche antes en la nevera, o bajo el grifo de agua fría dentro de una bolsa cerrada.',
-      'Seca los lomos con papel de cocina y ponlos en la cesta sobre un trozo de papel de horno, con sal, aceite y el zumo de medio limón.',
-      'Lamina los ajos y repártelos por encima. Si usas perejil, también.',
-      '10-12 minutos a 190°C.',
-      'Está lista cuando pasa de transparente a blanca y se separa en láminas.'
+      'Los espárragos, sin el extremo duro, con aceite y sal a la cesta: 4 minutos a 190°C.',
+      'Seca los filetes y ponlos encima de los espárragos con la piel hacia arriba, sal, aceite y el zumo de medio limón.',
+      'Lamina los ajos y repártelos por encima.',
+      '8-9 minutos más a 190°C.',
+      'Está cuando la carne se separa en láminas.'
     ],
-    nota:'El papel de horno, siempre con la comida encima: suelto, el aire lo levanta y se pega a la resistencia.'
+    nota:'La piel queda más crujiente que en el horno. Encima de los espárragos no se pega a la cesta.'
   },
-  'merluza-plancha-limon': {
+  'dorada-plancha-judias': {
     tiempo:12,
     pasos:[
-      'Seca bien la merluza con papel de cocina.',
-      'Con sal y un hilo de aceite, en la cesta sobre un trozo de papel de horno.',
-      '8-10 minutos a 190°C, sin darle la vuelta.',
+      'Las judías, 5 minutos al microondas tapadas con un chorrito de agua.',
+      'Seca bien los filetes y ponlos en la cesta sobre un trozo de papel de horno, con la piel hacia arriba, sal y un hilo de aceite.',
+      '8-9 minutos a 190°C, sin darles la vuelta.',
       'Limón por encima al servir.'
     ],
-    nota:'En la sartén la merluza se pega y se rompe si no está muy caliente. Aquí no hay que darle la vuelta.'
+    nota:'Sin vuelta y sin que se pegue: la forma más fácil de que no se rompa.'
   },
   'bacalao-horno-ajo': {
     tiempo:15,
