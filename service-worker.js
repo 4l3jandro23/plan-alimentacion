@@ -1,7 +1,8 @@
-const CACHE_VERSION = 'plan-alimentacion-v59';
+const CACHE_VERSION = 'plan-alimentacion-v60';
 const APP_SHELL = [
   './',
   './index.html',
+  './menu.js',
   './platos.js',
   './rescate.js',
   './manifest.json',
