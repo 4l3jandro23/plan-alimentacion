@@ -480,3 +480,68 @@ const SUPERS = [
    Aldi (Numància 88), Mercadona (Tarragona 177) y Hiper Galicia (pl. Països
    Catalans). Ninguno aporta nada que no tengas más cerca. */
 const SUPERS_TOTAL = 28;
+
+/* ==========================================================================
+   MODO URGENTE: gastar lo mínimo comiendo bien
+   No es rutina: es para la semana que toca apretar. Todo con lo que ya
+   comes (legumbre, huevo, arroz, pasta, atún, patata, pollo), sin nada de
+   lo que no le gusta. Precios medios de súper (marca blanca), aproximados.
+   ========================================================================== */
+const MIN_GASTO = [
+  { nombre:'Garbanzos con tomate y huevo', icono:'legumbre', euros:'1 €', min:15,
+    ing:['Garbanzos cocidos (bote)', 'Cebolla', 'Tomate frito', 'Huevo', 'Aceite y pimentón'],
+    como:'Rehoga media cebolla picada en una sartén con un chorrito de aceite, cinco minutos. Echa tres cucharadas de tomate frito y una pizca de pimentón. Añade los garbanzos escurridos y un vaso de agua, y deja diez minutos. Pon un huevo encima, tapa y cuando cuaje, listo.',
+    porQue:'Legumbre y huevo: proteína, fibra y saciedad por menos de un euro. Es la comida más barata de la lista y de las que mejor te sientan.' },
+  { nombre:'Lentejas con arroz y zanahoria', icono:'legumbre', euros:'1 €', min:20,
+    ing:['Lentejas cocidas (bote)', 'Arroz', 'Zanahoria', 'Cebolla', 'Aceite y pimentón'],
+    como:'Rehoga cebolla y una zanahoria en trocitos. Añade medio vaso de arroz y dos vasos de agua; cuando falten cinco minutos, echa las lentejas escurridas. Un poco de pimentón y sal al final.',
+    porQue:'Legumbre y cereal juntos: proteína completa. Hecho para dos, es también la comida de mañana en el tupper.' },
+  { nombre:'Arroz con tomate, atún y huevo duro', icono:'pescado', euros:'1,50 €', min:20,
+    ing:['Arroz', 'Tomate frito', 'Atún en lata', 'Huevo'],
+    como:'Cuece el arroz (y un huevo en la misma olla, diez minutos). Escurre, mezcla con dos cucharadas de tomate frito y una lata de atún. El huevo duro, troceado encima.',
+    porQue:'Una lata y un huevo dan la proteína de dos raciones. Aguanta bien en el tupper.' },
+  { nombre:'Tortilla de patata y cebolla con tomate', icono:'huevo', euros:'1,30 €', min:30,
+    ing:['Patata', 'Cebolla', 'Huevos', 'Tomate', 'Aceite'],
+    como:'Corta una patata en láminas finas y media cebolla. Cocínalas a fuego suave en la sartén con un poco de aceite, tapadas, hasta que estén blandas (15 minutos). Mézclalas con tres huevos batidos y cuaja por los dos lados. Con un tomate aliñado al lado.',
+    porQue:'Tres ingredientes de despensa y llena. Fría o caliente, vale para la cena y para el tupper.' },
+  { nombre:'Pasta con tomate y atún', icono:'pescado', euros:'1,20 €', min:15,
+    ing:['Pasta', 'Tomate frito', 'Atún en lata', 'Ajo'],
+    como:'Cuece la pasta. Calienta el tomate con un ajo laminado, mezcla la lata de atún escurrida y échalo sobre la pasta.',
+    porQue:'Cuando no hay más que esto, esto es una cena de verdad. Con media lata más de atún, más proteína.' },
+  { nombre:'Crema de zanahoria y patata', icono:'ensalada', euros:'0,70 €', min:25,
+    ing:['Patata', 'Zanahoria', 'Cebolla', 'Huevo', 'Aceite'],
+    como:'Cuece una patata, dos zanahorias y media cebolla troceadas en agua con sal, 20 minutos. Tritura con un poco del caldo y un chorrito de aceite. Con un huevo duro troceado encima.',
+    porQue:'La más barata de todas. El huevo duro la convierte en cena completa.' },
+  { nombre:'Tostadas con huevo y tomate', icono:'huevo', euros:'1 €', min:10,
+    ing:['Pan de molde', 'Huevos', 'Tomate', 'Aceite'],
+    como:'Tuesta dos rebanadas, ralla un tomate encima con un hilo de aceite y sal. Dos huevos a la plancha o revueltos al lado.',
+    porQue:'Diez minutos y sin lavar apenas nada. Para el día que no tienes ganas.' },
+  { nombre:'Avena con plátano y yogur', icono:'desayuno', euros:'0,80 €', min:5,
+    ing:['Avena', 'Plátano', 'Yogur natural'],
+    como:'Cuatro cucharadas de avena con el yogur y medio plátano en rodajas. Si la quieres caliente, avena con leche o agua al microondas dos minutos y el yogur encima.',
+    porQue:'Desayuno o cena ligera por menos de un euro. La avena además ayuda al colesterol.' },
+  { nombre:'Contramuslos de pollo con patatas al horno', icono:'ave', euros:'2 €', min:50,
+    ing:['Contramuslos de pollo', 'Patata', 'Cebolla', 'Aceite, sal y pimentón'],
+    como:'Patata y cebolla en trozos en una bandeja, con los contramuslos encima, sal, pimentón y un chorrito de aceite. Horno a 200 °C, 45 minutos, dándoles la vuelta a mitad. Salen dos o tres raciones.',
+    porQue:'La carne más barata del súper, y con un horno encendido haces dos comidas. Es la única de la lista que lleva carne.' }
+];
+/* Cada cosa lleva su precio aproximado. «extra» = no hace falta para una
+   semana pelada, pero da variedad. */
+const MIN_COMPRA = [
+  { txt:'Garbanzos cocidos (dos botes)', p:1.8, nota:'Marca blanca. Si tienes tiempo, la legumbre seca sale a la mitad.' },
+  { txt:'Lentejas cocidas (dos botes)', p:1.8, nota:'Marca blanca.' },
+  { txt:'Arroz (1 kg)', p:1.2, nota:'Dura meses.' },
+  { txt:'Pasta (1 kg)', p:1, nota:'Dura meses.' },
+  { txt:'Huevos (docena)', p:2.8, nota:'Son la proteína más barata.' },
+  { txt:'Tomate frito', p:0.9, nota:'Marca blanca.' },
+  { txt:'Atún en lata (tres latas)', p:2.7, nota:'Marca blanca, al natural.' },
+  { txt:'Patatas (1,5 kg)', p:2, nota:'Saco, no bandeja.' },
+  { txt:'Cebollas (1 kg)', p:1.3, nota:'' },
+  { txt:'Zanahorias (1 kg)', p:1, nota:'' },
+  { txt:'Avena', p:0.9, nota:'' },
+  { txt:'Pan de molde', p:1.2, nota:'Marca blanca. Al congelador nada más llegar.' },
+  { txt:'Tomate (medio kilo)', p:1.3, nota:'' },
+  { txt:'Contramuslos de pollo (bandeja)', p:3.5, nota:'Los más baratos. Congela la mitad.', extra:true },
+  { txt:'Plátanos', p:1.6, nota:'Si están muy maduros, mejor: suelen estar rebajados.', extra:true },
+  { txt:'Yogur natural (pack)', p:1.2, nota:'Marca blanca.', extra:true }
+];

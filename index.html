@@ -1392,6 +1392,10 @@
       <span class="sos-ico" style="background:linear-gradient(135deg,#a05a7a,#d48db2)"><svg class="ic-v"><use href="#i-antojo"/></svg></span>
       <span><b>Me apetece algo concreto</b><span>Bocata, hamburguesa, pizza, dulce… la versión que puedes hacer en casa ahora mismo</span></span>
     </button>
+    <button class="sos-btn ancho" onclick="abrirMinimo()">
+      <span class="sos-ico" style="background:linear-gradient(135deg,#2f7a5f,#57a686)"><svg class="ic-v"><use href="#i-carrito"/></svg></span>
+      <span><b>Gastar lo mínimo</b><span>Para la semana que toca apretar: comer bien con unos 20 € de compra</span></span>
+    </button>
   </div>
 
   <div id="hoyAvisos"></div>
@@ -3396,6 +3400,67 @@ function verSinCocinar(i, azar){
   );
 }
 
+/* ---- 1b. Modo urgente: gastar lo mínimo --------------------------------
+   No es una rutina ni un plan nuevo: una hoja para la semana en que toca
+   apretar. Comidas de uno o dos euros con lo de siempre, una compra pelada
+   que se puede añadir a la lista, y las reglas que de verdad ahorran. */
+const TIPO_MINIMO = { ico:'carrito', label:'Gastar lo mínimo' };
+function minimoComidas(){
+  return MIN_GASTO.map((c, i) => ({ c: c, i: i })).filter(x => !x.c.ing.some(t => noMeGustaEn(t).length));
+}
+function minimoCompra(conExtras){
+  return MIN_COMPRA.filter(x => (conExtras || !x.extra) && !noMeGustaEn(x.txt).length);
+}
+function minimoTotal(items){ return items.reduce((s, x) => s + x.p, 0); }
+function abrirMinimo(){
+  const comidas = minimoComidas().map(x =>
+    '<button class="opt" onclick="verMinimo(' + x.i + ')">' +
+      '<span class="opt-ico" style="background:' + degradado(x.c.icono) + '">' + ico(x.c.icono) + '</span>' +
+      '<span class="opt-txt"><b>' + esc(x.c.nombre) + '</b><span>' + esc(x.c.ing.slice(0, 3).join(' · ')) + '</span></span>' +
+      '<span class="opt-min">' + esc(x.c.euros) + '</span>' +
+    '</button>').join('');
+  const base = minimoTotal(minimoCompra(false)), todo = minimoTotal(minimoCompra(true));
+  abrirSheet(TIPO_MINIMO, 'Gastar lo mínimo',
+    'Esto no es rutina: es por si un día no quieres gastar. Comes bien igualmente, y cuenta como seguir el plan.',
+    '<div class="ficha-h">' + ico('check') + 'Antes de comprar nada</div>' +
+    '<p style="font-size:var(--t-base); line-height:1.6; margin:0 0 16px;">Mira la nevera, el congelador y «Lo fresco que tienes». Lo más barato es lo que ya está en casa: hoy cocina eso primero.</p>' +
+    '<div class="ficha-h">' + ico('sarten') + 'Comidas de uno o dos euros</div>' + comidas +
+    '<p style="font-size:var(--t-sm); color:var(--muted); margin:6px 0 18px;">Elige dos o tres y repítelas. Repetir es lo que más baja el gasto, y no tiene nada de malo.</p>' +
+    '<div class="ficha-h">' + ico('carrito') + 'La compra pelada</div>' +
+    '<p style="font-size:var(--t-base); line-height:1.6; margin:0 0 10px;">Con esto sales de un súper de marca blanca por unos <b>' + euros(base) + '</b>, y más de la mitad es despensa que dura semanas. Con pollo, plátanos y yogur, unos <b>' + euros(todo) + '</b>.</p>' +
+    '<button class="ficha-cta" onclick="addMinimo(false)">' + ico('mas') + '<span>Añadir la compra pelada a la lista</span></button>' +
+    '<button class="btn-mini" onclick="addMinimo(true)" style="margin:2px 0 18px;">' + ico('mas') + ' Con pollo, plátanos y yogur</button>' +
+    '<div class="ficha-h">' + ico('bombilla') + 'Lo que más ahorra</div>' +
+    '<ul class="lista-si">' + [
+      'Marca blanca en todo: legumbre, tomate frito, atún, pan, yogur.',
+      'Legumbre seca si tienes tiempo: sale a la mitad que el bote.',
+      'Cocina para dos y deja un tupper: la comida de mañana ya está hecha.',
+      'Patatas y cebollas en saco, fruta suelta, nada de bandejas ni precocinados.',
+      'Lo rebajado por caducidad, si lo vas a cocinar hoy o lo puedes congelar.',
+      'Agua del grifo: las bebidas y el café de fuera son lo que más se escapa sin notarlo.'
+    ].map(t => '<li>' + ico('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul>' +
+    '<div class="veredicto">Una semana así no es pasar hambre ni hacerlo mal: son las comidas más baratas de todo el plan y las que más legumbre y huevo llevan. Cuando se pase el apretón, vuelves al menú normal y ya está.</div>'
+  );
+}
+function verMinimo(i){
+  const c = MIN_GASTO[i];
+  if(!c) return;
+  abrirSheet(TIPO_MINIMO, esc(c.nombre), 'Unos ' + esc(c.euros) + ' por ración · ' + c.min + ' minutos.',
+    '<div class="ficha-hero" style="background:' + degradado(c.icono) + '">' + ico(c.icono) + '</div>' +
+    '<div class="ficha-h">' + ico('lista') + 'Lo que necesitas</div>' +
+    '<ul class="lista-si">' + c.ing.map(t => '<li>' + ico('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul>' +
+    '<div class="ficha-h" style="margin-top:20px;">' + ico('sarten') + 'Cómo</div>' +
+    '<p style="font-size:var(--t-base); line-height:1.6; margin:0 0 16px;">' + esc(c.como) + '</p>' +
+    '<div class="ficha-nota tip"><b>Por qué vale</b>' + esc(c.porQue) + '</div>' +
+    '<button class="btn-mini" onclick="volverSheet()" style="margin-top:6px;">' + ico('flecha') + ' Ver otras comidas</button>',
+    true
+  );
+}
+function addMinimo(conExtras){
+  const n = addItems(minimoCompra(conExtras).map(x => ({ txt: x.txt, nota: x.nota })), 'L:minimo');
+  toast(n ? 'Añadidas ' + n + ' cosas a la lista' : 'Ya estaba todo en la lista');
+}
+
 /* ---- 2. Comer fuera --------------------------------------------------- */
 function abrirFuera(){
   const NIVEL_TXT = { bien:'Buena opción', ok:'Se puede', cuidado:'Con cabeza' };
@@ -3946,6 +4011,11 @@ function renderAtajos(){
       accion:'addLista(\'despensa\')', ico:'tupper', grad:'legumbre',
       titulo:'La despensa base',
       desc:'Lo que siempre debería haber en casa. Se compra una vez y dura semanas.'
+    },
+    {
+      accion:'abrirMinimo()', ico:'carrito', grad:'ensalada',
+      titulo:'Modo urgente: gastar lo mínimo',
+      desc:'Para la semana que toca apretar: comidas de 1-2 € y la compra pelada.'
     },
     {
       accion:'addRescate()', ico:'rayo', grad:'capricho',
@@ -6318,9 +6388,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-10-11'; }
+function novedadesId(){ return '2026-10-12'; }
 function novedadesFechadas(){
   return [
+    { id:'2026-10-12', t:'<b>Gastar lo mínimo:</b> botón nuevo en Hoy (y en Compra) para la semana que toca apretar. Nueve comidas de 1-2 €, una compra pelada de unos 20 € que se añade a la lista y las reglas que más ahorran. No es rutina: solo si lo necesitas.' },
     { id:'2026-10-11', t:'<b>Consejos para días flojos:</b> resaca, poco sueño, sin hambre o con agujetas. Un tema nuevo en Inicio y entre los consejos de Hoy.' },
     { id:'2026-09-29', t:'<b>Adiós a la merluza:</b> las tres cenas que la llevaban ahora son de <b>dorada</b> (al horno con espárragos, o a la plancha con judías verdes). Pescado blanco igual de ligero, con más sabor y la carne firme. Y la merluza está en «No me gusta».' },
     { id:'2026-09-27c', t:'<b>Tuppers de la semana:</b> si uno aguanta 3 días (como el calamar encebollado), te dice que lo dejes hecho el domingo, igual que el menú.' },
