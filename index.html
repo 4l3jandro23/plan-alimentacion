@@ -9,7 +9,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Alimentación">
-<meta name="theme-color" content="#eff1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#f3f4f0" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0d1210" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Plan de alimentación personalizado de 4 semanas, con menú, macros, recetas y lista de la compra.">
 <link rel="manifest" href="manifest.json">
@@ -1062,7 +1062,6 @@
   .semana-dia .dia-estado .ic-v{width:17px; height:17px; color:var(--accent); flex-shrink:0;}
   .semana-dia .dia-estado i{font-style:normal; color:var(--muted); font-size:var(--t-xs);}
 </style>
-<link rel="stylesheet" href="diseno.css">
 </head>
 <body>
 <!-- ==================== ICONOS ====================
@@ -1269,6 +1268,7 @@
   .cab-barata{margin-top:8px;}
   .nmg-chip{background:var(--accent-soft); color:var(--accent); border:none; border-radius:999px; padding:6px 12px; font-family:inherit; font-size:var(--t-sm); font-weight:600; cursor:pointer;}
 </style>
+<link rel="stylesheet" href="diseno.css">
 <div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this) closeSettings()">
   <div class="settings-panel">
     <h3>⚙️ Ajustes</h3>
@@ -6390,9 +6390,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-10-30'; }
+function novedadesId(){ return '2026-11-01'; }
 function novedadesFechadas(){
   return [
+    { id:'2026-11-01', t:'<b>Diseño más sobrio:</b> el color se queda solo para los datos. Todo lo demás es papel y tinta, con el botón principal casi negro, los iconos sueltos y las cifras como texto. Las etiquetas ya no van en mayúsculas pequeñas.' },
     { id:'2026-10-30', t:'<b>Nuevo diseño:</b> más limpio y plano, con titulares en otra letra y el verde como único color de acción. Los iconos ya no son un arcoíris: el color solo queda en las recetas, para distinguir carne, pescado, legumbre…' },
     { id:'2026-10-12', t:'<b>Gastar lo mínimo:</b> botón nuevo en Hoy (y en Compra) para la semana que toca apretar. Nueve comidas de 1-2 €, una compra pelada de unos 20 € que se añade a la lista y las reglas que más ahorran. No es rutina: solo si lo necesitas.' },
     { id:'2026-10-11', t:'<b>Consejos para días flojos:</b> resaca, poco sueño, sin hambre o con agujetas. Un tema nuevo en Inicio y entre los consejos de Hoy.' },
