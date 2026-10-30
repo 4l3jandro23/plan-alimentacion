@@ -9,7 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Alimentación">
-<meta name="theme-color" content="#2f7a5f">
+<meta name="theme-color" content="#eff1ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1210" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Plan de alimentación personalizado de 4 semanas, con menú, macros, recetas y lista de la compra.">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -1061,6 +1062,7 @@
   .semana-dia .dia-estado .ic-v{width:17px; height:17px; color:var(--accent); flex-shrink:0;}
   .semana-dia .dia-estado i{font-style:normal; color:var(--muted); font-size:var(--t-xs);}
 </style>
+<link rel="stylesheet" href="diseno.css">
 </head>
 <body>
 <!-- ==================== ICONOS ====================
@@ -1278,7 +1280,7 @@
       <div class="settings-row">
         <div>Color</div>
         <div class="swatches" id="colorSwatches">
-          <button class="swatch" data-color="" style="background:#2f7a5f;" onclick="setColor('')" aria-label="Verde"></button>
+          <button class="swatch" data-color="" style="background:#1f6b4f;" onclick="setColor('')" aria-label="Verde"></button>
           <button class="swatch" data-color="azul" style="background:#2b6cb0;" onclick="setColor('azul')" aria-label="Azul"></button>
           <button class="swatch" data-color="morado" style="background:#6b46c1;" onclick="setColor('morado')" aria-label="Morado"></button>
           <button class="swatch" data-color="naranja" style="background:#c2660a;" onclick="setColor('naranja')" aria-label="Naranja"></button>
@@ -3533,7 +3535,7 @@ function verAntojo(i){
 
 function degradado(icono){
   const c = ICONO_COLOR[icono] || ICONO_COLOR.libre;
-  return 'linear-gradient(140deg,' + c[0] + ',' + c[1] + ')';
+  return c[0];
 }
 
 /* ==================== ¿QUÉ TOCA AHORA? ====================
@@ -6388,9 +6390,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-10-12'; }
+function novedadesId(){ return '2026-10-30'; }
 function novedadesFechadas(){
   return [
+    { id:'2026-10-30', t:'<b>Nuevo diseño:</b> más limpio y plano, con titulares en otra letra y el verde como único color de acción. Los iconos ya no son un arcoíris: el color solo queda en las recetas, para distinguir carne, pescado, legumbre…' },
     { id:'2026-10-12', t:'<b>Gastar lo mínimo:</b> botón nuevo en Hoy (y en Compra) para la semana que toca apretar. Nueve comidas de 1-2 €, una compra pelada de unos 20 € que se añade a la lista y las reglas que más ahorran. No es rutina: solo si lo necesitas.' },
     { id:'2026-10-11', t:'<b>Consejos para días flojos:</b> resaca, poco sueño, sin hambre o con agujetas. Un tema nuevo en Inicio y entre los consejos de Hoy.' },
     { id:'2026-09-29', t:'<b>Adiós a la merluza:</b> las tres cenas que la llevaban ahora son de <b>dorada</b> (al horno con espárragos, o a la plancha con judías verdes). Pescado blanco igual de ligero, con más sabor y la carne firme. Y la merluza está en «No me gusta».' },

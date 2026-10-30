@@ -1,0 +1,238 @@
+/* Alimentación: gris verdoso de mercado, acento verde pino */
+:root{
+  --bg:#eff1ec; --bg2:#eff1ec; --ink:#171b16; --muted:#585f55;
+  --accent:#1f6b4f; --accent2:#2f8f6b; --accent-soft:#e1efe7;
+  --protein:#1f6b4f; --carbs:#b9791d; --fat:#a33333; --barbg:#e2e6df;
+  --warn:#9a4a0c; --warn-soft:#fbeadb;
+  --border:rgba(23,27,22,.10);
+}
+html.dark{
+  --bg:#0d1210; --bg2:#0d1210; --card:#151b18; --ink:#e9eeea; --muted:#97a19b;
+  --accent:#6fdcae; --accent2:#3f9975; --accent-soft:#16302a;
+  --protein:#6fdcae; --carbs:#e0b25a; --fat:#e07a7a; --barbg:#212a26;
+  --warn:#e0955a; --warn-soft:#33261a;
+  --border:rgba(255,255,255,.09);
+}
+
+/* ==========================================================================
+   DISEÑO — papel y tinta
+   --------------------------------------------------------------------------
+   Capa de diseño que va DESPUÉS del CSS de la app y la pisa. Misma regla que
+   antes sobre qué se ve de pie en un gimnasio con luz mala: contraste alto,
+   nada translúcido, un solo color de acción.
+
+   Lo que dice este sistema:
+   · Superficies planas: papel (fondo), tarjeta blanca con un filo de 1 px. Sin
+     vidrio, sin degradados, sin sombras de adorno.
+   · El color es información, no decoración. Acento = lo que se toca.
+     Dorado = un logro (subir peso, mejor marca). Gris = nada que contar.
+   · Un solo titular grande por pantalla (el bloque de color de Hoy); lo demás
+     es silencioso.
+   · Titulares en Bricolage Grotesque, texto en la fuente del sistema, datos en
+     mono.
+   ========================================================================== */
+@font-face{font-family:'Bricolage Grotesque'; font-style:normal; font-weight:500 800; font-display:swap; src:url(fonts/bricolage-grotesque.woff2) format('woff2');}
+
+:root{
+  --on-accent:#fff;
+  --font-display:'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
+  --t-xs:.78rem; --t-sm:.875rem; --t-base:.97rem; --t-md:1.08rem; --t-lg:1.3rem; --t-xl:1.6rem; --t-2xl:2.05rem;
+
+  --card:#ffffff;
+  --glass:var(--card); --glass-2:var(--card); --glass-3:var(--card);
+  --glass-brd:var(--border); --glass-hl:transparent; --pane:var(--card);
+  --blur:none; --blur-sm:none;
+
+  --sh-1:none;
+  --sh-2:0 1px 2px rgba(16,20,26,.06);
+  --sh-3:0 -8px 32px rgba(16,20,26,.16);
+  --shadow:none;
+
+  --r-xs:6px; --r-sm:10px; --r-md:14px; --r-lg:18px; --r-xl:22px; --radius:14px; --radius-lg:18px;
+
+  --gold:#f2b705; --gold-soft:#fff4cc; --gold-ink:#5c4300;
+}
+html.dark{
+  --on-accent:#0b0d12;
+  --glass:var(--card); --glass-2:var(--card); --glass-3:var(--card);
+  --glass-brd:var(--border); --glass-hl:transparent; --pane:var(--card);
+  --sh-2:none; --sh-3:0 -8px 32px rgba(0,0,0,.5);
+  --gold:#ffd23f; --gold-soft:#2f2808; --gold-ink:#ffe27a;
+}
+
+/* ---- Base ---- */
+body{ -webkit-font-smoothing:antialiased; font-feature-settings:"kern","liga"; line-height:1.55; }
+body::before, html.dark body::before{ display:none; }
+h1,h2,h3,.sheet-h,.ses-nombre,.hoy-que,.ses-fin h3,.settings-panel h3,.escape-card h4,.sust-zona,.dec-top b,details summary{
+  font-family:var(--font-display); font-weight:700; letter-spacing:-.022em;
+}
+h2{ font-size:var(--t-xl); margin:30px 0 12px; line-height:1.1; }
+h3{ font-size:var(--t-md); font-weight:650; letter-spacing:-.015em; }
+.h2-badge{ width:32px; height:32px; border-radius:var(--r-sm); background:var(--accent-soft); color:var(--accent); box-shadow:none; }
+.lead{ line-height:1.5; }
+th{ font-family:var(--font-display); font-weight:650; }
+
+/* ---- Cabecera: papel, no una banda de color ---- */
+header{
+  background:var(--bg); color:var(--ink); border-bottom:1px solid var(--border);
+  padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+}
+header h1{ font-size:1.32rem; font-weight:700; letter-spacing:-.03em; display:flex; align-items:center; gap:9px; }
+header h1 .ic-v{ color:var(--accent); width:1.15em; height:1.15em; }
+header p{ opacity:1; color:var(--muted); font-size:var(--t-xs); }
+.headbtns button{
+  background:var(--card); border:1px solid var(--border); color:var(--ink);
+  -webkit-backdrop-filter:none; backdrop-filter:none; width:40px; height:40px;
+}
+.headbtns button:focus-visible{ outline-color:var(--accent); }
+
+/* ---- Barra inferior: filo arriba, marca sobre el icono activo ---- */
+.bottomnav{
+  background:var(--bg); -webkit-backdrop-filter:none; backdrop-filter:none;
+  border-top:1px solid var(--border); box-shadow:none; gap:0; padding-top:6px;
+}
+.bottomnav button{ border-radius:0; font-weight:600; letter-spacing:.005em; }
+.bottomnav button.active{ color:var(--ink); }
+.bottomnav button.active::before{
+  inset:auto; top:-7px; left:50%; width:26px; height:3px; margin-left:-13px;
+  border-radius:0 0 3px 3px; background:var(--accent); z-index:0;
+}
+.bottomnav button.active .ic-v{ color:var(--accent); }
+
+/* ---- Superficies ---- */
+.card, .pane, .glass, .stat, details, .opt, .sos-btn, .aforo, .ses-peso, .ses-alt, .dec, .franja, .sust, .anim-caja{
+  background:var(--card); box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; border-color:var(--border);
+}
+.card{ border-radius:var(--r-lg); padding:16px; }
+details{ border-radius:var(--r-lg); }
+details summary{ font-size:var(--t-md); font-weight:650; }
+.tip, .warn, .quiet, .ses-recuerda, .dec-hacer{
+  border-radius:var(--r-sm); border:none; border-left:3px solid var(--accent);
+}
+.tip, .ses-recuerda{ background:var(--accent-soft); }
+.warn{ border-left-color:var(--warn); }
+.quiet{ border-left-color:var(--neutral-ink, var(--muted)); background:var(--card); border:1px solid var(--border); border-left:3px solid var(--neutral-ink, var(--muted)); }
+
+/* ---- Botones ---- */
+.btn-main, .sheet-cta, .ficha-cta{
+  background:var(--accent); color:#fff; border:none; border-radius:var(--r-md); box-shadow:none;
+  padding:16px 14px; font-weight:700; letter-spacing:-.005em;
+}
+.btn-main:active, .sheet-cta:active{ filter:brightness(.9); box-shadow:none; }
+.btn-second{
+  background:var(--card); border:1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+  border-radius:var(--r-md); box-shadow:none; padding:14px; font-weight:650;
+}
+.btn-escape{ border-radius:var(--r-md); }
+.btn-mini{ border-radius:var(--r-sm); }
+.btn-mini.solid{ background:var(--accent); box-shadow:none; }
+.style-opt.active{ background:var(--accent); }
+.pill, .nivel{ border-radius:var(--r-xs); font-weight:650; }
+
+/* ---- Filas de opciones: icono plano, sin arcoíris ---- */
+.sos-row{ gap:8px; }
+.sos-btn{ border-radius:var(--r-md); padding:12px; gap:11px; }
+.sos-btn .sos-ico, .opt-ico, .dec-ico, .hoy-ahora-ico{
+  background:var(--accent-soft) !important; color:var(--accent) !important; border-radius:var(--r-sm);
+  box-shadow:none;
+}
+.sos-btn b, .opt-txt b{ font-weight:650; letter-spacing:-.005em; }
+.opt{ border-radius:var(--r-md); }
+.opt:active, .sos-btn:active{ border-color:var(--accent); }
+.opt-min{ border-radius:var(--r-xs); background:var(--accent-soft); color:var(--accent); }
+.aforo{ border-radius:var(--r-md); }
+
+/* ---- El bloque de color de Hoy: lo único grande ---- */
+.hoy-hero{
+  background:var(--cab); color:#fff; border:none; box-shadow:none;
+  border-radius:var(--r-xl); padding:22px 20px 20px;
+}
+.hoy-hero::after{ display:none; }
+.hoy-fecha{ opacity:.78; letter-spacing:.09em; font-size:.7rem; font-weight:650; }
+.hoy-que{ font-size:2.05rem; line-height:1.04; letter-spacing:-.035em; margin:8px 0 8px; font-weight:750; }
+.hoy-sub{ font-size:var(--t-base); opacity:.9; max-width:30ch; line-height:1.4; }
+.hoy-hecho{
+  background:rgba(255,255,255,.14); border:none; -webkit-backdrop-filter:none; backdrop-filter:none;
+  border-radius:var(--r-md);
+}
+.hoy-subidas{
+  background:var(--gold-soft); color:var(--ink); border:1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius:var(--r-md);
+}
+.hoy-subidas > b{ color:var(--gold-ink); }
+.hoy-subidas > b::before{
+  content:""; display:inline-block; width:9px; height:9px; margin-right:8px; border-radius:2px;
+  background:var(--gold); transform:translateY(-1px);
+}
+
+/* ---- Cifras ---- */
+.statgrid{ gap:8px; }
+.stat{ border-radius:var(--r-md); padding:16px 8px; }
+.stat b{ font-family:var(--font-display); font-weight:750; letter-spacing:-.04em; font-size:2.1rem; line-height:1; margin-bottom:6px; }
+.stat span{ line-height:1.25; }
+
+/* ---- Hojas (sheets) y ajustes ---- */
+.sheet-back{ background:rgba(10,12,16,.52); -webkit-backdrop-filter:none; backdrop-filter:none; }
+.sheet, .settings-panel{
+  background:var(--card); -webkit-backdrop-filter:none; backdrop-filter:none; border:none;
+  border-radius:var(--r-xl) var(--r-xl) 0 0; box-shadow:var(--sh-3);
+}
+.sheet-h{ font-size:var(--t-xl); }
+.settings-panel h3{ font-size:var(--t-xl); }
+.settings-row > .lbl, .settings-row > div:first-child{ letter-spacing:.06em; }
+.style-opt, .daypicker button, .swatch{ border-radius:var(--r-sm); }
+.swatch{ border-radius:50%; }
+
+/* ---- Formularios ---- */
+input[type=text], input[type=number], input[type=search], input[type=time], select, textarea{
+  border-radius:var(--r-sm);
+}
+input:focus, select:focus, textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
+
+/* ---- Sesión guiada: opaca, sin ornamento ---- */
+.sesion, .estira{ background:var(--bg); }
+.ses-nombre{ font-size:2.1rem; line-height:1.05; letter-spacing:-.035em; font-weight:750; }
+.ses-alias{ color:var(--muted); }
+.ses-peso{ border-radius:var(--r-md); }
+.ses-peso-ctrl button{ background:var(--card); }
+.ses-peso-ctrl input{ background:var(--card); font-size:var(--t-lg); width:76px; }
+.ses-serie{ border-radius:var(--r-sm); background:var(--card); padding:13px 4px; }
+.ses-serie.hecha{ background:var(--accent); border-color:var(--accent); color:#fff; }
+.ses-serie.actual{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+.ses-foot .btn-main{ min-height:56px; font-size:var(--t-md); }
+.ses-sensacion-ops button{ border-radius:var(--r-sm); }
+.ses-sugerencia{ border-radius:var(--r-sm); }
+.ses-barra i{ background:var(--accent); }
+.ring{ filter:none; }
+.ring circle{ stroke-width:9; }
+.ring-txt{ font-weight:700; letter-spacing:-.03em; }
+.btn-timer{ border-radius:var(--r-md); background:var(--card); font-weight:650; }
+.ses-resumen div, .entrenos-total div, .fase{ border-radius:var(--r-md); }
+.ses-resumen b, .entrenos-total b{ font-family:var(--font-display); font-weight:750; letter-spacing:-.03em; }
+.ses-fin .emo{ border-radius:var(--r-lg); background:var(--accent) !important; box-shadow:none; }
+.cinta-num b{ font-family:var(--font-display); font-weight:750; letter-spacing:-.04em; }
+
+/* ---- Movimiento: quieto salvo lo que informa ---- */
+.tabpanel.active{ animation:fade .22s var(--ease); }
+@media (prefers-reduced-motion: reduce){ .tabpanel.active{ animation:none; } }
+
+/* ---- Texto sobre el color de acción: blanco en claro, tinta en oscuro ---- */
+.btn-main, .sheet-cta, .ficha-cta, .btn-mini.solid, .style-opt.active, .daypicker button.fijo, .daypicker button.cinta,
+.ses-serie.hecha, .ses-sensacion-ops button.on, .cal-dias button.on, .sync-btn.principal, .nmg-add button{ color:var(--on-accent); }
+.daypicker button.fijo{ background:var(--accent); }
+.daypicker button.cinta{ background:color-mix(in srgb, var(--accent) 62%, var(--card)); }
+.ses-sensacion-ops button.on, .cal-dias button.on{ background:var(--accent); border-color:var(--accent); }
+
+/* ---- Alimentación: lo que toca ahora, dentro del bloque de Hoy ---- */
+.hoy-ciclo{ opacity:.8; font-size:var(--t-sm); margin:4px 0 0; }
+.hoy-ahora{
+  background:rgba(255,255,255,.14); border:none; border-radius:var(--r-md); box-shadow:none;
+  -webkit-backdrop-filter:none; backdrop-filter:none; color:#fff;
+}
+.hoy-ahora-ico{ background:rgba(255,255,255,.18) !important; color:#fff !important; }
+.hoy-ahora-momento{ letter-spacing:.09em; opacity:.8; font-weight:650; }
+.hoy-ahora-plato{ font-family:var(--font-display); font-weight:700; letter-spacing:-.02em; font-size:1.2rem; }
+.daycard{ border-radius:var(--r-md); background:var(--card); box-shadow:none; }
+.daycard.es-hoy{ box-shadow:inset 0 0 0 1.5px var(--accent); }
+.dayname{ font-family:var(--font-display); font-weight:700; letter-spacing:-.02em; }
