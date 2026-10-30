@@ -269,3 +269,16 @@ main{ padding-left:16px; padding-right:16px; }
 .consejo-h{ text-transform:none; letter-spacing:0; font-size:var(--t-xs); font-weight:600; }
 .bottomnav{ padding-left:12px; padding-right:12px; }
 .btn-mini:not(.solid){ background:var(--card); border:1px solid var(--control); color:var(--ink); }
+
+/* ---- Calidez: el bloque de Hoy vuelve a llevar el color de tu tema, plano ----
+   Una app de comida tiene que apetecer. Es el único bloque de color de la app. */
+.hoy-hero{ background:var(--accent); color:#fff; border:none; }
+html.dark .hoy-hero{ background:color-mix(in srgb, var(--accent) 52%, #000); }
+.hoy-hero .hoy-fecha, .hoy-hero .hoy-ciclo{ color:rgba(255,255,255,.84); }
+.hoy-hero .hoy-que{ color:#fff; }
+.hoy-hero .hoy-sub{ color:rgba(255,255,255,.92); }
+.hoy-ahora{ background:rgba(255,255,255,.16); border:none; color:#fff; }
+.hoy-ahora-momento{ color:rgba(255,255,255,.84); }
+.hoy-ahora-plato, .hoy-ahora .flecha, .hoy-ahora .flecha .ic-v{ color:#fff; }
+.hoy-ahora-ico{ color:#fff !important; }
+.hoy-cocinar{ background:#fff; color:#12161b; }
