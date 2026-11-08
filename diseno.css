@@ -1,35 +1,33 @@
-/* Alimentación: gris verdoso de mercado, acento verde pino */
+/* Alimentación: blanco de mercado con un punto de menta, acento verde fresco */
 :root{
-  --bg:#f3f4f0; --bg2:#f3f4f0; --ink:#171b16; --muted:#585f55;
-  --accent:#1f6b4f; --accent2:#2f8f6b; --accent-soft:#e1efe7;
-  --protein:#1f6b4f; --carbs:#b9791d; --fat:#a33333; --barbg:#e2e6df;
-  --warn:#9a4a0c; --warn-soft:#fbeadb;
-  --border:#e4e7e1;
+  --bg:#eef5f0; --bg2:#eef5f0; --ink:#10201a; --muted:#55655d;
+  --accent:#17895f; --accent2:#17895f; --accent-soft:#dff3e8;
+  --protein:#17895f; --carbs:#c27a12; --fat:#b23a3a; --barbg:#dde8e1;
+  --warn:#b45309; --warn-soft:#ffecd5;
+  --border:#e1ebe5;
 }
 html.dark{
-  --bg:#0d1210; --bg2:#0d1210; --card:#151b18; --ink:#e9eeea; --muted:#97a19b;
-  --accent:#6fdcae; --accent2:#3f9975; --accent-soft:#16302a;
-  --protein:#6fdcae; --carbs:#e0b25a; --fat:#e07a7a; --barbg:#212a26;
-  --warn:#e0955a; --warn-soft:#33261a;
-  --border:#272d29;
+  --bg:#09110e; --bg2:#09110e; --card:#131c18; --ink:#eaf2ed; --muted:#97a69e;
+  --accent:#5fd9a4; --accent2:#5fd9a4; --accent-soft:#143027;
+  --protein:#5fd9a4; --carbs:#e0b25a; --fat:#e07a7a; --barbg:#1f2b25;
+  --warn:#f0a060; --warn-soft:#37271a;
+  --border:#22302a;
 }
 
 /* ==========================================================================
-   DISEÑO — libro de cuentas
+   DISEÑO 3 — color con intención
    --------------------------------------------------------------------------
-   Capa de diseño que va DESPUÉS del CSS de la app y la pisa. Está hecha con las
-   reglas de pantallas de trabajo (design-taste-frontend, app-screens):
+   Capa de diseño que va DESPUÉS del CSS de la app y la pisa.
 
-   · El color va en los datos, no en el marco. Todo el marco es papel, tinta y
-     gris; el único tono vivo (el acento que eliges en Ajustes) se queda para la
-     semana dibujada, las barras de datos y las marcas pequeñas.
-   · Superficies planas: un filo de 1 px o un escalón de tono, nunca vidrio, ni
-     degradados, ni sombras en reposo. Los iconos van sueltos, sin caja.
-   · La acción principal es casi negra. Una por pantalla.
-   · Las cifras son texto (tabulares), no fichas. Títulos con letra propia
-     (Bricolage Grotesque); el resto, la letra del sistema.
-   · Etiquetas en minúscula y a un tamaño que se lee; nada en mayúsculas
-     espaciadas, nada en monoespaciada salvo código.
+   La idea: pantallas con carácter, no un kit gris.
+   · Un bloque de color grande y con dibujo propio abre cada pantalla (en
+     ejercicio, el disco de una pesa; en alimentación, el plato partido en
+     cuartos, que es el método de la app). Todo lo demás descansa sobre papel.
+   · Tarjetas blancas de esquinas generosas y sombra suave, sin filos.
+   · Titulares gruesos y apretados (Bricolage Grotesque); cifras grandes.
+   · La barra de abajo flota: un píldora con la pestaña activa rellena.
+   · Los iconos van en fichas de color, cada una con su tono.
+   Sigue siendo opaco y rápido: nada de desenfoque.
    ========================================================================== */
 @font-face{font-family:'Bricolage Grotesque'; font-style:normal; font-weight:500 800; font-display:swap; src:url(fonts/bricolage-grotesque.woff2) format('woff2');}
 
@@ -37,165 +35,177 @@ html.dark{
   --font-display:'Bricolage Grotesque','Avenir Next',system-ui,sans-serif;
   --font-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;
   --font-mono:var(--font-body);
-  --t-2xs:.72rem; --t-xs:.78rem; --t-sm:.875rem; --t-base:.97rem; --t-md:1.08rem; --t-lg:1.25rem; --t-xl:1.5rem; --t-2xl:1.75rem; --t-3xl:2.6rem;
+  --t-2xs:.74rem; --t-xs:.8rem; --t-sm:.9rem; --t-base:1rem; --t-md:1.12rem; --t-lg:1.32rem; --t-xl:1.7rem; --t-2xl:2.2rem; --t-3xl:2.6rem;
 
-  --card:#ffffff; --raised:#f7f8f9; --active:#ececee; --control:#d1d5db; --faint:#6b6b6b;
-  --primary:#1d1f20; --on-primary:#ffffff; --on-accent:#ffffff;
+  --card:#ffffff; --raised:#f6f7fb; --active:#eceef6; --control:#d6d9e6; --faint:#6b7088;
+  --primary:var(--ink); --on-primary:#ffffff; --on-accent:#ffffff;
   --glass:var(--card); --glass-2:var(--card); --glass-3:var(--card);
-  --glass-brd:var(--border); --glass-hl:transparent; --pane:var(--card);
+  --glass-brd:transparent; --glass-hl:transparent; --pane:var(--card);
   --blur:none; --blur-sm:none;
 
-  --sh-1:none; --sh-2:none;
-  --sh-3:0 -8px 32px rgba(16,20,26,.16);
-  --shadow:none;
+  --sh-1:0 1px 2px rgba(20,24,48,.05), 0 6px 18px rgba(20,24,48,.06);
+  --sh-2:0 2px 4px rgba(20,24,48,.06), 0 14px 34px rgba(20,24,48,.12);
+  --sh-3:0 -10px 40px rgba(20,24,48,.22);
+  --shadow:var(--sh-1);
 
-  --r-xs:4px; --r-sm:6px; --r-md:8px; --r-lg:8px; --r-xl:12px; --radius:8px; --radius-lg:8px;
+  --r-xs:8px; --r-sm:12px; --r-md:18px; --r-lg:22px; --r-xl:28px; --radius:18px; --radius-lg:22px;
 
-  --gold:#f2b705; --gold-soft:#fff6d6; --gold-ink:#5c4300;
+  /* Paleta de apoyo: cada ficha de icono toma uno */
+  --c1:#2b4dff; --c1s:#e4e9ff;
+  --c2:#12a150; --c2s:#dcf5e7;
+  --c3:#f2a900; --c3s:#fff1c7;
+  --c4:#f0543c; --c4s:#ffe3dd;
+  --gold:#f2b705; --gold-soft:#fff3cf; --gold-ink:#6a4a00;
 }
 html.dark{
-  --card:#16191e; --raised:#1b1f25; --active:#252a31; --control:#444a52; --faint:#949ba3;
-  --primary:#f2f3f5; --on-primary:#0b0d12; --on-accent:#0b0d12;
-  --glass:var(--card); --glass-2:var(--card); --glass-3:var(--card);
-  --glass-brd:var(--border); --glass-hl:transparent; --pane:var(--card);
-  --sh-2:none; --sh-3:0 -8px 32px rgba(0,0,0,.5);
+  --card:#171b27; --raised:#1d2231; --active:#262c3d; --control:#3a4156; --faint:#9aa1b8;
+  --primary:#f4f5f9; --on-primary:#0b0d14; --on-accent:#0b0d14;
+  --glass:var(--card); --glass-2:var(--card); --glass-3:var(--card); --pane:var(--card);
+  --sh-1:0 1px 2px rgba(0,0,0,.3), 0 6px 18px rgba(0,0,0,.25);
+  --sh-2:0 2px 4px rgba(0,0,0,.35), 0 14px 34px rgba(0,0,0,.4);
+  --sh-3:0 -10px 40px rgba(0,0,0,.6);
+  --c1:#8da4ff; --c1s:#1c2447; --c2:#5fd49a; --c2s:#14301f; --c3:#ffc94d; --c3s:#38300f; --c4:#ff8b78; --c4s:#3a1e19;
   --gold:#ffd23f; --gold-soft:#2f2808; --gold-ink:#ffe27a;
 }
+:root, html.dark, html[data-color], html.dark[data-color]{ --accent2:var(--accent); }
 
 /* ---- Base ---- */
-body{ -webkit-font-smoothing:antialiased; line-height:1.55; font-variant-numeric:tabular-nums; }
+body{ -webkit-font-smoothing:antialiased; line-height:1.55; font-variant-numeric:tabular-nums; padding-bottom:calc(112px + env(safe-area-inset-bottom)); }
 body::before, html.dark body::before{ display:none; }
 h1,h2,h3,.sheet-h,.ses-nombre,.hoy-que,.ses-fin h3,.settings-panel h3,.escape-card h4,.sust-zona,.dec-top b,details summary{
-  font-family:var(--font-display); font-weight:650; letter-spacing:-.02em;
+  font-family:var(--font-display); font-weight:750; letter-spacing:-.03em;
 }
-h2{ font-size:var(--t-xl); margin:28px 0 12px; line-height:1.15; }
-h3{ font-size:var(--t-md); letter-spacing:-.01em; }
-.h2-badge{ width:auto; height:auto; background:none; color:var(--muted); box-shadow:none; border-radius:0; }
+h2{ font-size:var(--t-xl); margin:34px 0 14px; line-height:1.08; font-weight:800; }
+h3{ font-size:var(--t-md); letter-spacing:-.02em; }
+.h2-badge{
+  width:38px; height:38px; border-radius:13px; background:var(--accent-soft); color:var(--accent); box-shadow:none;
+}
 .h2-badge .ic-v{ width:20px; height:20px; }
-th{ font-family:var(--font-body); font-weight:500; color:var(--muted); font-size:var(--t-xs); text-transform:none; letter-spacing:0; }
+.lead{ color:var(--muted); line-height:1.5; }
+th{ font-family:var(--font-body); font-weight:600; color:var(--muted); font-size:var(--t-xs); text-transform:none; letter-spacing:0; }
 
-/* Etiquetas: minúscula, legibles, grises. Nada de mayúsculas espaciadas. */
-.hoy-fecha, .horario-title, .settings-row > .lbl, .settings-row > div:first-child, .ex-field > div:first-child,
-.ses-peso-lbl, .ses-ajuste span, .cinta-num span, .dec-hacer b, .fase small, .sust-op em, .medidas-sub,
-.hoy-ahora-momento, .nmg-tag, .stat span, .sheet-sub{
-  text-transform:none; letter-spacing:0;
-}
-
-/* ---- Cabecera: papel, con la marca y el nombre ---- */
+/* ---- Cabecera: la marca grande sobre el papel ---- */
 header{
-  background:var(--bg); color:var(--ink); border-bottom:1px solid var(--border);
-  padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background:var(--bg); color:var(--ink); border-bottom:none;
+  padding:calc(14px + env(safe-area-inset-top)) 18px 10px;
 }
-header h1{ font-size:1.15rem; font-weight:700; letter-spacing:-.025em; display:flex; align-items:center; gap:9px; }
-header h1 .ic-v{ color:var(--accent); width:1.2em; height:1.2em; }
-header p{ opacity:1; color:var(--muted); font-size:var(--t-xs); }
+header h1{ font-size:1.3rem; font-weight:800; letter-spacing:-.04em; display:flex; align-items:center; gap:9px; white-space:nowrap; }
+header h1 .ic-v{ color:var(--accent); width:1.15em; height:1.15em; }
+header p{ opacity:1; color:var(--muted); font-size:var(--t-sm); }
 .headbtns button{
-  background:var(--card); border:1px solid var(--border); color:var(--ink);
-  -webkit-backdrop-filter:none; backdrop-filter:none; width:40px; height:40px; border-radius:var(--r-sm);
+  background:var(--card); border:none; color:var(--ink); box-shadow:var(--sh-1);
+  -webkit-backdrop-filter:none; backdrop-filter:none; width:44px; height:44px; border-radius:50%;
 }
 .headbtns button:focus-visible{ outline-color:var(--accent); }
 
-/* ---- Barra inferior: la pestaña activa se ve por la tinta, no por el color ---- */
+/* ---- Barra inferior: una píldora flotante ---- */
 .bottomnav{
-  background:var(--bg); -webkit-backdrop-filter:none; backdrop-filter:none;
-  border-top:1px solid var(--border); box-shadow:none; gap:0; padding-top:6px;
+  left:12px; right:12px; bottom:calc(10px + env(safe-area-inset-bottom));
+  background:var(--card); -webkit-backdrop-filter:none; backdrop-filter:none;
+  border:none; border-radius:30px; box-shadow:var(--sh-2); padding:8px 6px; gap:0;
 }
-.bottomnav button{ border-radius:0; font-weight:500; }
-.bottomnav button.active{ color:var(--ink); font-weight:650; }
-.bottomnav button.active::before{
-  inset:auto; top:-7px; left:50%; width:24px; height:2px; margin-left:-12px;
-  border-radius:0 0 2px 2px; background:var(--ink); z-index:0;
-}
-.bottomnav button.active .ic-v{ color:var(--ink); }
+.bottomnav button{ border-radius:20px; font-weight:600; padding:4px 2px 3px; gap:2px; }
+.bottomnav button.active{ color:var(--ink); font-weight:700; }
+.bottomnav button.active::before{ display:none; }
+.bottomnav button .ic{ width:50px; height:30px; border-radius:15px; transition:background .2s var(--ease), color .2s var(--ease); }
+.bottomnav button.active .ic{ background:var(--accent); color:var(--on-accent); }
+.bottomnav button.active .ic-v{ color:var(--on-accent); }
 
-/* ---- Superficies: un filo y ya ---- */
-.card, .pane, .glass, .stat, details, .opt, .sos-btn, .aforo, .ses-peso, .ses-alt, .dec, .franja, .sust, .anim-caja{
-  background:var(--card); box-shadow:none; -webkit-backdrop-filter:none; backdrop-filter:none; border-color:var(--border);
+/* ---- Superficies: tarjetas blancas, esquinas grandes, sombra suave ---- */
+.card, .pane, .glass, .stat, details, .opt, .sos-btn, .aforo, .ses-peso, .ses-alt, .dec, .franja, .sust, .anim-caja, .daycard{
+  background:var(--card); border:none; box-shadow:var(--sh-1); -webkit-backdrop-filter:none; backdrop-filter:none;
 }
-.card{ border-radius:var(--r-md); padding:16px; }
-details{ border-radius:var(--r-md); }
-details summary{ font-size:var(--t-md); font-weight:600; }
+.card{ border-radius:var(--r-lg); padding:18px; }
+details{ border-radius:var(--r-lg); }
+details summary{ font-size:var(--t-md); font-weight:700; padding:17px 18px; }
 .tip, .ses-recuerda, .dec-hacer, .sheet-nota.tip{
-  background:var(--raised); border:1px solid var(--border); border-radius:var(--r-sm); color:var(--ink);
+  background:var(--accent-soft); border:none; border-radius:var(--r-md); color:var(--ink);
 }
-.warn{ background:var(--warn-soft); border:1px solid color-mix(in srgb, var(--warn) 25%, transparent); border-radius:var(--r-sm); }
-.quiet{ background:var(--card); border:1px solid var(--border); border-radius:var(--r-sm); }
+.warn{ background:var(--warn-soft); border:none; border-radius:var(--r-md); }
+.quiet{ background:var(--raised); border:none; border-radius:var(--r-md); }
 
-/* ---- Botones: una sola acción casi negra ---- */
+/* ---- Botones: grandes y redondos ---- */
 .btn-main, .sheet-cta, .ficha-cta, .btn-mini.solid{
-  background:var(--primary); color:var(--on-primary); border:none; border-radius:var(--r-sm); box-shadow:none;
-  padding:14px; font-weight:600;
+  background:var(--accent); color:var(--on-accent); border:none; border-radius:var(--r-md);
+  box-shadow:0 10px 22px color-mix(in srgb, var(--accent) 32%, transparent);
+  padding:17px 16px; font-weight:700; font-size:var(--t-md); letter-spacing:-.01em;
 }
-.btn-main:active, .sheet-cta:active{ filter:brightness(1.25); box-shadow:none; }
+.btn-main:active, .sheet-cta:active{ filter:brightness(.92); box-shadow:none; }
 .btn-second{
-  background:var(--card); border:1px solid var(--control); color:var(--ink);
-  border-radius:var(--r-sm); box-shadow:none; padding:13px 14px; font-weight:600;
+  background:var(--card); color:var(--ink); border:none; box-shadow:var(--sh-1);
+  border-radius:var(--r-md); padding:15px 16px; font-weight:650;
 }
-.btn-escape{ border-radius:var(--r-sm); }
-.btn-mini{ border-radius:var(--r-sm); }
-.btn-undo{ color:var(--ink); }
+.btn-escape{ border-radius:var(--r-md); }
+.btn-mini{ border-radius:999px; }
+.btn-mini:not(.solid){ background:var(--accent-soft); color:var(--accent); border:none; }
+.btn-undo{ color:var(--accent); }
 .style-opt.active, .daypicker button.fijo, .ses-serie.hecha, .ses-sensacion-ops button.on, .cal-dias button.on,
-.sync-btn.principal, .nmg-add button{
-  background:var(--primary); border-color:var(--primary); color:var(--on-primary);
+.sync-btn.principal, .nmg-add button, .opts button.active, .extra-fila button.active, .filtro.on, .checkin-op button.on, .ficha-tabs button.on{
+  background:var(--accent); border-color:var(--accent); color:var(--on-accent); box-shadow:none;
 }
-.daypicker button.cinta{ background:var(--active); color:var(--ink); border-color:var(--control); }
-.pill, .nivel{ border-radius:var(--r-xs); font-weight:600; background:var(--active); color:var(--ink); }
+.daypicker button.cinta{ background:var(--accent-soft); color:var(--accent); border-color:transparent; }
+.pill, .nivel{ border-radius:999px; font-weight:650; background:var(--accent-soft); color:var(--accent); }
 .nivel.vacio{ background:var(--ok-soft); color:var(--ok); }
 .nivel.lleno{ background:var(--warn-soft); color:var(--warn); }
-.ses-alt summary, details[open] summary, .ex-head{ color:var(--ink); }
-.ses-alt summary{ font-family:var(--font-body); }
+.settings-close, .cocina-sig, .hoy-tag, .wcell .box.l3{ background:var(--accent); color:var(--on-accent); box-shadow:none; border-color:transparent; }
 
-/* ---- Filas de opciones: icono suelto y gris, sin caja ---- */
-.sos-row{ gap:8px; }
-.sos-btn{ border-radius:var(--r-md); padding:12px; gap:10px; }
+/* ---- Filas de opciones: iconos en fichas de color ---- */
+.sos-row{ gap:10px; }
+.sos-btn{ border-radius:var(--r-lg); padding:14px; gap:12px; }
 .sos-btn .sos-ico, .opt-ico, .dec-ico, .hoy-ahora-ico{
-  background:none !important; color:var(--muted) !important; box-shadow:none; width:auto; height:auto; border-radius:0;
+  width:44px; height:44px; border-radius:14px; display:grid; place-items:center; flex-shrink:0;
+  background:var(--c1s) !important; color:var(--c1) !important; box-shadow:none;
 }
-.sos-btn .sos-ico .ic-v, .opt-ico .ic-v{ width:20px; height:20px; }
-.sos-btn b, .opt-txt b{ font-weight:600; }
-.opt{ border-radius:var(--r-md); }
-.opt:active, .sos-btn:active{ border-color:var(--control); }
-.opt-min{ border-radius:var(--r-xs); background:var(--active); color:var(--ink); font-weight:600; font-family:var(--font-body); }
-.aforo{ border-radius:var(--r-md); }
-.aforo-ico, .aforo-bien .aforo-ico{ background:none; color:var(--muted); }
+.sos-row .sos-btn:nth-child(4n+2) .sos-ico{ background:var(--c2s) !important; color:var(--c2) !important; }
+.sos-row .sos-btn:nth-child(4n+3) .sos-ico{ background:var(--c3s) !important; color:var(--c3) !important; }
+.sos-row .sos-btn:nth-child(4n+4) .sos-ico{ background:var(--c4s) !important; color:var(--c4) !important; }
+.opt:nth-of-type(4n+2) .opt-ico{ background:var(--c2s) !important; color:var(--c2) !important; }
+.opt:nth-of-type(4n+3) .opt-ico{ background:var(--c3s) !important; color:var(--c3) !important; }
+.opt:nth-of-type(4n+4) .opt-ico{ background:var(--c4s) !important; color:var(--c4) !important; }
+.sos-btn .sos-ico .ic-v, .opt-ico .ic-v{ width:22px; height:22px; }
+.sos-btn b, .opt-txt b{ font-weight:700; letter-spacing:-.015em; font-size:var(--t-base); }
+.opt{ border-radius:var(--r-lg); padding:14px 16px; }
+.opt:active, .sos-btn:active{ transform:scale(.98); }
+.opt-min{ border-radius:999px; background:var(--accent-soft); color:var(--accent); font-weight:700; font-family:var(--font-body); }
+.aforo{ border-radius:var(--r-lg); }
+.aforo-ico{ border-radius:14px; }
 
-/* ---- El bloque de Hoy: la pregunta de la pantalla, en papel ---- */
+/* ---- El bloque de color grande de Hoy ---- */
 .hoy-hero{
-  background:var(--card); color:var(--ink); border:1px solid var(--border); box-shadow:none;
-  border-radius:var(--r-md); padding:20px 18px 18px;
+  position:relative; overflow:hidden;
+  background-color:var(--accent); color:#fff; border:none; border-radius:var(--r-xl);
+  padding:26px 22px 22px; box-shadow:0 18px 36px color-mix(in srgb, var(--accent) 30%, transparent);
 }
+html.dark .hoy-hero{ background-color:color-mix(in srgb, var(--accent) 55%, #000); box-shadow:none; }
 .hoy-hero::after{ display:none; }
-.hoy-fecha{ color:var(--muted); opacity:1; font-size:var(--t-sm); font-weight:500; }
-.hoy-que{ font-size:var(--t-2xl); line-height:1.1; letter-spacing:-.025em; margin:6px 0 8px; font-weight:700; color:var(--ink); }
-.hoy-sub{ font-size:var(--t-base); color:var(--muted); opacity:1; line-height:1.45; }
+.hoy-fecha{ color:rgba(255,255,255,.82); opacity:1; font-size:var(--t-sm); font-weight:600; letter-spacing:0; text-transform:none; }
+.hoy-que{ color:#fff; font-size:clamp(2rem, 9.5vw, 2.6rem); line-height:.98; letter-spacing:-.045em; margin:8px 0 10px; font-weight:800; max-width:11em; }
+.hoy-sub{ color:rgba(255,255,255,.9); opacity:1; font-size:var(--t-base); line-height:1.42; max-width:28ch; }
 .hoy-hecho{
-  background:var(--raised); border:1px solid var(--border); color:var(--ink);
-  -webkit-backdrop-filter:none; backdrop-filter:none; border-radius:var(--r-sm);
+  background:rgba(255,255,255,.18); border:none; color:#fff;
+  -webkit-backdrop-filter:none; backdrop-filter:none; border-radius:var(--r-md);
 }
-.hoy-hecho span{ opacity:1; color:var(--muted); }
+.hoy-hecho span{ opacity:1; color:rgba(255,255,255,.92); }
 .hoy-subidas{
-  background:var(--gold-soft); color:var(--ink); border:1px solid color-mix(in srgb, var(--gold) 50%, transparent);
-  border-radius:var(--r-sm);
+  background:var(--gold-soft); color:var(--ink); border:none; border-radius:var(--r-md);
 }
 .hoy-subidas > b{ color:var(--gold-ink); }
 
-/* ---- Cifras: texto, no fichas. Un contenedor partido por filos ---- */
-.statgrid{
-  gap:0; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden;
-}
-.stat{ border:none; border-radius:0; background:none; padding:14px 8px; }
-.stat + .stat{ border-left:1px solid var(--border); }
-.stat b{ font-family:var(--font-display); font-weight:600; letter-spacing:-.02em; font-size:1.6rem; line-height:1.05; margin-bottom:4px; color:var(--ink); }
+/* ---- Cifras grandes ---- */
+.statgrid{ gap:10px; background:none; border:none; overflow:visible; }
+.stat{ border-radius:var(--r-lg); padding:18px 8px; }
+.stat + .stat{ border-left:none; }
+.stat b{ font-family:var(--font-display); font-weight:800; letter-spacing:-.05em; font-size:2.4rem; line-height:1; margin-bottom:6px; color:var(--accent); }
 .stat span{ font-size:var(--t-xs); line-height:1.25; }
 
-/* ---- Hojas (sheets) y ajustes ---- */
-.sheet-back{ background:rgba(10,12,16,.5); -webkit-backdrop-filter:none; backdrop-filter:none; }
+/* ---- Hojas y ajustes ---- */
+.sheet-back{ background:rgba(12,14,28,.5); -webkit-backdrop-filter:none; backdrop-filter:none; }
 .sheet, .settings-panel{
   background:var(--card); -webkit-backdrop-filter:none; backdrop-filter:none; border:none;
-  border-radius:var(--r-xl) var(--r-xl) 0 0; box-shadow:var(--sh-3);
+  border-radius:30px 30px 0 0; box-shadow:var(--sh-3);
 }
-.sheet-h{ font-size:var(--t-xl); }
-.settings-panel h3{ font-size:var(--t-xl); }
+.sheet-h{ font-size:var(--t-xl); font-weight:800; }
+.settings-panel h3{ font-size:var(--t-xl); font-weight:800; }
 .style-opt, .daypicker button{ border-radius:var(--r-sm); }
 .swatch{ border-radius:50%; }
 
@@ -203,82 +213,71 @@ details summary{ font-size:var(--t-md); font-weight:600; }
 input[type=text], input[type=number], input[type=search], input[type=time], select, textarea{ border-radius:var(--r-sm); }
 input:focus, select:focus, textarea:focus{ outline:2px solid var(--accent); outline-offset:1px; }
 
-/* ---- Sesión guiada: opaca y quieta ---- */
+/* ---- Sesión guiada ---- */
 .sesion, .estira{ background:var(--bg); }
-.ses-nombre{ font-size:var(--t-2xl); line-height:1.1; letter-spacing:-.025em; font-weight:700; }
-.ses-peso{ border-radius:var(--r-md); }
-.ses-peso-ctrl button{ background:var(--card); }
-.ses-peso-ctrl input{ background:var(--card); font-size:var(--t-lg); width:76px; }
-.ses-serie{ border-radius:var(--r-sm); background:var(--card); padding:13px 4px; }
-.ses-serie.actual{ border-color:var(--ink); color:var(--ink); box-shadow:inset 0 0 0 1px var(--ink); }
-.ses-foot .btn-main{ min-height:54px; font-size:var(--t-md); }
-.ses-sensacion-ops button{ border-radius:var(--r-sm); }
-.ses-sugerencia{ border-radius:var(--r-sm); }
-.ses-barra i{ background:var(--ink); }
+.ses-nombre{ font-size:var(--t-2xl); line-height:1.02; letter-spacing:-.045em; font-weight:800; }
+.ses-peso{ border-radius:var(--r-lg); }
+.ses-peso-ctrl button{ background:var(--raised); border:none; }
+.ses-peso-ctrl input{ background:var(--raised); border:none; font-size:var(--t-lg); width:80px; font-weight:800; }
+.ses-serie{ border-radius:var(--r-md); background:var(--card); padding:14px 4px; border:none; box-shadow:var(--sh-1); }
+.ses-serie.actual{ box-shadow:inset 0 0 0 2px var(--accent); color:var(--accent); }
+.ses-foot .btn-main{ min-height:58px; }
+.ses-sensacion-ops button{ border-radius:var(--r-sm); border:none; background:var(--raised); }
+.ses-sugerencia{ border-radius:var(--r-md); }
+.ses-barra i{ background:var(--accent); }
 .ring{ filter:none; }
-.ring circle{ stroke-width:8; }
-.ring .avance{ stroke:var(--ink); }
-.ring-txt{ font-weight:650; letter-spacing:-.03em; font-size:2.8rem; }
-.btn-timer{ border-radius:var(--r-sm); background:var(--card); font-weight:600; }
-.ses-resumen div, .entrenos-total div, .fase{ border-radius:var(--r-md); }
-.ses-resumen b, .entrenos-total b{ font-family:var(--font-display); font-weight:650; letter-spacing:-.02em; color:var(--ink); }
-.ses-fin .emo{ border-radius:var(--r-md); background:var(--primary) !important; color:var(--on-primary); box-shadow:none; }
-.cinta-num b{ font-family:var(--font-display); font-weight:650; letter-spacing:-.03em; color:var(--ink); font-size:1.9rem; }
-.ses-subidas{ border-radius:var(--r-sm); }
+.ring circle{ stroke-width:10; }
+.ring .avance{ stroke:var(--accent); }
+.ring-txt{ font-weight:800; letter-spacing:-.04em; font-size:3rem; }
+.btn-timer{ border-radius:var(--r-md); background:var(--card); border:none; box-shadow:var(--sh-1); font-weight:650; }
+.ses-resumen div, .entrenos-total div, .fase{ border-radius:var(--r-lg); background:var(--card); border:none; box-shadow:var(--sh-1); }
+.ses-resumen b, .entrenos-total b{ font-family:var(--font-display); font-weight:800; letter-spacing:-.04em; color:var(--accent); }
+.ses-fin .emo{ border-radius:28px; background:var(--accent) !important; color:var(--on-accent); box-shadow:0 14px 30px color-mix(in srgb, var(--accent) 35%, transparent); }
+.cinta-num b{ font-family:var(--font-display); font-weight:800; letter-spacing:-.05em; color:var(--accent); font-size:2.3rem; }
+.ses-subidas{ border-radius:var(--r-md); }
+.linea.hecho .marca, .cocina-ing.ok .marca{ background:var(--accent); border-color:var(--accent); }
+.super-barra i, .cocina-barra i{ background:var(--accent); }
 
-/* ---- Movimiento: quieto salvo lo que informa ---- */
-.tabpanel.active{ animation:fade .2s var(--ease); }
+/* ---- Alto contraste: los filos vuelven ---- */
+html.contraste .card, html.contraste details, html.contraste .opt, html.contraste .sos-btn, html.contraste .stat{ box-shadow:none; border:1px solid var(--muted); }
+
+/* ---- Movimiento ---- */
+.tabpanel.active{ animation:fade .22s var(--ease); }
 @media (prefers-reduced-motion: reduce){ .tabpanel.active{ animation:none; } }
 
-/* ---- Fuera los degradados que quedaban: un solo tono, y la selección va en tinta ---- */
-:root, html.dark, html[data-color], html.dark[data-color]{ --accent2:var(--accent); }
-main{ padding-left:16px; padding-right:16px; }
-.style-opt.active{ box-shadow:none; }
-.settings-close, .cocina-sig, .hoy-tag, .filtro.on, .checkin-op button.on, .ficha-tabs button.on, .opts button.active,
-.extra-fila button.active, .wcell .box.l3, .dec-ico{
-  background:var(--primary); color:var(--on-primary); border-color:var(--primary); box-shadow:none;
-}
-.dec-ico{ background:none !important; color:var(--muted); }
-.linea.hecho .marca, .cocina-ing.ok .marca{ background:var(--primary); border-color:var(--primary); }
-.super-barra i, .cocina-barra i, .ses-barra i{ background:var(--accent); }
+/* ---- Pestañas de la semana (días) y selectores ---- */
 .opts{ gap:8px; }
+.opts button{ border:none; background:var(--raised); border-radius:var(--r-sm); }
 .opts.dias{ display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); }
 .opts.dias button .tx{ font-size:var(--t-2xs); }
-.opts.dias button.active .tx{ color:var(--on-primary); opacity:1; }
+.opts.dias button.active .tx{ color:var(--on-accent); opacity:1; }
 .daypicker button i{ font-size:var(--t-2xs); }
-.checkin label{ text-transform:none; letter-spacing:0; font-size:var(--t-sm); font-weight:600; }
-.statgrid .stat:nth-child(n) b{ color:var(--ink); }
+.checkin label{ text-transform:none; letter-spacing:0; font-size:var(--t-sm); font-weight:650; }
+.super-barra, .cocina-barra{ background:var(--active); }
+.card .btn-second, details .btn-second{ background:var(--raised); box-shadow:none; }
 
-/* ---- Alimentación: lo que toca ahora, dentro del bloque de Hoy ---- */
-.hoy-ciclo{ color:var(--muted); opacity:1; font-size:var(--t-sm); margin:2px 0 0; }
+/* ---- Alimentación: el plato partido en cuartos (el método de la app) ---- */
+.hoy-hero{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 220 220'%3E%3Ccircle cx='110' cy='110' r='104' fill='%23fff' fill-opacity='.13'/%3E%3Cpath d='M110 110V6A104 104 0 0 1 214 110Z' fill='%23fff' fill-opacity='.2'/%3E%3Ccircle cx='110' cy='110' r='72' fill='none' stroke='%23fff' stroke-opacity='.3' stroke-width='3'/%3E%3Cpath d='M110 6V214M6 110H214' stroke='%23fff' stroke-opacity='.3' stroke-width='3'/%3E%3Ccircle cx='110' cy='110' r='9' fill='%23fff' fill-opacity='.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right -78px top -78px; background-size:230px;
+}
+.hoy-ciclo{ color:rgba(255,255,255,.85); opacity:1; font-size:var(--t-sm); margin:2px 0 0; }
 .hoy-ahora{
-  background:var(--raised); border:1px solid var(--border); border-radius:var(--r-sm); box-shadow:none;
-  -webkit-backdrop-filter:none; backdrop-filter:none; color:var(--ink); margin-top:14px;
+  background:rgba(255,255,255,.2); border:none; border-radius:var(--r-md); box-shadow:none;
+  -webkit-backdrop-filter:none; backdrop-filter:none; color:#fff; margin-top:16px; position:relative;
 }
-.hoy-ahora-momento{ opacity:1; color:var(--muted); font-weight:500; font-size:var(--t-xs); }
-.hoy-ahora-plato{ font-family:var(--font-display); font-weight:650; letter-spacing:-.015em; font-size:1.15rem; color:var(--ink); }
-.hoy-ahora .flecha, .hoy-ahora .flecha .ic-v{ color:var(--muted); }
-.daycard{ border-radius:var(--r-md); background:var(--card); box-shadow:none; }
-.daycard.es-hoy{ box-shadow:inset 0 0 0 1.5px var(--ink); }
-.dayname{ font-family:var(--font-display); font-weight:650; letter-spacing:-.015em; color:var(--ink); }
-.rec-card{ border-radius:var(--r-md); }
-.hoy-cocinar{
-  background:var(--primary); color:var(--on-primary); border:none; border-radius:var(--r-sm);
-  padding:10px 14px; font-size:var(--t-sm); font-weight:600; margin-top:10px;
-}
-.consejo-h{ text-transform:none; letter-spacing:0; font-size:var(--t-xs); font-weight:600; }
-.bottomnav{ padding-left:12px; padding-right:12px; }
-.btn-mini:not(.solid){ background:var(--card); border:1px solid var(--control); color:var(--ink); }
+.hoy-ahora-ico{ background:rgba(255,255,255,.22) !important; color:#fff !important; }
+.hoy-ahora-momento{ color:rgba(255,255,255,.85); opacity:1; font-weight:600; font-size:var(--t-xs); letter-spacing:0; text-transform:none; }
+.hoy-ahora-plato{ font-family:var(--font-display); font-weight:750; letter-spacing:-.03em; font-size:1.3rem; color:#fff; }
+.hoy-ahora .flecha, .hoy-ahora .flecha .ic-v{ color:#fff; }
+.hoy-cocinar{ background:#fff; color:#10201a; border:none; border-radius:999px; padding:11px 16px; font-size:var(--t-sm); font-weight:700; margin-top:12px; position:relative; }
+.daycard{ border-radius:var(--r-lg); }
+.daycard.es-hoy{ box-shadow:inset 0 0 0 2px var(--accent), var(--sh-1); }
+.dayname{ font-family:var(--font-display); font-weight:750; letter-spacing:-.025em; color:var(--ink); }
+.rec-card{ border-radius:var(--r-lg); box-shadow:var(--sh-1); border:none; overflow:hidden; }
+.consejo-h{ text-transform:none; letter-spacing:0; font-size:var(--t-xs); font-weight:650; }
+.hoy-aviso{ margin:0 0 14px; }
 
-/* ---- Calidez: el bloque de Hoy vuelve a llevar el color de tu tema, plano ----
-   Una app de comida tiene que apetecer. Es el único bloque de color de la app. */
-.hoy-hero{ background:var(--accent); color:#fff; border:none; }
-html.dark .hoy-hero{ background:color-mix(in srgb, var(--accent) 52%, #000); }
-.hoy-hero .hoy-fecha, .hoy-hero .hoy-ciclo{ color:rgba(255,255,255,.84); }
-.hoy-hero .hoy-que{ color:#fff; }
-.hoy-hero .hoy-sub{ color:rgba(255,255,255,.92); }
-.hoy-ahora{ background:rgba(255,255,255,.16); border:none; color:#fff; }
-.hoy-ahora-momento{ color:rgba(255,255,255,.84); }
-.hoy-ahora-plato, .hoy-ahora .flecha, .hoy-ahora .flecha .ic-v{ color:#fff; }
-.hoy-ahora-ico{ color:#fff !important; }
-.hoy-cocinar{ background:#fff; color:#12161b; }
+/* ---- De temporada ---- */
+.chips-t{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip-t{ display:inline-block; padding:7px 14px; border-radius:999px; background:var(--accent-soft); color:var(--accent); font-weight:650; font-size:var(--t-sm); }
