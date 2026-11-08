@@ -1297,6 +1297,15 @@
         </div>
       </div>
 
+      <div class="settings-row">
+        <div>Apuntar lo que cocino</div>
+        <div class="style-options" id="apuntarOpts">
+          <button class="style-opt active" data-v="no" onclick="setApuntar('no')">No hace falta</button>
+          <button class="style-opt" data-v="si" onclick="setApuntar('si')">Sí</button>
+        </div>
+        <div class="settings-hint">Con «No hace falta» la app no te pide marcar nada: sin botón «Lo he cocinado hoy», sin contadores. Con «Sí» te enseña lo que cocinas en Progreso y te pregunta qué sobra.</div>
+      </div>
+
     </details>
 
     <details class="settings-group" id="syncGrupo">
@@ -1798,8 +1807,10 @@
 <!-- ==================== PROGRESO ==================== -->
 <div id="tab-progreso" class="tabpanel">
 
+  <div id="progCocinadoWrap">
   <h2>🍳 Lo que has cocinado</h2>
   <div class="card" id="cocinadosCard"></div>
+  </div>
 
   <h2>✅ Check-in de la semana</h2>
   <p class="lead">Treinta segundos, una vez por semana. No hay puntuación, ni rachas, ni nada que se rompa si te saltas una semana — solo sirve para que dentro de dos meses puedas mirar atrás y ver algo real.</p>
@@ -2271,7 +2282,10 @@ function pasoCocina(delta){
   const pasos = CO.pasos || p.pasos;
   CO.paso = Math.max(-1, Math.min(pasos.length, CO.paso + delta));
   /* Al tocar "Terminado" en el último paso se apunta solo. */
-  if(delta > 0 && antes < pasos.length && CO.paso >= pasos.length) apuntarCocinado(CO.slug);
+  if(delta > 0 && antes < pasos.length && CO.paso >= pasos.length){
+    if(apuntarActivo()) apuntarCocinado(CO.slug);
+    else gastarFrescosDe(CO.slug);   // sin apuntar el plato, lo fresco usado sí se descuenta
+  }
   pintarCocina();
   const c = document.querySelector('#cocina .cocina-cuerpo');
   if(c) c.scrollTop = 0;
@@ -2647,6 +2661,21 @@ function setColor(color){
     s.classList.toggle('active', s.dataset.color === color);
   });
 }
+function apuntarActivo(){
+  try{ return localStorage.getItem('planAlimentacionApuntar') === 'si'; }catch(e){ return false; }
+}
+function aplicarApuntar(){
+  const on = apuntarActivo();
+  const w = document.getElementById('progCocinadoWrap');
+  if(w) w.hidden = !on;
+  document.querySelectorAll('#apuntarOpts .style-opt').forEach(b => b.classList.toggle('active', b.dataset.v === (on ? 'si' : 'no')));
+  if(typeof fichaSlugActual !== 'undefined' && fichaSlugActual && document.getElementById('cocinadoFicha')) pintarCocinadoFicha(fichaSlugActual);
+}
+function setApuntar(v){
+  setLS('planAlimentacionApuntar', v === 'si' ? 'si' : 'no');
+  aplicarApuntar();
+  toast(v === 'si' ? 'Se apuntará lo que cocines' : 'No hace falta apuntar nada');
+}
 function setTextSize(size){
   document.documentElement.setAttribute('data-textsize', size);
   try{ setLS('planAlimentacionTextSize', size); }catch(e){}
@@ -2845,7 +2874,7 @@ const SYNC_KEYS = [
   'planAlimentacionWfh','planAlimentacionWfhDates',
   'planAlimentacionBowlDays','planAlimentacionVacaciones','planAlimentacionQuinoaDays',
   'planAlimentacionCompra','planAlimentacionFavPlatos','planAlimentacionCheckins','planAlimentacionNoMeGusta','planAlimentacionCambios','planAlimentacionHabituales','planAlimentacionCocinados',
-  'planAlimentacionCongelador','planAlimentacionMisSupers','planAlimentacionSinAirfryer'
+  'planAlimentacionCongelador','planAlimentacionMisSupers','planAlimentacionSinAirfryer','planAlimentacionApuntar'
 ];
 
 /* ===================== MÓVIL Y ORDENADOR A LA VEZ =====================
@@ -2860,7 +2889,7 @@ const SYNC_CFG = {
   todas: ['planAlimentacionColor', 'planAlimentacionWfh', 'planAlimentacionWfhDates',
           'planAlimentacionBowlDays', 'planAlimentacionVacaciones', 'planAlimentacionQuinoaDays', 'planAlimentacionCompra',
           'planAlimentacionFavPlatos', 'planAlimentacionCheckins', 'planAlimentacionNoMeGusta', 'planAlimentacionCambios', 'planAlimentacionHabituales', 'planAlimentacionCocinados',
-          'planAlimentacionCongelador', 'planAlimentacionMisSupers', 'planAlimentacionSinAirfryer', 'planAlimentacionFotos'],
+          'planAlimentacionCongelador', 'planAlimentacionMisSupers', 'planAlimentacionSinAirfryer', 'planAlimentacionFotos', 'planAlimentacionApuntar'],
   lista: {
     planAlimentacionCompra:   { campo:'id',    orden:'asc'  },
     planAlimentacionCheckins: { campo:'fecha', orden:'desc' },
@@ -4733,7 +4762,7 @@ function apuntarCocinado(slug){
 }
 function cocinadoFichaHTML(slug){
   const p = PLATOS[slug];
-  if(!p || !(p.tiempo > 0)) return '';
+  if(!p || !(p.tiempo > 0) || !apuntarActivo()) return '';
   return '<div class="cocinado-fila" id="cocinadoFicha">' + cocinadoFichaDentro(slug) + '</div>';
 }
 function cocinadoFichaDentro(slug){
@@ -6390,10 +6419,11 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-11-01'; }
+function novedadesId(){ return '2026-11-08'; }
 function novedadesFechadas(){
   return [
-    { id:'2026-11-01', t:'<b>Diseño más sobrio:</b> el color se queda solo para los datos. Todo lo demás es papel y tinta, con el botón principal casi negro, los iconos sueltos y las cifras como texto. Las etiquetas ya no van en mayúsculas pequeñas.' },
+    { id:'2026-11-08', t:'<b>Sin apuntar nada:</b> ya no hace falta marcar lo que cocinas. Todo lo demás sigue igual (menú, recetas, compra, rescate). Si algún día quieres apuntarlo, está en Ajustes → «Apuntar lo que cocino».' },
+    { id:'2026-10-30', t:'<b>Diseño más sobrio:</b> el color se queda solo para los datos. Todo lo demás es papel y tinta, con el botón principal casi negro, los iconos sueltos y las cifras como texto. Las etiquetas ya no van en mayúsculas pequeñas.' },
     { id:'2026-10-30', t:'<b>Nuevo diseño:</b> más limpio y plano, con titulares en otra letra y el verde como único color de acción. Los iconos ya no son un arcoíris: el color solo queda en las recetas, para distinguir carne, pescado, legumbre…' },
     { id:'2026-10-12', t:'<b>Gastar lo mínimo:</b> botón nuevo en Hoy (y en Compra) para la semana que toca apretar. Nueve comidas de 1-2 €, una compra pelada de unos 20 € que se añade a la lista y las reglas que más ahorran. No es rutina: solo si lo necesitas.' },
     { id:'2026-10-11', t:'<b>Consejos para días flojos:</b> resaca, poco sueño, sin hambre o con agujetas. Un tema nuevo en Inicio y entre los consejos de Hoy.' },
@@ -6642,6 +6672,7 @@ if('serviceWorker' in navigator){
     window.location.reload();
   });
 }
+aplicarApuntar();
 </script>
 
 </body>
