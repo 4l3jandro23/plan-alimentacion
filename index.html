@@ -9,8 +9,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Alimentación">
-<meta name="theme-color" content="#eef5f0" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#09110e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#fff1c2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#17161c" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Plan de alimentación personalizado de 4 semanas, con menú, macros, recetas y lista de la compra.">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -1407,9 +1407,9 @@
       <span class="sos-ico" style="background:linear-gradient(135deg,#2f7a5f,#57a686)"><svg class="ic-v"><use href="#i-carrito"/></svg></span>
       <span><b>Gastar lo mínimo</b><span>Para la semana que toca apretar: comer bien con unos 20 € de compra</span></span>
     </button>
-    <button class="sos-btn ancho" onclick="irAChuleta()">
-      <span class="sos-ico"><svg class="ic-v"><use href="#i-bombilla"/></svg></span>
-      <span><b>De temporada y chuleta de cocina</b><span>Qué está en su mejor momento y cuánto tarda cada cosa</span></span>
+    <button class="sos-btn ancho" onclick="abrirDomingo()">
+      <span class="sos-ico"><svg class="ic-v"><use href="#i-tupper"/></svg></span>
+      <span><b>Domingo de tuppers</b><span>Qué cocinar para la semana, en qué orden y cuánto tardas</span></span>
     </button>
   </div>
 
@@ -1572,12 +1572,6 @@
   <div class="rec-grid" id="recGrid"></div>
   <div id="recExtras"></div>
   <p class="vacio" id="recVacio" style="display:none;">Nada coincide con eso. Prueba con otra palabra o quita algún filtro.</p>
-
-  <h2 id="temporada">🌿 De temporada</h2>
-  <div class="card" id="temporadaCard"></div>
-
-  <h2 id="chuleta">⏱️ Chuleta de cocina</h2>
-  <div id="chuletaBox"></div>
 
   <h2>🔥 Técnicas que valen para todo</h2>
   <p class="lead">Cuatro maneras de cocinar que cubren casi cualquier plato del menú. Si te aprendes estas, ya no necesitas receta: eliges proteína y verdura y aplicas la técnica.</p>
@@ -2671,66 +2665,32 @@ function setColor(color){
     s.classList.toggle('active', s.dataset.color === color);
   });
 }
-/* ==================== DE TEMPORADA Y CHULETA DE COCINA ====================
-   Dos cosas de consultar, sin apuntar nada. La temporada es la de la península:
-   orientativa, cada año se adelanta o se retrasa un poco. */
-const MES_TXT = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
-const TEMPORADA = {
-  1:  { v:['alcachofa', 'acelgas', 'brócoli', 'coliflor', 'espinacas', 'puerro', 'zanahoria', 'remolacha'], f:['naranja', 'mandarina', 'kiwi', 'manzana', 'pera', 'limón'] },
-  2:  { v:['alcachofa', 'brócoli', 'coliflor', 'espinacas', 'puerro', 'zanahoria', 'lechuga'], f:['naranja', 'mandarina', 'kiwi', 'manzana', 'pera', 'limón'] },
-  3:  { v:['alcachofa', 'espárragos', 'guisantes', 'habas', 'espinacas', 'puerro', 'zanahoria'], f:['naranja', 'kiwi', 'fresa', 'plátano', 'manzana'] },
-  4:  { v:['espárragos', 'guisantes', 'habas', 'alcachofa', 'lechuga', 'rábanos', 'zanahoria'], f:['fresa', 'naranja', 'níspero', 'kiwi'] },
-  5:  { v:['espárragos', 'guisantes', 'habas', 'lechuga', 'pepino', 'rábanos', 'zanahoria'], f:['fresa', 'cerezas', 'níspero', 'albaricoque'] },
-  6:  { v:['judías verdes', 'pepino', 'tomate', 'pimiento', 'lechuga', 'zanahoria'], f:['cerezas', 'albaricoque', 'melocotón', 'fresa', 'sandía'] },
-  7:  { v:['tomate', 'pimiento', 'pepino', 'judías verdes', 'lechuga', 'zanahoria'], f:['melocotón', 'nectarina', 'albaricoque', 'sandía', 'ciruela'] },
-  8:  { v:['tomate', 'pimiento', 'pepino', 'judías verdes', 'maíz', 'lechuga'], f:['melocotón', 'ciruela', 'higos', 'sandía', 'pera'] },
-  9:  { v:['tomate', 'pimiento', 'judías verdes', 'pepino', 'zanahoria', 'puerro'], f:['uva', 'higos', 'manzana', 'pera', 'ciruela'] },
-  10: { v:['boniato', 'brócoli', 'coliflor', 'espinacas', 'acelgas', 'zanahoria', 'puerro', 'pimiento'], f:['uva', 'granada', 'caqui', 'manzana', 'pera', 'membrillo'] },
-  11: { v:['brócoli', 'coliflor', 'espinacas', 'acelgas', 'alcachofa', 'puerro', 'zanahoria', 'remolacha', 'boniato'], f:['naranja', 'mandarina', 'caqui', 'granada', 'kiwi', 'manzana', 'pera'] },
-  12: { v:['alcachofa', 'brócoli', 'coliflor', 'espinacas', 'acelgas', 'puerro', 'zanahoria', 'remolacha'], f:['naranja', 'mandarina', 'kiwi', 'manzana', 'pera', 'granada'] }
-};
-function temporadaDeHoy(){
-  const d = TEMPORADA[new Date().getMonth() + 1];
-  const ok = l => l.filter(x => !noMeGustaEn(x).length);
-  return { v: ok(d.v), f: ok(d.f) };
-}
-function renderTemporada(){
-  const el = document.getElementById('temporadaCard');
-  if(!el) return;
-  const t = temporadaDeHoy();
-  const chips = l => '<div class="chips-t">' + l.map(x => '<span class="chip-t">' + esc(x) + '</span>').join('') + '</div>';
-  el.innerHTML =
-    '<p style="margin:0 0 12px;">En <b>' + MES_TXT[new Date().getMonth()] + '</b> suele estar en su mejor momento y casi siempre sale más barato:</p>' +
-    '<div class="ficha-h">' + ico('ensalada') + 'Verdura</div>' + chips(t.v) +
-    '<div class="ficha-h" style="margin-top:14px;">' + ico('media') + 'Fruta</div>' + chips(t.f) +
-    '<button class="btn-second" style="margin-top:14px;" onclick="addTemporada()">' + ico('mas') + ' Añadir a la lista de la compra</button>' +
-    '<p style="font-size:var(--t-xs); color:var(--muted); margin:10px 0 0;">Orientativo: cada año se adelanta o se retrasa un poco. Lo que no te gusta no sale.</p>';
-}
-function addTemporada(){
-  const t = temporadaDeHoy();
-  const n = addItems(t.v.concat(t.f).map(x => ({ txt: x.charAt(0).toUpperCase() + x.slice(1), nota: 'De temporada' })), 'L:temporada');
-  toast(n ? 'Añadidas ' + n + ' cosas a la lista' : 'Ya estaba todo en la lista');
-}
-const CHULETA = [
-  ['Huevos', ['Pasado por agua: 3 minutos', 'Cocido blando: 6 minutos', 'Duro: 10-11 minutos desde que hierve, y al agua fría para pelarlo fácil']],
-  ['Arroz y pasta', ['Arroz blanco: 1 de arroz por 2 de agua, 15-18 minutos', 'Arroz integral: 1 de arroz por 2,5 de agua, 35-40 minutos', 'Pasta: lo que diga el paquete (casi siempre 9-11 minutos), con sal en el agua']],
-  ['Legumbres', ['De bote: enjuagar y 5 minutos en la sartén', 'Lentejas secas: 25-30 minutos, sin remojo', 'Garbanzos secos: remojo de una noche y 1 hora o 1 hora y media (30 minutos en olla exprés)']],
-  ['Carne y pescado', ['Pechuga fina a la plancha: 4-5 minutos por lado', 'Contramuslos al horno a 200 °C: 40-45 minutos', 'Salmón a la plancha: 4 minutos por el lado de la piel y 2 por el otro', 'Dorada al horno a 200 °C: 15-20 minutos']],
-  ['Airfryer', ['Pollo en trozos: 180-200 °C, 15-20 minutos', 'Patata en dados: 200 °C, 20-25 minutos', 'Verdura: 180 °C, 10-15 minutos', 'Agita la cesta a la mitad']],
-  ['Cuánto aguanta en la nevera', ['Carne y pescado crudos: 1-2 días', 'Cocinado (carne, pescado, arroz, pasta): 3-4 días', 'Legumbre cocida: 4-5 días', 'Huevos duros con cáscara: hasta 7 días', 'Siempre en tupper cerrado y enfriado antes de guardarlo']],
-  ['Congelador', ['Carne y pescado: 3-6 meses', 'Pan y verdura: unos 3 meses', 'Ponle la fecha con rotulador: dentro de un mes nadie se acuerda'] ]
-];
-function renderChuleta(){
-  const el = document.getElementById('chuletaBox');
-  if(!el) return;
-  el.innerHTML = CHULETA.map(g =>
-    '<details><summary>' + esc(g[0]) + '</summary><div class="content"><ul class="lista-si">' +
-    g[1].map(t => '<li>' + ico('check') + '<span>' + esc(t) + '</span></li>').join('') + '</ul></div></details>').join('') +
-    '<p style="font-size:var(--t-xs); color:var(--muted); margin:6px 4px 0;">Tiempos orientativos: cada fogón y cada pieza son distintos. Con el pollo, que no quede rosa por dentro.</p>';
-}
-function irAChuleta(){
-  showTab('recetas', document.querySelectorAll('.bottomnav button')[3]);
-  setTimeout(() => { const el = document.getElementById('temporada'); if(el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 96, behavior:'auto' }); }, 80);
+/* ==================== DOMINGO DE TUPPERS ====================
+   Los tuppers de la semana que viene en una sola hoja: qué cocinar, por qué
+   orden (lo que más tarda, primero, y se aprovechan los tiempos muertos del
+   horno o la olla para ir adelantando el siguiente) y cuánto se tarda en total. */
+const TIPO_DOMINGO = { ico:'tupper', label:'Tuppers' };
+function minutosDe(slug){ return PLATOS[slug] && PLATOS[slug].tiempo > 0 ? tiempoDe(slug) : 0; }
+function abrirDomingo(){
+  const obj = semanaTupperObjetivo();
+  const lista = tupperesDeSemana(obj.desde).filter(t => t.slug);
+  if(!lista.length){
+    abrirSheet(TIPO_DOMINGO, 'Domingo de tuppers', 'Esta semana no te llevas comida: por teletrabajo, vacaciones o comida de equipo.',
+      '<p style="font-size:var(--t-base); line-height:1.55;">Cuando haya días de tupper, aquí te sale qué cocinar y en qué orden.</p>');
+    return;
+  }
+  const orden = lista.slice().sort((a, b) => minutosDe(b.slug) - minutosDe(a.slug));
+  const total = orden.reduce((s, t) => s + minutosDe(t.slug), 0);
+  const filas = orden.map((t, i) =>
+    '<div class="dom-fila" role="button" tabindex="0" onclick="abrirFicha(\'' + t.slug + '\',\'comida\')">' +
+      '<span class="dom-n">' + (i + 1) + '</span>' +
+      '<span class="dom-t"><b>' + esc(PLATOS[t.slug].nombre) + '</b><span>Para el ' + nombreDiaAli(t.dia) + (aguanta3Dias(t.slug) ? ' · aguanta 3 días' : '') + '</span></span>' +
+      '<span class="dom-min">' + (minutosDe(t.slug) ? minutosDe(t.slug) + ' min' : '—') + '</span></div>').join('');
+  abrirSheet(TIPO_DOMINGO, 'Domingo de tuppers',
+    (obj.siguiente ? 'Los de la semana que viene' : 'Los de lo que queda de semana') + ': ' + orden.length + (orden.length === 1 ? ' tupper' : ' tuppers') + (total ? ', unos ' + total + ' minutos si los haces uno detrás de otro.' : '.'),
+    filas +
+    '<div class="tip" style="margin-top:16px;"><b style="display:block; margin-bottom:4px;">Cómo hacerlos de seguido</b>Empieza por el primero, que es el que más tarda. Mientras se hace en el horno o en la olla, ve cortando y preparando el siguiente. Deja enfriar antes de cerrar el tupper.</div>' +
+    '<button class="ficha-cta" style="margin-top:14px;" onclick="addTupperesSemana()">' + ico('carrito') + '<span>Añadir sus ingredientes a la compra</span></button>');
 }
 function apuntarActivo(){
   try{ return localStorage.getItem('planAlimentacionApuntar') === 'si'; }catch(e){ return false; }
@@ -6490,10 +6450,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-11-09'; }
+function novedadesId(){ return '2026-11-10'; }
 function novedadesFechadas(){
   return [
-    { id:'2026-11-09', t:'<b>Nuevo diseño con más color,</b> y dos cosas para consultar en Recetas (también desde Hoy): <b>De temporada</b> (qué está en su mejor momento este mes, con botón para añadirlo a la lista) y la <b>Chuleta de cocina</b> (cuánto tarda cada cosa y cuánto aguanta en la nevera).' },
+    { id:'2026-11-10', t:'<b>Diseño nuevo, de mercado:</b> contornos gruesos, sombras que se hunden al tocar y bloques de colores de fruta. Y una cosa que se usa cada semana: <b>Domingo de tuppers</b> (botón en Hoy), con los tuppers que te llevas, por qué orden cocinarlos y cuánto tardas.' },
     { id:'2026-11-08', t:'<b>Sin apuntar nada:</b> ya no hace falta marcar lo que cocinas. Todo lo demás sigue igual (menú, recetas, compra, rescate). Si algún día quieres apuntarlo, está en Ajustes → «Apuntar lo que cocino».' },
     { id:'2026-10-30', t:'<b>Diseño más sobrio:</b> el color se queda solo para los datos. Todo lo demás es papel y tinta, con el botón principal casi negro, los iconos sueltos y las cifras como texto. Las etiquetas ya no van en mayúsculas pequeñas.' },
     { id:'2026-10-30', t:'<b>Nuevo diseño:</b> más limpio y plano, con titulares en otra letra y el verde como único color de acción. Los iconos ya no son un arcoíris: el color solo queda en las recetas, para distinguir carne, pescado, legumbre…' },
@@ -6745,8 +6705,6 @@ if('serviceWorker' in navigator){
   });
 }
 aplicarApuntar();
-renderTemporada();
-renderChuleta();
 </script>
 
 </body>
