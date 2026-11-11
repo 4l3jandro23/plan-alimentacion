@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>🥗 Plan de Alimentación — Alejandro</title>
+<title>Alimentación</title>
 <!-- Ajustes para que se comporte como app al añadirla a pantalla de inicio en iPhone -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Alimentación">
-<meta name="theme-color" content="#fff1c2" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#17161c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e0e0d" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Plan de alimentación personalizado de 4 semanas, con menú, macros, recetas y lista de la compra.">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -1149,8 +1149,7 @@
 <header>
   <div class="headtop">
     <div>
-      <h1><svg class="ic-v"><use href="#i-ensalada"/></svg> Plan de Alimentación</h1>
-      <p>Personalizado para Alejandro</p>
+      <div class="marca"><svg class="marca-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 12 L12 4.2 A7.8 7.8 0 0 1 19.8 12 Z" fill="var(--accent)"/><path d="M12 12 L19.8 12 A7.8 7.8 0 0 1 12 19.8 Z" fill="var(--carbs)"/><path d="M12 12 L12 19.8 A7.8 7.8 0 0 1 12 4.2 Z" fill="currentColor" opacity=".16"/></svg><span>Alimentación</span></div>
     </div>
     <div class="headbtns">
       <button onclick="openSettings()" aria-label="Ajustes"><svg class="ic-v"><use href="#i-ajustes"/></svg></button>
@@ -1380,9 +1379,9 @@
 <!-- ==================== HOY ==================== -->
 <div id="tab-hoy" class="tabpanel active">
 
+  <h1 class="saludo" id="hoySaludo"></h1>
+  <p class="saludo-sub"><span id="hoyDate"></span> · <span id="hoyWeekLabel"></span></p>
   <div class="hoy-hero">
-    <p class="hoy-fecha" id="hoyDate"></p>
-    <p class="hoy-ciclo" id="hoyWeekLabel"></p>
     <button class="hoy-ahora" id="hoyAhora" onclick="abrirAhora()"></button>
     <button class="hoy-cocinar" id="hoyCocinar" onclick="cocinarAhora()" style="display:none"></button>
   </div>
@@ -1390,6 +1389,7 @@
   <!-- Rescate: los tres botones que hacen falta cuando el plan se cae.
        Van arriba del todo a propósito. El día que los necesitas no tienes
        ganas de buscarlos. -->
+  <h2 class="sos-tit">Si hoy el plan no encaja</h2>
   <div class="sos-row">
     <button class="sos-btn" onclick="abrirRescate()">
       <span class="sos-ico" style="background:linear-gradient(135deg,#8a5a2f,#c98f5a)"><svg class="ic-v"><use href="#i-agobio"/></svg></span>
@@ -1418,13 +1418,25 @@
   <div id="hoyContent"></div>
 </div>
 
+<!-- ==================== MÁS ==================== -->
+<div id="tab-mas" class="tabpanel">
+  <h2>Más</h2>
+  <div class="mas-lista">
+    <button onclick="irA('inicio')"><span><b>Cómo funciona el plan</b><i>El método del plato, hambre real o ansiedad, cocinar viviendo solo</i></span></button>
+    <button onclick="irA('progreso')"><span><b>Progreso</b><i>El check-in de la semana y tus referencias</i></span></button>
+    <button onclick="abrirDomingo()"><span><b>Domingo de tuppers</b><i>Qué cocinar para la semana, en qué orden y cuánto tardas</i></span></button>
+    <button onclick="abrirMenuImagen()"><span><b>Mandar el menú como imagen</b><i>La semana entera, para compartirla o guardarla</i></span></button>
+    <button onclick="openSettings()"><span><b>Ajustes</b><i>Mi semana, lo que no me gusta, copia de seguridad, móvil y ordenador</i></span></button>
+    <button onclick="toggleTheme()"><span><b>Claro u oscuro</b><i>Cambia el aspecto de la app</i></span></button>
+    <a href="https://4l3jandro23.github.io/plan-ejercicio/" target="_blank" rel="noopener"><span><b>Abrir Ejercicio</b><i>Tu plan de gimnasio</i></span></a>
+  </div>
+</div>
+
 <!-- ==================== INICIO ==================== -->
 <div id="tab-inicio" class="tabpanel">
+  <button class="volver" onclick="irA('mas')">Más</button>
 
-  <a href="https://4l3jandro23.github.io/plan-ejercicio/" target="_blank" rel="noopener" class="exercise-link" style="display:flex; align-items:center; justify-content:space-between; gap:10px; background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; border-radius:var(--r-md); padding:14px 16px; margin-bottom:16px; text-decoration:none; font-weight:700; font-size:var(--t-sm); box-shadow:var(--sh-1);">
-    <span style="display:flex; align-items:center; gap:10px;"><svg class="ic-v"><use href="#i-pesa"/></svg> Ir a tu plan de ejercicio</span>
-    <span class="exercise-link-arrow" aria-hidden="true"><svg class="ic-v"><use href="#i-flecha"/></svg></span>
-  </a>
+
 
   <div class="statgrid">
     <div class="stat"><b>58-78</b><span>kg rango sano</span></div>
@@ -1535,12 +1547,12 @@
 
 <!-- ==================== MENU ==================== -->
 <div id="tab-menu" class="tabpanel">
-  <h2>📅 Menú de 4 semanas</h2>
-  <div class="card">
+  <h2>Menú</h2>
+  <div id="semanaVisual"></div>
+  <details class="menu-notas"><summary>Cómo leer el menú</summary><div class="card">
     <p>Todo es intercambiable: si un día no te apetece lo que toca, «Cambiar» en Hoy te da otro plato del mismo menú. Los días de oficina, tupper (se marcan en Ajustes → Mi semana); viernes y sábado noche, cena libre.</p>
     <div class="tip">Las <b>kcal y macros son una estimación orientativa</b> (no un cálculo clínico exacto) — de media rondan los <b>~1.740 kcal/día</b>. Los días con cena libre o pizza no cuentan esa comida en el total. No son para contar: el plan funciona con el método del plato.</div>
-  </div>
-  <button class="btn-mini solid" style="margin:0 0 12px;" onclick="abrirMenuImagen()"><svg class="ic-v"><use href="#i-compartir"/></svg> Mandar el menú de la semana como imagen</button>
+  </div></details>
   <div class="style-options" id="menuFilter" style="margin-bottom:14px;">
     <button class="style-opt active" data-filter="all" onclick="setMenuFilter('all')">Todo</button>
     <button class="style-opt" data-filter="comida" onclick="setMenuFilter('comida')">Solo comidas</button>
@@ -1810,6 +1822,7 @@
 
 <!-- ==================== PROGRESO ==================== -->
 <div id="tab-progreso" class="tabpanel">
+  <button class="volver" onclick="irA('mas')">Más</button>
 
   <div id="progCocinadoWrap">
   <h2>🍳 Lo que has cocinado</h2>
@@ -1846,19 +1859,20 @@
 </div>
 </main>
 
-<footer>Plan orientativo de salud general — no sustituye la valoración de tu dietista, psicóloga o médico.<br>Actualizado septiembre 2026</footer>
+<footer><span id="creditosFotos"></span>Plan orientativo de salud general — no sustituye la valoración de tu dietista, psicóloga o médico.<br>Actualizado septiembre 2026</footer>
 
 <nav class="bottomnav" id="tabnav">
   <button class="active" onclick="showTab('hoy', this)"><span class="ic"><svg class="ic-v"><use href="#i-sol"/></svg></span>Hoy</button>
-  <button onclick="showTab('inicio', this)"><span class="ic"><svg class="ic-v"><use href="#i-casa"/></svg></span>Inicio</button>
   <button onclick="showTab('menu', this)"><span class="ic"><svg class="ic-v"><use href="#i-calendario"/></svg></span>Menú</button>
   <button onclick="showTab('recetas', this)"><span class="ic"><svg class="ic-v"><use href="#i-sarten"/></svg></span>Recetas</button>
   <button onclick="showTab('compra', this)"><span class="ic"><svg class="ic-v"><use href="#i-carrito"/></svg></span>Compra</button>
-  <button onclick="showTab('progreso', this)"><span class="ic"><svg class="ic-v"><use href="#i-grafico"/></svg></span>Progreso</button>
+  <button id="navMas" onclick="showTab('mas', this)"><span class="ic"><svg class="ic-v"><use href="#i-lista"/></svg></span>Más</button>
 </nav>
 
 <script src="menu.js"></script>
 <script src="platos.js"></script>
+<script src="fotos.js"></script>
+<script src="dibujos.js"></script>
 <script src="rescate.js"></script>
 <script>
 // El scroll suave lanzado desde JS no lo frena la media query de CSS: hay que consultarla aquí.
@@ -2156,10 +2170,10 @@ function abrirFicha(slug, momento){
 
   const enCompra = enListaRapida(slug);
   const nmgFicha = noMeGustaPlato(slug);
+  const repartoHTML = platoVisualHTML(p);
 
   document.getElementById('fichaScroll').innerHTML =
-    (platoVisualHTML(p) ||
-      '<div class="ficha-hero" style="background:linear-gradient(140deg,' + col[0] + ',' + col[1] + ')">' + ico(p.icono) + '</div>') +
+    '<div class="ficha-dibujo">' + dibujoComida(p.nombre) + '</div>' +
     '<h2 class="ficha-titulo" id="fichaTitulo">' + esc(p.nombre) + '</h2>' +
     '<p class="ficha-sub" id="fichaSub">' + subFichaTxt(slug) + '</p>' +
     '<div class="ficha-chips" id="fichaChips">' + chipsFichaHTML(slug) + '</div>' +
@@ -2207,6 +2221,7 @@ function abrirFicha(slug, momento){
 
     /* --- Info --- */
     '<div class="ficha-pane">' +
+      (repartoHTML ? '<div class="ficha-bloque"><div class="ficha-h">' + ico('info') + 'Cómo se reparte el plato</div>' + repartoHTML + '</div>' : '') +
       '<div class="ficha-bloque"><div class="ficha-h">' + ico('corazon') + 'Por qué está en tu plan</div>' +
         '<div class="ficha-nota tip">' + esc(p.porQue) + '</div></div>' +
       (p.diaMalo && p.diaMalo !== '—'
@@ -2496,8 +2511,11 @@ function showTab(name, btn){
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
   document.querySelectorAll('#tabnav button').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn) btn.classList.add('active');
+  document.documentElement.setAttribute('data-tab', name);
 }
+/* Guía y Progreso viven dentro de «Más». */
+function irA(name){ showTab(name, document.getElementById('navMas')); }
 
 function pintaIconoTema(){
   const use = document.querySelector('#themeBtn use');
@@ -3707,7 +3725,7 @@ function renderRecetas(){
     const p = PLATOS[k];
     const fav = favs.includes(k);
     return '<div class="rec-card" role="button" tabindex="0" onclick="abrirFicha(\'' + k + '\',\'comida\')">' +
-      '<div class="rec-top" style="background:' + degradado(p.icono) + '">' + ico(p.icono) +
+      '<div class="rec-top">' + dibujoComida(p.nombre) +
         '<button class="rec-fav' + (fav ? ' on' : '') + '" onclick="toggleFavPlato(\'' + k + '\', event)" aria-label="Favorita">' + ico('estrella') + '</button>' +
       '</div>' +
       '<div class="rec-body">' +
@@ -4272,12 +4290,13 @@ function etiquetaComidaEquipo(){
 function mealHtml(etiqueta, texto, momento, extra){
   const slug = (typeof slugDePlato === "function") ? slugDePlato(texto) : null;
   const nmg = noMeGustaPlato(slug, texto);
-  const cuerpo = "<b>" + etiqueta + ":</b> " + ico(iconoDeTexto(texto)) + " " + esc(sinEmoji(texto)) + (extra || "") +
+  const dib = '<span class="meal-dib">' + dibujoComida(sinEmoji(String(texto || '').replace(/🔁/g, ''))) + '</span>';
+  const cuerpo = "<b>" + etiqueta + "</b> " + esc(sinEmoji(texto)) + (extra || "") +
     (/^🔁/.test(String(texto || '')) ? ' <span class="cambio-tag">cambiado</span>' : '') +
     (nmg.length ? ' <span class="nmg-tag">lleva ' + esc(nmg.join(', ')) + '</span>' : '');
-  if(!slug) return '<div class="meal">' + cuerpo + '</div>';
+  if(!slug) return '<div class="meal">' + dib + '<span class="meal-txt">' + cuerpo + '</span></div>';
   return '<div class="meal tocable" role="button" tabindex="0" onclick="abrirFicha(&quot;' + slug + '&quot;,&quot;' + momento + '&quot;)">' +
-         '<span class="meal-txt">' + cuerpo + '</span><span class="flecha">' + ico("flecha") + '</span></div>';
+         dib + '<span class="meal-txt">' + cuerpo + '</span><span class="flecha">' + ico("flecha") + '</span></div>';
 }
 
 function dayCardHtml(d, filterMode, esHoy){
@@ -4299,8 +4318,8 @@ function dayCardHtml(d, filterMode, esHoy){
      solo limpia el principio, así que salía duplicado con el icono vectorial. */
   const nombreDia = esc(d.day.split(' ')[0]);
   let html = '<div class="daycard' + (esHoy ? ' es-hoy' : '') + '">';
-  html += '<div class="daycard-header"><span class="dayname">' + ico(iconoDeTexto(d.comida)) + nombreDia + badges + '</span>'
-        + '<span class="kcal">' + ico('fuego') + d.kcal + ' kcal</span></div>';
+  html += '<div class="daycard-header"><span class="dayname">' + nombreDia + badges + '</span>'
+        + '<span class="kcal">' + d.kcal + ' kcal</span></div>';
   if(filterMode === 'all'){
     html += mealHtml('Desayuno', d.desayuno, 'desayuno');
     html += mealHtml('Media mañana', d.media, 'media');
@@ -4352,6 +4371,43 @@ function renderWeeks(){
   container.innerHTML = html;
 }
 
+/* ==================== LA SEMANA, EN DIBUJOS ====================
+   Siete días de un vistazo: la comida y la cena de cada uno, con los cambios
+   que hayas hecho. Tocar un plato abre su ficha. */
+function pintarSemanaVisual(){
+  const el = document.getElementById('semanaVisual');
+  if(!el || typeof getDayForDate !== 'function') return;
+  const hoy = new Date(); hoy.setHours(12, 0, 0, 0);
+  const lunes = new Date(hoy); lunes.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
+  const letras = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+  let h = '<div class="semv">';
+  for(let i = 0; i < 7; i++){
+    const f = new Date(lunes); f.setDate(lunes.getDate() + i);
+    let d; try{ d = getDayForDate(f).d; }catch(e){ continue; }
+    const celda = (txt, mom) => {
+      const limpio = sinEmoji(String(txt || '').replace(/🔁/g, ''));
+      const slug = slugDePlato(txt);
+      return '<button class="semv-plato" ' + (slug ? 'onclick="abrirFicha(\'' + slug + '\',\'' + mom + '\')"' : 'disabled') + ' aria-label="' + esc(limpio) + '">' + dibujoComida(limpio) + '</button>';
+    };
+    h += '<div class="semv-dia' + (f.getTime() === hoy.getTime() ? ' hoy' : '') + '"><span>' + letras[i] + ' ' + f.getDate() + '</span>' + celda(d.comida, 'comida') + celda(d.cena, 'cena') + '</div>';
+  }
+  el.innerHTML = '<div class="semv-cab"><b>Esta semana</b><span>arriba la comida, abajo la cena</span></div>' + h + '</div>';
+}
+/* Los títulos venían con un emoji delante. Fuera: el título se basta. */
+function quitarEmojisTitulos(){
+  const re = /^[\p{Extended_Pictographic}\uFE0F\u200D\s]+/u;
+  document.querySelectorAll('main h2, .settings-panel h3, .settings-group > summary, main h3').forEach(el => {
+    const n = el.firstChild;
+    if(n && n.nodeType === 3 && re.test(n.nodeValue)) n.nodeValue = n.nodeValue.replace(re, '');
+  });
+}
+quitarEmojisTitulos();
+(function(){
+  const el = document.getElementById('creditosFotos'); const F = window.FOTOS_PLATOS || {};
+  const vistos = [...new Set(Object.values(F).map(x => x.c))];
+  if(el && vistos.length) el.innerHTML = 'Fotos de platos: ' + vistos.map(esc).join(' · ') + '.<br>';
+})();
+document.documentElement.setAttribute('data-tab', 'hoy');
 renderWeeks();
 renderRecFiltros();
 renderRecetas();
@@ -4365,8 +4421,7 @@ renderCocinados();
 renderConsejos();
 renderHoy();
 pedirAlmacenamientoPersistente();
-badgeifyHeadings();
-insertSectionDividers();
+
 
 /* Cerrar con Escape lo que esté abierto, por orden de encima hacia abajo. */
 document.addEventListener('keydown', e => {
@@ -6450,10 +6505,10 @@ async function sincronizarFotos(){
 /* ==================== QUÉ HAY DE NUEVO ====================
    Una tarjeta, una vez por tanda de novedades, con qué es y dónde está. Quien
    abre la app por primera vez no la ve. */
-function novedadesId(){ return '2026-11-10'; }
+function novedadesId(){ return '2026-11-10b'; }
 function novedadesFechadas(){
   return [
-    { id:'2026-11-10', t:'<b>Diseño nuevo, de mercado:</b> contornos gruesos, sombras que se hunden al tocar y bloques de colores de fruta. Y una cosa que se usa cada semana: <b>Domingo de tuppers</b> (botón en Hoy), con los tuppers que te llevas, por qué orden cocinarlos y cuánto tardas.' },
+    { id:'2026-11-10b', t:'<b>Todo cambiado, también la forma:</b> ahora parece un recetario. Papel crema, titulares con serifa y botones de color tomate. Hoy empieza con un bloque de lado a lado con el plato de ahora, los atajos son una lista bajo «Cuando el plan no encaja», el menú del día se lee como una carta y la barra de abajo es una cápsula que flota.' },
     { id:'2026-11-08', t:'<b>Sin apuntar nada:</b> ya no hace falta marcar lo que cocinas. Todo lo demás sigue igual (menú, recetas, compra, rescate). Si algún día quieres apuntarlo, está en Ajustes → «Apuntar lo que cocino».' },
     { id:'2026-10-30', t:'<b>Diseño más sobrio:</b> el color se queda solo para los datos. Todo lo demás es papel y tinta, con el botón principal casi negro, los iconos sueltos y las cifras como texto. Las etiquetas ya no van en mayúsculas pequeñas.' },
     { id:'2026-10-30', t:'<b>Nuevo diseño:</b> más limpio y plano, con titulares en otra letra y el verde como único color de acción. Los iconos ya no son un arcoíris: el color solo queda en las recetas, para distinguir carne, pescado, legumbre…' },
@@ -6595,10 +6650,12 @@ function renderHoy(){
 
   const dateStr = now.toLocaleDateString('es-ES', { weekday:'long', day:'numeric', month:'long' });
   document.getElementById('hoyDate').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+  const hh = now.getHours();
+  document.getElementById('hoySaludo').textContent = (hh < 6 ? 'Buenas noches' : hh < 14 ? 'Buenos días' : hh < 21 ? 'Buenas tardes' : 'Buenas noches') + ', Alejandro.';
   const dayNameClean = d.day.replace(/\s*\S+$/, '').trim();
   document.getElementById('hoyWeekLabel').textContent = isTeamLunch
-    ? 'Último viernes laboral del mes · ' + dayNameClean
-    : 'Semana ' + week.n + ' del ciclo · ' + dayNameClean;
+    ? 'último viernes laboral del mes'
+    : 'semana ' + week.n + ' de 4';
 
   /* Lo que toca AHORA, según la hora. Una comida, no cinco. */
   const m = momentoAhora();
@@ -6606,9 +6663,9 @@ function renderHoy(){
   ahoraSlug = (typeof slugDePlato === 'function') ? slugDePlato(textoAhora) : null;
   const btnAhora = document.getElementById('hoyAhora');
   btnAhora.innerHTML =
-    '<span class="hoy-ahora-ico">' + ico(iconoDeTexto(textoAhora)) + '</span>' +
+    '<span class="hoy-ahora-dib">' + dibujoComida(sinEmoji(textoAhora.replace(/🔁/g, ''))) + '</span>' +
     '<span class="hoy-ahora-txt">' +
-      '<span class="hoy-ahora-momento">Ahora · ' + esc(m.label) + (yaHechoEl(now, m.id) ? ' · ya lo tienes hecho' : '') + '</span>' +
+      '<span class="hoy-ahora-momento">Ahora, ' + esc(m.label.toLowerCase()) + (yaHechoEl(now, m.id) ? ' · ya lo tienes hecho' : '') + '</span>' +
       '<span class="hoy-ahora-plato">' + esc(sinEmoji(textoAhora)) + '</span>' +
     '</span>' +
     (ahoraSlug ? '<span class="flecha">' + ico('flecha') + '</span>' : '');
@@ -6658,6 +6715,7 @@ function renderHoy(){
   tipHtml += renderTomorrowCard() + hambreNocheHTML() + (enPausa ? '' : resumenSemanaAliHTML());
 
   document.getElementById('hoyTip').innerHTML = tipHtml;
+  pintarSemanaVisual();
   document.getElementById('hoyContent').innerHTML = contentHtml;
   renderAvisosHoy();
 }

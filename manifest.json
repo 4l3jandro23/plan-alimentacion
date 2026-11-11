@@ -1,13 +1,13 @@
 {
-  "name": "Plan de Alimentación",
+  "name": "Alimentación",
   "short_name": "Alimentación",
   "description": "Plan de alimentación personalizado de 4 semanas, con menú, macros, recetas y lista de la compra.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fff1c2",
-  "theme_color": "#fff1c2",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "lang": "es",
   "icons": [
     {
