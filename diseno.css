@@ -342,3 +342,109 @@ img.dibujo.foto{ display:block; width:100%; height:auto; aspect-ratio:1; object-
 .creditos{ background:none !important; margin:0; }
 .creditos summary{ font:400 var(--t-xs) var(--font-body) !important; color:var(--faint); padding:4px 0 !important; cursor:pointer; list-style:none; }
 .creditos p{ font-size:11px; line-height:1.4; color:var(--faint); overflow-wrap:anywhere; text-align:left; max-height:240px; overflow:auto; }
+
+/* ==========================================================================
+   ESTILO CÁLIDO (noviembre 2026) — manda sobre todo lo anterior
+   --------------------------------------------------------------------------
+   Más cerca de una buena app de recetas que de una herramienta: crema cálida,
+   tarjetas blancas que flotan con sombra suave, fotos grandes y apetecibles,
+   tomate como color de acción y pasteles alegres en los atajos. Títulos en
+   Fraunces (serifa redonda y amable), el resto en Instrument Sans.
+   ========================================================================== */
+@font-face{font-family:'Fraunces'; font-style:normal; font-weight:600; font-display:swap; src:url(fonts/fraunces-600.woff2) format('woff2');}
+:root{
+  --font-serif:'Fraunces','New York',ui-serif,Georgia,serif;
+  --bg:#fff7ee; --bg2:#fff7ee; --card:#ffffff; --raised:#fff3e6; --active:#ffe9d6; --control:#e3cdb7;
+  --ink:#2b1d14; --muted:#7a6656; --faint:#9a8574;
+  --accent:#e8572a; --accent2:#e8572a; --accent-soft:#ffe4d6; --on-accent:#ffffff;
+  --cta:#e8572a; --on-cta:#ffffff; --cta-soft:#ffe4d6; --primary:#e8572a; --on-primary:#ffffff;
+  --protein:#e8572a; --carbs:#f0a830; --fat:#4caf7a; --barbg:#f6e6d6;
+  --border:#f2e4d4; --neutral:#f2e4d4; --tip:#fff1d6; --warn:#a4470f; --warn-soft:#ffe7cf;
+  --p1:#ffe3d3; --p1i:#9a3412; --p2:#dff3e4; --p2i:#1f6b3d; --p3:#fff0c2; --p3i:#7a5300; --p4:#e6e9ff; --p4i:#3540a0; --p5:#ffe0ec; --p5i:#9b1d52;
+  --sh-card:0 1px 2px rgba(110,60,20,.06), 0 10px 28px rgba(110,60,20,.09);
+  --sh-float:0 12px 40px rgba(110,60,20,.18);
+  --r-lg:26px; --r-md:18px;
+}
+html.dark{
+  --bg:#17110d; --bg2:#17110d; --card:#231a14; --raised:#2c2119; --active:#3a2a1f; --control:#5c4636;
+  --ink:#fbefe4; --muted:#c7b2a0; --faint:#a38d7b;
+  --accent:#ff7a4d; --accent2:#ff7a4d; --accent-soft:#3d2216; --on-accent:#1d0d06;
+  --cta:#ff7a4d; --on-cta:#1d0d06; --primary:#ff7a4d; --on-primary:#1d0d06;
+  --border:#33261d; --neutral:#33261d; --tip:#33270f;
+  --p1:#3d2216; --p1i:#ffb699; --p2:#173222; --p2i:#9be0b4; --p3:#3a2f0e; --p3i:#f5d27a; --p4:#22264a; --p4i:#b9c0ff; --p5:#3d1828; --p5i:#ffb3cf;
+  --sh-card:0 1px 2px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35); --sh-float:0 12px 40px rgba(0,0,0,.6);
+}
+html, body, header, body:has(#tab-hoy.active) header, .sheet, .settings-panel, .ficha{ background:var(--bg); }
+
+/* Títulos con carácter */
+.saludo, .tabpanel > h2:first-of-type, .ficha-titulo, .sheet-h, .settings-panel h3{ font-family:var(--font-serif); font-weight:600; letter-spacing:-.025em; }
+.saludo{ font-size:2.125rem; line-height:1.08; }
+.tabpanel > h2:first-of-type{ font-size:2rem; }
+h2, .semv-cab b{ letter-spacing:-.02em; }
+
+/* Tarjetas que flotan */
+.card, details, .daycard, .rec-card, .semv, .mas-lista, .statgrid, .hoy-hero, #tab-hoy .hoy-hero, .opt, .sos-btn, .ficha-dibujo, .cocina-abrir, .rec-extras{
+  background:var(--card); box-shadow:var(--sh-card); border:none;
+}
+details.week, details.menu-notas{ box-shadow:none; background:transparent; }
+.card .card, .card .opt, details .opt, .sheet .card, .sheet .opt, .sheet details{ box-shadow:none; background:var(--raised); }
+.tip{ background:var(--tip); }
+
+/* Hoy: la comida de ahora, con su foto a lo grande */
+#tab-hoy .hoy-hero{ padding:0; overflow:hidden; border-radius:var(--r-lg); }
+.hoy-ahora{ padding:0 18px 16px; }
+.hoy-ahora-dib{ width:auto; margin:0 -18px 14px; }
+.hoy-ahora-dib img.foto{ width:100%; aspect-ratio:4/3; border-radius:0; }
+.hoy-ahora-dib:not(:has(img)){ background:var(--raised); padding:18px 0; }
+.hoy-ahora-dib .dibujo:not(.foto){ width:56%; margin:0 auto; }
+.hoy-ahora-momento{ display:inline-block; background:var(--accent-soft); color:var(--accent); font-weight:600; font-size:var(--t-xs); padding:4px 10px; border-radius:999px; }
+.hoy-ahora-plato{ font-family:var(--font-serif); font-weight:600; font-size:1.5rem; letter-spacing:-.02em; margin-top:8px; }
+.hoy-cocinar{ margin:0 18px 18px; width:calc(100% - 36px); background:linear-gradient(180deg,#f2683b,#e04f22); color:#fff; box-shadow:0 6px 18px rgba(232,87,42,.35); }
+html.dark .hoy-cocinar{ background:var(--accent); color:var(--on-accent); box-shadow:none; }
+
+/* Atajos en pasteles alegres */
+#tab-hoy .sos-row .sos-btn{ box-shadow:none; font-weight:600; }
+#tab-hoy .sos-row .sos-btn:nth-child(5n+1){ background:var(--p1); color:var(--p1i); }
+#tab-hoy .sos-row .sos-btn:nth-child(5n+2){ background:var(--p4); color:var(--p4i); }
+#tab-hoy .sos-row .sos-btn:nth-child(5n+3){ background:var(--p5); color:var(--p5i); }
+#tab-hoy .sos-row .sos-btn:nth-child(5n+4){ background:var(--p2); color:var(--p2i); }
+#tab-hoy .sos-row .sos-btn:nth-child(5n+5){ background:var(--p3); color:var(--p3i); }
+#tab-hoy .sos-row .sos-btn b{ font-weight:600; }
+h2.sos-tit{ color:var(--ink); font-size:var(--t-md); font-weight:600; }
+
+/* Fotos de los platos: esquinas suaves, no círculos */
+.meal-dib{ flex-basis:60px; width:60px; height:60px; }
+.meal-dib img.foto, .rec-top img.foto{ border-radius:16px; }
+.semv-plato img.foto{ border-radius:12px; }
+.semv-dia.hoy{ background:var(--accent-soft); }
+.semv-dia.hoy > span{ color:var(--accent); }
+.meal.tocable:active, .meal.tocable:hover{ background:var(--raised); }
+.meal-txt > b:first-child{ color:var(--accent); font-weight:600; }
+
+/* Recetas: la foto manda */
+.rec-top{ padding:0; }
+.rec-top img.foto{ width:100%; border-radius:0; }
+.rec-top .dibujo:not(.foto){ width:70%; margin:12px auto 0; }
+.rec-nombre{ font-size:var(--t-base); font-weight:600; }
+.rec-fav{ background:rgba(255,255,255,.92); color:var(--ink); box-shadow:0 2px 8px rgba(0,0,0,.12); }
+.rec-fav.on{ color:var(--accent); }
+
+/* Ficha: foto de lado a lado */
+.ficha-dibujo:has(.foto){ margin:0 -16px 16px; border-radius:0; box-shadow:none; }
+.ficha-dibujo img.foto{ max-height:320px; }
+
+/* Botones */
+.btn-main, .sheet-cta, .ficha-cta, .btn-mini.solid, .settings-close, .cocina-sig{ background:var(--cta); color:var(--on-cta); }
+.style-opt.active, .filtro.on, .ficha-tabs button.on, .nevera-chip.on, .raciones-btn.on, .af-selector button.on, .checkin-op button.on{ background:var(--ink); color:var(--bg); }
+.style-opt, .filtro, .ficha-tabs button, .btn-mini, .nevera-chip{ background:var(--card); box-shadow:0 1px 3px rgba(110,60,20,.1); }
+.card .style-opt, .card .btn-mini, .tip .btn-mini{ background:var(--raised); box-shadow:none; }
+.tocable, .rec-card, .opt, .sos-btn, .mas-lista > *, .semv-plato, .hoy-ahora{ transition:transform .15s ease; }
+.rec-card:active, .opt:active, .sos-btn:active, .hoy-ahora:active{ transform:scale(.97); }
+
+/* Barra de abajo que flota */
+.bottomnav{ left:12px; right:12px; bottom:calc(10px + env(safe-area-inset-bottom)); max-width:520px; margin:0 auto; border:none; border-radius:28px;
+  background:var(--card); box-shadow:var(--sh-float); padding:6px; }
+.bottomnav button.active{ color:var(--accent); }
+.bottomnav button.active .ic{ background:var(--accent-soft); }
+.bottomnav button.active .ic-v, .bottomnav button.active .ic{ color:var(--accent); }
+body{ padding-bottom:calc(104px + env(safe-area-inset-bottom)); }
