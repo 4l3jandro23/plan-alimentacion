@@ -1149,7 +1149,7 @@
 <header>
   <div class="headtop">
     <div>
-      <div class="marca"><svg class="marca-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 12 L12 4.2 A7.8 7.8 0 0 1 19.8 12 Z" fill="var(--accent)"/><path d="M12 12 L19.8 12 A7.8 7.8 0 0 1 12 19.8 Z" fill="var(--carbs)"/><path d="M12 12 L12 19.8 A7.8 7.8 0 0 1 12 4.2 Z" fill="currentColor" opacity=".16"/></svg><span>Alimentación</span></div>
+      <div class="marca"><svg class="marca-ico" viewBox="0 0 100 100" aria-hidden="true"><rect width="100" height="100" rx="26" fill="#2c7a4b"/><g transform="translate(50 50) scale(1.12) translate(-50 -50)"><circle cx="50" cy="50" r="29" fill="none" stroke="#fff" stroke-width="5.5"/><path d="M50 30 A20 20 0 0 0 50 70 Z" fill="#fff"/><path d="M50 30 A20 20 0 0 1 70 50 L50 50 Z" fill="#fff" opacity=".7"/><path d="M70 50 A20 20 0 0 1 50 70 L50 50 Z" fill="#fff" opacity=".4"/></g></svg><span>Alimentación</span></div>
     </div>
     <div class="headbtns">
       <button onclick="openSettings()" aria-label="Ajustes"><svg class="ic-v"><use href="#i-ajustes"/></svg></button>
@@ -4405,7 +4405,7 @@ quitarEmojisTitulos();
 (function(){
   const el = document.getElementById('creditosFotos'); const F = window.FOTOS_PLATOS || {};
   const vistos = [...new Set(Object.values(F).map(x => x.c))];
-  if(el && vistos.length) el.innerHTML = 'Fotos de platos: ' + vistos.map(esc).join(' · ') + '.<br>';
+  if(el && vistos.length) el.innerHTML = '<details class="creditos"><summary>Créditos de las fotos</summary><p>' + vistos.map(esc).join('<br>') + '</p></details>';
 })();
 document.documentElement.setAttribute('data-tab', 'hoy');
 renderWeeks();

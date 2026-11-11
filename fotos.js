@@ -2,10 +2,6 @@
    Si un plato está aquí, se ve su foto en vez del dibujo. Para añadir otro:
    la imagen en fotos/ y una línea aquí con su crédito. */
 window.FOTOS_PLATOS = {
- "lentejas-estofadas": {
-  "f": "fotos/lentejas-estofadas.jpg",
-  "c": "LENTEJAS ESTOFADAS, doronko (CC BY-SA 2.0), https://www.flickr.com/photos/25962965@N04/2718708311"
- },
  "pulpo-gallega-patata": {
   "f": "fotos/pulpo-gallega-patata.jpg",
   "c": "Pulpo a la gallega con patata, Pmazzoleni (CC BY-SA 4.0), https://commons.wikimedia.org/w/index.php?curid=112460600"
@@ -44,27 +40,23 @@ window.FOTOS_PLATOS = {
  },
  "alubias-pimiento-champinon-jamon": {
   "f": "fotos/alubias-pimiento-champinon-jamon.jpg",
-  "c": "Cocina Palentina Alubias de Saldaña con Chorizo 001, Valdavia (CC BY-SA 3.0), https://commons.wikimedia.org/wiki/File:Cocina_Palentina_Alubias_de_Salda%C3%B1a_con_Chorizo_001.jpg"
+  "c": "Etli kuru fasulye, E4024 (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Etli_kuru_fasulye.jpg"
  },
  "salmon-plancha-arroz-brocoli": {
-  "f": "fotos/salmon-plancha-arroz-brocoli.jpg",
-  "c": "Healthy Entree (8514368701), Prayitno / Thank you for (12 millions +) view from Los Angeles, USA (CC BY 2.0), https://commons.wikimedia.org/wiki/File:Healthy_Entree_(8514368701).jpg"
+  "f": "fotos/salmon-airfryer-esparragos.jpg",
+  "c": "2021-02-23 20 32 58 Herb-grilled salmon, asparagus and brocc, Famartin (CC BY-SA 4.0), https://commons.wikimedia.org/w/index.php?curid=100270292"
  },
  "salmon-horno-brocoli": {
-  "f": "fotos/salmon-plancha-arroz-brocoli.jpg",
-  "c": "Healthy Entree (8514368701), Prayitno / Thank you for (12 millions +) view from Los Angeles, USA (CC BY 2.0), https://commons.wikimedia.org/wiki/File:Healthy_Entree_(8514368701).jpg"
+  "f": "fotos/salmon-airfryer-esparragos.jpg",
+  "c": "2021-02-23 20 32 58 Herb-grilled salmon, asparagus and brocc, Famartin (CC BY-SA 4.0), https://commons.wikimedia.org/w/index.php?curid=100270292"
  },
  "salmon-airfryer-limon-patata": {
-  "f": "fotos/salmon-plancha-arroz-brocoli.jpg",
-  "c": "Healthy Entree (8514368701), Prayitno / Thank you for (12 millions +) view from Los Angeles, USA (CC BY 2.0), https://commons.wikimedia.org/wiki/File:Healthy_Entree_(8514368701).jpg"
- },
- "bacalao-horno-ajo": {
-  "f": "fotos/bacalao-horno-ajo.jpg",
-  "c": "Arroz al horno con bacalao, Juan Emilio Prades Bel (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Arroz_al_horno_con_bacalao.jpg"
+  "f": "fotos/salmon-airfryer-esparragos.jpg",
+  "c": "2021-02-23 20 32 58 Herb-grilled salmon, asparagus and brocc, Famartin (CC BY-SA 4.0), https://commons.wikimedia.org/w/index.php?curid=100270292"
  },
  "caballa-papillote": {
   "f": "fotos/caballa-papillote.jpg",
-  "c": "Grilled mackerel on a BBQ, Kernow Skies (CC BY-SA 3.0), https://commons.wikimedia.org/wiki/File:Grilled_mackerel_on_a_BBQ.jpg"
+  "c": "Plato de caballas fritas (España), Juan Emilio Prades Bel (CC BY 4.0), https://commons.wikimedia.org/w/index.php?curid=177651763"
  },
  "sardinas-horno-ensalada": {
   "f": "fotos/sardinas-horno-ensalada.jpg",
@@ -96,7 +88,7 @@ window.FOTOS_PLATOS = {
  },
  "solomillo-patata-pimientos": {
   "f": "fotos/solomillo-patata-pimientos.jpg",
-  "c": "프레퍼스 다이어트 푸드 성신여대점 포크 플레이트 포장 1, 재연 (CC BY 2.0), https://commons.wikimedia.org/wiki/File:%ED%94%84%EB%A0%88%ED%8D%BC%EC%8A%A4_%EB%8B%A4%EC%9D%B4%EC%96%B4%ED%8A%B8_%ED%91%B8%EB%93%9C_%EC%84%B1%EC%8B%A0%EC%97%AC%EB%8C%80%EC%A0%90_%ED%8F%AC%ED%81%AC_%ED%94%8C%EB%A0%88%EC%9D%B4%ED%8A%B8_%ED%8F%AC%EC%9E%A5_1.jpg"
+  "c": "Pork tenderloin dish, User:Ɱ (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Pork_tenderloin_dish.png"
  },
  "bistec-ternera-ensalada-patata": {
   "f": "fotos/bistec-ternera-ensalada-patata.jpg",
@@ -146,10 +138,6 @@ window.FOTOS_PLATOS = {
   "f": "fotos/yogur-fruta.jpg",
   "c": "Yogurt fruit bowl, Jumbocombo0811 (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Yogurt_fruit_bowl.jpg"
  },
- "kefir-fruta-nueces": {
-  "f": "fotos/kefir-fruta-nueces.jpg",
-  "c": "Kefir glass london feb 10, secretlondon123 (CC BY-SA 2.0), https://commons.wikimedia.org/wiki/File:Kefir_glass_london_feb_10.jpg"
- },
  "bolleria-capricho": {
   "f": "fotos/bolleria-capricho.jpg",
   "c": "Croissants au beurre (18953292873), Herry Wibisono (herryway) (CC0), https://commons.wikimedia.org/w/index.php?curid=45733817"
@@ -184,7 +172,7 @@ window.FOTOS_PLATOS = {
  },
  "bocadillo-tortilla-francesa": {
   "f": "fotos/bocadillo-tortilla-francesa.jpg",
-  "c": "Bocadillo de Tortilla de patatas - 34, Tamorlan (CC BY 3.0), https://commons.wikimedia.org/wiki/File:Bocadillo_de_Tortilla_de_patatas_-_34.jpg"
+  "c": "Llomello, truita i formatge, Francesc Fort (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Llomello,_truita_i_formatge.jpg"
  },
  "gachas-avena-platano": {
   "f": "fotos/gachas-avena-platano.jpg",
@@ -204,7 +192,7 @@ window.FOTOS_PLATOS = {
  },
  "tortilla-patata": {
   "f": "fotos/tortilla-patata.jpg",
-  "c": "Tortilla de Patatas (Corte transversal), Tamorlan (CC BY-SA 3.0), https://commons.wikimedia.org/wiki/File:Tortilla_de_Patatas_(Corte_transversal).jpg"
+  "c": "Tortilla Española, Juan Emilio Prades Bel (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Tortilla_Espa%C3%B1ola.jpg"
  },
  "patatas-rellenas-kumpir": {
   "f": "fotos/patatas-rellenas-kumpir.jpg",
@@ -248,7 +236,7 @@ window.FOTOS_PLATOS = {
  },
  "sopa-tomate-pimiento": {
   "f": "fotos/sopa-tomate-pimiento.jpg",
-  "c": "Empty tomato soup dish and wine glass, Kotivalo (CC0), https://commons.wikimedia.org/wiki/File:Empty_tomato_soup_dish_and_wine_glass.jpg"
+  "c": "Tomato soup at restaurant Treffi Pub, JIP (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Tomato_soup_at_restaurant_Treffi_Pub.jpg"
  },
  "latkes-manzana": {
   "f": "fotos/latkes-manzana.jpg",
@@ -268,10 +256,10 @@ window.FOTOS_PLATOS = {
  },
  "pavo-champinones-arroz": {
   "f": "fotos/pavo-champinones-arroz.jpg",
-  "c": "Poulet au marsala, Nikchick (CC BY-SA 2.0), https://commons.wikimedia.org/wiki/File:Poulet_au_marsala.jpg"
+  "c": "Chicken and mushrooms, E4024 (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Chicken_and_mushrooms.jpg"
  },
  "pavo-airfryer-pimiento-champinon": {
   "f": "fotos/pavo-champinones-arroz.jpg",
-  "c": "Poulet au marsala, Nikchick (CC BY-SA 2.0), https://commons.wikimedia.org/wiki/File:Poulet_au_marsala.jpg"
+  "c": "Chicken and mushrooms, E4024 (CC BY-SA 4.0), https://commons.wikimedia.org/wiki/File:Chicken_and_mushrooms.jpg"
  }
 };
